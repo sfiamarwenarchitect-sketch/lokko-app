@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOKKO — Planche de Workflow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0A0A0A;
+            color: #F5F5F0;
+            padding: 20px;
+        }
+
+        .serif { font-family: 'Playfair Display', serif; }
+        .gold { color: #C5A256; }
+
+        .workflow-title {
+            text-align: center;
+            padding: 30px 20px;
+            margin-bottom: 10px;
+        }
+
+        .workflow-title h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            letter-spacing: 6px;
+            margin-bottom: 8px;
+        }
+
+        .workflow-title p {
+            color: #8A8A86;
+            font-size: 14px;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .workflow-section {
+            margin-bottom: 40px;
+            border-top: 1px solid rgba(245, 245, 240, 0.1);
+            padding-top: 30px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+
+        .section-header p {
+            color: #8A8A86;
+            font-size: 13px;
+        }
+
+        .screen-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        .screen {
+            background: #141414;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(245, 245, 240, 0.08);
+        }
+
+        .screen-label {
+            background: #1C1C1C;
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #C5A256;
+            border-bottom: 1px solid rgba(245, 245, 240, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .screen-label .step {
+            font-size: 11px;
+            color: #8A8A86;
+            font-weight: 400;
+        }
+
+        .screen-body {
+            padding: 20px;
+            min-height: 400px;
+        }
+
+        /* Mobile frame */
+        .phone-frame {
+            width: 280px;
+            margin: 0 auto;
+            background: #0A0A0A;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 2px solid #1C1C1C;
+        }
+
+        .phone-header {
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 10, 0.95);
+        }
+
+        .phone-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            letter-spacing: 3px;
+        }
+
+        .phone-icons {
+            display: flex;
+            gap: 10px;
+            font-size: 16px;
+            opacity: 0.7;
+        }
+
+        .phone-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(245, 245, 240, 0.08);
+        }
+
+        .phone-tab {
+            flex: 1;
+            text-align: center;
+            font-size: 10px;
+            font-weight: 500;
+            color: #8A8A86;
+            padding: 8px 4px;
+        }
+
+        .phone-tab.active {
+            color: #F5F5F0;
+            border-bottom: 2px solid #C5A256;
+        }
+
+        .phone-content {
+            padding: 12px;
+        }
+
+        .phone-image {
+            width: 100%;
+            height: 300px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            object-fit: cover;
+        }
+
+        .phone-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 11px;
+            color: #C5A256;
+        }
+
+        .phone-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .phone-price {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .phone-meta {
+            font-size: 10px;
+            color: #8A8A86;
+            display: flex;
+            gap: 8px;
+        }
+
+        .phone-badges {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .badge {
+            font-size: 9px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .badge-trust {
+            background: rgba(197, 162, 86, 0.15);
+            color: #C5A256;
+        }
+
+        .badge-timer {
+            background: rgba(212, 92, 92, 0.2);
+            color: #D45C5C;
+        }
+
+        .badge-ai {
+            background: rgba(197, 162, 86, 0.3);
+            color: #C5A256;
+        }
+
+        .phone-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .phone-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .btn-pass { background: #1C1C1C; color: #8A8A86; border: 1px solid rgba(245, 245, 240, 0.1); }
+        .btn-eye { background: #C5A256; color: #0A0A0A; flex: 0.5; }
+        .btn-offer { background: #F5F5F0; color: #0A0A0A; }
+        .btn-gold { background: #C5A256; color: #0A0A0A; }
+
+        /* Flow arrows */
+        .flow-arrow {
+            text-align: center;
+            padding: 10px;
+            color: #C5A256;
+            font-size: 24px;
+        }
+
+        /* AI Card */
+        .ai-card-mobile {
+            background: linear-gradient(135deg, #1C1C1C 0%, #141414 100%);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(197, 162, 86, 0.3);
+            text-align: center;
+        }
+
+        .ai-badge-mobile {
+            background: rgba(197, 162, 86, 0.2);
+            color: #C5A256;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .ai-title-mobile {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+
+        .ai-desc-mobile {
+            color: #8A8A86;
+            font-size: 12px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .ai-score-mobile {
+            color: #C5A256;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Dressing */
+        .dressing-item {
+            background: #1C1C1C;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .dressing-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .dressing-info {
+            flex: 1;
+        }
+
+        .dressing-title {
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .dressing-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 10px;
+            color: #C5A256;
+        }
+
+        .dressing-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .stat-box {
+            background: #1C1C1C;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: #C5A256;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #8A8A86;
+            margin-top: 2px;
+        }
+
+        /* Bid */
+        .bid-item {
+            background: #1C1C1C;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+
+        .bid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .bid-title {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .bid-amount {
+            font-size: 16px;
+            font-weight: 600;
+            color: #C5A256;
+        }
+
+        .bid-status {
+            font-size: 10px;
+            color: #8A8A86;
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Exchange */
+        .exchange-card {
+            background: #1C1C1C;
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .exchange-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .exchange-title {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .exchange-desc {
+            font-size: 10px;
+            color: #8A8A86;
+        }
+
+        /* Warning */
+        .warning-box {
+            background: rgba(212, 92, 92, 0.1);
+            border: 1px solid rgba(212, 92, 92, 0.3);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .warning-title {
+            color: #D45C5C;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .warning-desc {
+            font-size: 10px;
+            color: #8A8A86;
+        }
+    </style>
+</head>
+<body>
+    <!-- TITLE -->
+    <div class="workflow-title">
+        <h1 class="serif">LOKKO</h1>
+        <p>Planche de workflow complet — Parcours utilisateur de l'application</p>
+    </div>
+
+    <!-- SECTION 1: LE SWIPE FEED -->
+    <div class="workflow-section">
+        <div class="section-header">
+            <h2 class="serif">📱 ÉCRAN 1 — Le Feed de Swipe</h2>
+            <p>L'utilisateur ouvre l'application et voit une pièce par écran</p>
+        </div>
+        <div class="screen-grid">
+            <div class="screen">
+                <div class="screen-label">
+                    FEED PRINCIPAL
+                    <span class="step">ÉCRAN 1/6</span>
+                </div>
+                <div class="screen-body">
+                    <div class="phone-frame">
+                        <div class="phone-header">
+                            <span class="phone-logo serif">LOKKO</span>
+                            <div class="phone-icons">🔔 👤</div>
+                        </div>
+                        <div class="phone-tabs">
+                            <div class="phone-tab active">FEED</div>
+                            <div class="phone-tab">DRESSING</div>
+                            <div class="phone-tab">OFFRES</div>
+                            <div class="phone-tab">ÉCHANGE</div>
+                        </div>
+                        <div class="phone-content">
+                            <img src="https://picsum.photos/280/300?random=1" alt="Chanel" class="phone-image">
+                            <div style="text-align: center; margin: 8px 0;">
+                                <span class="badge badge-trust">🏆 Score IA: 92</span>
+                                <span class="badge badge-timer">⏱ 46h restantes</span>
+                            </div>
+                            <div class="phone-brand">CHANEL</div>
+                            <div class="phone-title">Classic Flap Bag</div>
+                            <div style="font-size: 10px; color: #8A8A86; margin-bottom: 8px;">📏 Taille S • ✨ Comme neuf • 👤 amina_style</div>
+                            <div class="phone-price serif">3 200 €</div>
+                            <div class="phone-buttons">
+                                <div class="phone-btn btn-pass">← Passer</div>
+                                <div class="phone-btn btn-eye">👁</div>
+                                <div class="phone-btn btn-offer">Offrir →</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 12px; font-size: 12px; color: #8A8A86;">
+                        ← Swipe gauche pour passer • Swipe droit pour offrir
+                    </div>
+                </div>
+            </div>
+
+            <div class="screen">
+                <div class="screen-label">
+                    PRIX MASQUÉ → VISIBLE
+                    <span class="step">ÉCRAN 1a/6</span>
+                </div>
+                <div class="screen-body">
+                    <div class="phone-frame">
+                        <div class="phone-header">
+                            <span class="phone-logo serif">LOKKO</span>
+                            <div class="phone-icons">🔔 👤</div>
+                        </div>
+                        <div class="phone-tabs">
+                            <div class="phone-tab active">FEED</div>
+                            <div class="phone-tab">DRESSING</div>
+                            <div class="phone-tab">OFFRES</div>
+                            <div class="phone-tab">ÉCHANGE</div>
+                        </div>
+                        <div class="phone-content">
+                            <img src="https://picsum.photos/280/300?random=1" alt="Chanel" class="phone-image">
+                            <div style="text-align: center; margin: 14px 0; padding: 16px; background: #1C1C1C; border-radius: 10px;">
+                                <div style="font-size: 11px; color: #C5A256; margin-bottom: 8px;">👁 RÉGLE D'OR DU SILENCE VISUEL</div>
+                                <div style="font-size: 12px; color: #8A8A86; margin-bottom: 8px;">Le prix est <strong>masqué</strong> pendant 3 secondes</div>
+                                <div style="font-size: 12px; color: #F5F5F0;">Il apparaît ensuite en fondu doux</div>
+                                <div style="font-size: 20px; font-weight: 600; font-family: 'Playfair Display', serif; margin-top: 12px; color: #C5A256;">3 200 €</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 2: CARTA IA -->
+    <div class="workflow-section">
+        <div class="section-header">
+            <h2 class="serif">🤖 ÉCRAN 2 — L'IA Stylest</h2>
+            <p>Tous les 10 swipes, l'IA insère un "Look du Jour" personnalisé</p>
+        </div>
+        <div class="screen-grid">
+            <div class="screen">
+                <div class="screen-label">
+                    LOOK DU JOUR IA
+                    <span class="step">ÉCRAN 2/6</span>
+                </div>
+                <div class="screen-body">
+                    <div class="phone-frame">
+                        <div class="phone-header">
+                            <span class="phone-logo serif">LOKKO</span>
+                            <div class="phone-icons">🔔 👤</div>
+                        </div>
+                        <div class="phone-tabs">
+                            <div class="phone-tab active">FEED</div>
+                            <div class="phone-tab">DRESSING</div>
+                            <div class="phone-tab">OFFRES</div>
+                            <div class="phone-tab">ÉCHANGE</div>
+                        </div>
+                        <div class="phone-content">
+                            <div class="ai-card-mobile">
+                                <div class="ai-badge-mobile">✨ LOOK DU JOUR — IA</div>
+                                <div style="font-size: 32px; margin-bottom: 8px;">🤖</div>
+                                <div class="ai-title-mobile">Recommandation IA</div>
+                                <div class="ai-desc-mobile">Pièce d'échange trouvée selon vos préférences et votre style</div>
+                                <div class="ai-score-mobile">🏆 94% de correspondance</div>
+                            </div>
+                            <div style="text-align: center; margin-top: 12px; font-size: 10px; color: #8A8A86;">
+                                L'IA insère cette carte tous les 10 swipes pour vous guider
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 3: FAIRE UNE OFFRE -->
+    <div class="workflow-section">
+        <div class="section-header">
+            <h2 class="serif">💰 ÉCRAN 3 — Faire une Offre</h2>
+            <p>L'utilisateur clique sur "Offrir" et soumet une offre privée</p>
+        </div>
+        <div class="screen-grid">
+            <div class="screen">
+                <div class="screen-label">
+                    MODALE D'OFFRE
+                    <span class="step">ÉCRAN 3/6</span>
+                </div>
+                <div class="screen-body">
+                    <div class="phone-frame">
+                        <div class="phone-header">
+                            <span class="phone-logo serif">LOKKO</span>
+                            <div class="phone-icons">🔔 👤</div>
+                        </div>
+                        <div class="phone-tabs">
+                            <div class="phone-tab active">FEED</div>
+                            <div class="phone-tab">DRESSING</div>
+                            <div class="phone-tab">OFFRES</div>
+                            <div class="phone-tab">ÉCHANGE</div>
+                        </div>
+                        <div class="phone-content">
+                            <div style="text-align: center; padding: 12px;">
+                                <div style="font-size: 20px; margin-bottom: 10px;">💰</div>
+                                <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Faire une offre privée</div>
+                                <div style="font-size: 11px; color: #8A8A86; margin-bottom: 12px;">Chanel Classic Flap Bag</div>
+                                <div style="font-size: 11px; color: #8A8A86; margin-bottom: 16px;">Offre minimale : <strong>2 240 €</strong> (70% de l'estimation)</div>
+                                <div style="background: #1C1C1C; padding: 16px; border-radius: 12px; text-align: center; margin-bottom: 12px; font-size: 18px; font-weight: 600;">2 500 €</div>
+                                <div class="warning-box">
+                                    <div class="warning-title">RÈGLE DES 70%</div>
+                                    <div class="warning-desc">L'offre doit être ≥ 70% de l'estimation du vendeur</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="screen">
+                <div class="screen-label">
+                    TIMER EN CASCADE
+                    <span class="step">ÉCRAN 3b/6</span>
+                </div>
+                <div class="screen-body">
+                    <div class="phone-frame">
+                        <div class="phone-header">
+                            <span class="phone-logo serif">LOKKO</span>
+                            <div class="phone-icons">🔔 👤</div>
+                        </div>
+                        <div class="phone-tabs">
+                            <div class="phone-tab active">FEED</div>
+                            <div class="phone-tab">DRESSING</div>
+                            <div class="phone-tab">OFFRES</div>
+                            <div class="phone-tab">ÉCHANGE</div>
+                        </div>
+                        <div class="phone-content">
+                            <div style="text-align: center; padding: 12px;">
+                                <div style="font-size: 20px; margin-bottom: 10px;">⏱</div>
+                                <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Timer en cascade</div>
+                                <div style="font-size: 11px; color: #8A8A86; margin-bottom: 12px;">Règle des 12h</div>
+                                <div style="background: #1C1C1C; padding: 12px; border-radius: 10px; margin-bottom: 10px;">
+                                    <div style="font-size: 11px; margin-bottom: 4px;">🥇 Meilleur offre : <strong>2 500 €</strong></div>
+                                    <div style="font-size: 11px; color: #8A8A86;">⏱ 12h pour confirmer</div>
+                                </div>
+                                <div style="font-size: 11px; color: #8A8A86; line-height: 1.5;">
+                                    Si le meilleur offre ne paie pas en 12h, l'offre passe automatiquement au 2ème meilleur, puis au 3ème...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 4: DRESSING -->
+    <div class="workflow-section">
+        <div class="section-header">
+            <h2 class="serif">👛 ÉCRAN 4 — Mon Dressing</h2>
+            <p>Les pièces en vente de l'utilisateur</p>
+        </div>
+        <div class="screen-grid">
+            <div class="screen">
+                <div class="screen-label">
+                    DRESSING
+                    <span class="step">ÉCRAN 4/6</span>
+                </div>
+                <div class="screen-body">
+                    <div class="phone-frame">
+                        <div class="phone-header">
+                            <span class="phone-logo serif">LOKKO</span>
+                            <div class="phone-icons">🔔 👤</div>
+                        </div>
+                        <div class="phone-tabs">
+                            <div class="phone-tab">FEED</div>
+                            <div class="phone-tab active">DRESSING</div>
+                            <div class="phone-tab">OFFRES</div>
+                            <div class="phone-tab">ÉCHANGE</div>
+                        </div>
+                        <div class="phone-content">
+                            <div style="font-size: 14px; font-weight: 600; margin-bottom: 12px; font-family: 'Playfair Display', serif;">Mon Dressing</div>
+                            <div class="dressing-stats">
+                                <div class="stat-box">
+                                    <div class="stat-number">3</div>
+                                    <div class="stat-label">Pièces actives</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-number">5</div>
+                                    <div class="stat-label">Offres reçues</div>
+                                </div>
+                            </div>
+                            <div class="dressing-stats" style="margin-top: 10px;">
+                                <div class="stat-box">
+                                    <div class="stat-number">88</div>
+                                    <div class="stat-label">Score confiance 🏆</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-number">12</div>
+                                    <div class="stat-label">Vendus</div>
+                                </div>
+                            </div>
+                            <div style="font-size: 11px; color: #8A8A86; text-align: center; margin: 12px 0;">Commission Lokko : 8%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 5: OFFRES REÇUES -->
+    <div class="workflow-section">
+        <div class="section-header">
+            <h2 class="serif">🔔 ÉCRAN 5 — Offres Reçues</h2>
+            <p>Les offres privées reçues par le vendeur</p>
+        </div>
+        <div class="screen-grid">
+            <div class="screen">
+                <div class="screen-label">
+                    HUB DES OFFRES
+                    <span class="step">ÉCRAN 5/6</span>
+                </div>
+                <div class="screen-body">
+                    <div class="phone-frame">
+                        <div class="phone-header">
+                            <span class="phone-logo serif">LOKKO</span>
+                            <div class="phone-icons">🔔 👤</div>
+                        </div>
+                        <div class="phone-tabs">
+                            <div class="phone-tab">FEED</div>
+                            <div class="phone-tab">DRESSING</div>
+                            <div class="phone-tab active">OFFRES</div>
+                            <div class="phone-tab">ÉCHANGE</div>
+                        </div>
+                        <div class="phone-content">
+                            <div style="font-size: 14px; font-weight: 600; margin-bottom: 12px; font-family: 'Playfair Display', serif;">Vos offres</div>
+                            <div class="bid-item">
+                                <div class="bid-header">
+                                    <div>
+                                        <div class="bid-title">Chanel Classic Flap Bag</div>
+                                        <div style="font-size: 10px; color: #8A8A86;">amina_style → Vous</div>
+                                    </div>
+                                    <div class="bid-amount">3 200 €</div>
+                                </div>
+                                <div class="bid-status">
+                                    <span style="color: #C5A256;">🥇 Meilleure offre</span>
+                                    <span>⏱ 12h restants</span>
+                                </div>
+                            </div>
+                            <div class="bid-item">
+                                <div class="bid-header">
+                                    <div>
+                                        <div class="bid-title">Nike Air Max 90</div>
+                                        <div style="font-size: 10px; color: #8A8A86;">yassine_lux → Vous</div>
+                                    </div>
+                                    <div class="bid-amount">145 €</div>
+                                </div>
+                                <div class="bid-status">
+                                    <span style="color: #8A8A86;">🥈 2ème offre</span>
+                                    <span>⏱ 10h restants</span>
+                                </div>
+                            </div>
+                            <div class="bid-item">
+                                <div class="bid-header">
+                                    <div>
+                                        <div class="bid-title">Rolex Submariner</div>
+                                        <div style="font-size: 10px; color: #8A8A86;">sara_chic → Vous</div>
+                                    </div>
+                                    <div class="bid-amount">6 500 €</div>
+                                </div>
+                                <div class="bid-status">
+                                    <span style="color: #8A8A86;">🥉 3ème offre</span>
+                                    <span>⏱ 8h restants</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 6: ÉCHANGE -->
+    <div class="workflow-section">
+        <div class="section-header">
+            <h2 class="serif">🔄 ÉCRAN 6 — Échange</h2>
+            <p>Le système de bartering pour échanger des pièces</p>
+        </div>
+        <div class="screen-grid">
+            <div class="screen">
+                <div class="screen-label">
+                    LOOP BARTERING
+                    <span class="step">ÉCRAN 6/6</span>
+                </div>
+                <div class="screen-body">
+                    <div class="phone-frame">
+                        <div class="phone-header">
+                            <span class="phone-logo serif">LOKKO</span>
+                            <div class="phone-icons">🔔 👤</div>
+                        </div>
+                        <div class="phone-tabs">
+                            <div class="phone-tab">FEED</div>
+                            <div class="phone-tab">DRESSING</div>
+                            <div class="phone-tab">OFFRES</div>
+                            <div class="phone-tab active">ÉCHANGE</div>
+                        </div>
+                        <div class="phone-content">
+                            <div style="font-size: 14px; font-weight: 600; margin-bottom: 12px; font-family: 'Playfair Display', serif;">Échange</div>
+                            <div class="exchange-card">
+                                <div class="exchange-icon">🔄</div>
+                                <div class="exchange-title">Loop Bartering</div>
+                                <div class="exchange-desc">Proposez des pièces en échange d'autres pièces</div>
+                            </div>
+                            <div style="font-size: 11px; color: #8A8A86; text-align: center; margin: 12px 0; line-height: 1.5;">
+                                Plusieurs utilisateurs peuvent proposer des pièces. Vous validez plusieurs échanges en ordre de préférence.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RÉSUMÉ DU WORKFLOW -->
+    <div class="workflow-section">
+        <div class="section-header">
+            <h2 class="serif">🚀 RÉSUMÉ DU WORKFLOW</h2>
+            <p>Parcours complet de l'utilisateur dans l'application</p>
+        </div>
+        <div class="screen-grid">
+            <div class="screen">
+                <div class="screen-label">
+                    PARCOURS UTILISATEUR
+                </div>
+                <div class="screen-body">
+                    <div style="padding: 10px;">
+                        <div style="text-align: center; margin-bottom: 12px;">
+                            <div style="font-size: 16px; font-family: 'Playfair Display', serif; margin-bottom: 8px;">🎯 Objectif</div>
+                            <div style="font-size: 12px; color: #8A8A86; line-height: 1.6;">Découvrir des pièces de luxe par swipe, faire des offres privées, gérer ses ventes et échanges</div>
+                        </div>
+                        <div style="background: #1C1C1C; padding: 14px; border-radius: 12px; margin-bottom: 10px;">
+                            <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">💡 Fonctionnalités clés :</div>
+                            <div style="font-size: 11px; color: #8A8A86; line-height: 1.6;">
+                                ✅ Swipe plein écran avec prix masqué<br>
+                                ✅ Système d'enchères privées avec règle des 70%<br>
+                                ✅ Timer en cascade 12h pour les offres<br>
+                                ✅ L'IA insère des "Look du Jour" tous les 10 swipes<br>
+                                ✅ Score de confiance pour chaque produit<br>
+                                ✅ Système d'échange (bartering) pour échanger des pièces
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin: 10px 0;">
+                            <div style="font-size: 11px; color: #C5A256;">→→→ LE FLUX COMPLET →→→</div>
+                        </div>
+                        <div style="font-size: 11px; line-height: 1.5; color: #8A8A86;">
+                            1. <strong>Swipe</strong> l'utilisateur fait défiler les pièces<br>
+                            2. <strong>Voir le prix</strong> le prix apparaît après 3 secondes<br>
+                            3. <strong>Offrir</strong> l'utilisateur soumet une offre privée<br>
+                            4. <strong>Timer 12h</strong> le vendeur a 12h pour accepter<br>
+                            5. <strong>Cascade</strong> si le meilleur offre ne paie pas, passe au suivant<br>
+                            6. <strong>Échange</strong> l'utilisateur peut échanger des pièces
+                        </div>
+                        <div style="font-size: 11px; color: #C5A256; margin-top: 12px; text-align: center;">
+                            L'IA apprend des préférences de l'utilisateur pour recommander les meilleures pièces
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIN -->
+    <div class="workflow-title" style="margin-top: 40px;">
+        <h1 class="serif" style="font-size: 24px;">LOKKO</h1>
+        <p style="margin-bottom: 16px;">L'application de mode de luxe avec IA</p>
+        <div style="background: #1C1C1C; padding: 16px; border-radius: 12px; max-width: 400px; margin: 0 auto; text-align: center;">
+            <div style="font-size: 12px; color: #8A8A86; margin-bottom: 8px;">Fonctionnalités implémentées dans le prototype :</div>
+            <div style="font-size: 12px; color: #C5A256;">
+                ✅ Système de swipe avec prix masqué<br>
+                ✅ Enchères privées avec règle des 70%<br>
+                ✅ Timer en cascade 12h<br>
+                ✅ Moteur IA de recommandation<br>
+                ✅ Score de confiance dynamique<br>
+                ✅ Système d'échange<br>
+                ✅ Design premium noir/or/serif
+            </div>
+        </div>
+    </div>
+</body>
+</html>

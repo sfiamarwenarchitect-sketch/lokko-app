@@ -1,335 +1,668 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LOKKO — Luxe • IA • Enchères</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #0A0A0A;
-            color: #F5F5F0;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-        .serif { font-family: 'Playfair Display', serif; }
-        .gold { color: #C5A256; }
-        .app { max-width: 420px; margin: 0 auto; min-height: 100vh; background: #0A0A0A; }
-        .header { position: sticky; top: 0; z-index: 100; background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(245,245,240,0.08); }
-        .header-logo { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; letter-spacing: 4px; }
-        .tabs { display: flex; border-bottom: 1px solid rgba(245,245,240,0.08); }
-        .tab { flex: 1; padding: 14px; text-align: center; font-size: 13px; font-weight: 500; color: #8A8A86; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
-        .tab-active { color: #F5F5F0; border-bottom-color: #C5A256; }
-        .product-card { background: #1C1C1C; border-radius: 12px; margin: 16px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
-        .product-img { width: 100%; height: 480px; object-fit: cover; position: relative; }
-        .badge { position: absolute; top: 16px; font-size: 11px; padding: 5px 12px; border-radius: 20px; backdrop-filter: blur(8px); }
-        .badge-brand { left: 16px; background: rgba(245,245,240,0.15); color: #F5F5F0; letter-spacing: 1.5px; text-transform: uppercase; }
-        .badge-timer { right: 16px; background: rgba(212,92,92,0.85); color: #FFF; }
-        .price-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 24px 40px; background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, transparent 100%); transition: opacity 0.5s; }
-        .price-overlay.hidden { opacity: 0; }
-        .price { font-size: 28px; font-weight: 600; font-family: 'Playfair Display', serif; }
-        .price-label { font-size: 11px; color: #8A8A86; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
-        .product-info { padding: 16px 20px; }
-        .product-title { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
-        .trust-badge { display: inline-flex; align-items: center; gap: 4px; background: rgba(197,162,86,0.15); color: #C5A256; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 12px; margin-right: 8px; }
-        .product-meta { font-size: 12px; color: #8A8A86; display: flex; gap: 12px; }
-        .swipe-buttons { display: flex; gap: 12px; padding: 16px 20px 24px; }
-        .btn { flex: 1; padding: 14px; border: none; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; }
-        .btn-pass { background: #1C1C1C; color: #8A8A86; border: 1px solid rgba(245,245,240,0.1); }
-        .btn-eye { background: #C5A256; color: #0A0A0A; flex: 0.5; }
-        .btn-offer { background: #F5F5F0; color: #0A0A0A; }
-        .ai-card { background: linear-gradient(135deg, #1C1C1C 0%, #141414 100%); border-radius: 12px; margin: 16px; padding: 20px; border: 1px solid rgba(197,162,86,0.3); }
-        .ai-badge { background: rgba(197,162,86,0.2); color: #C5A256; font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 20px; display: inline-block; margin-bottom: 12px; }
-        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(10,10,10,0.8); z-index: 200; display: flex; align-items: flex-end; justify-content: center; }
-        .modal-content { background: #141414; border-radius: 24px 24px 0 0; padding: 28px 24px 40px; max-width: 420px; width: 100%; }
-        .modal-title { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 20px; text-align: center; }
-        .bid-input { width: 100%; padding: 16px; background: #1C1C1C; border: 1px solid rgba(245,245,240,0.1); border-radius: 12px; color: #F5F5F0; font-size: 20px; font-weight: 600; text-align: center; margin-bottom: 16px; }
-        .bid-input:focus { outline: none; border-color: #C5A256; }
-        .min-bid { font-size: 13px; color: #8A8A86; text-align: center; margin-bottom: 20px; }
-        .btn-primary { width: 100%; padding: 16px; background: #C5A256; color: #0A0A0A; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; }
-        .btn-secondary { width: 100%; padding: 16px; background: #1C1C1C; color: #F5F5F0; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; }
-        .empty-state { text-align: center; padding: 60px 20px; }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
-        .stat-box { background: #1C1C1C; padding: 16px; border-radius: 12px; text-align: center; }
-        .stat-number { font-size: 24px; font-weight: 600; color: #C5A256; font-family: 'Playfair Display', serif; }
-        .stat-label { font-size: 12px; color: #8A8A86; margin-top: 4px; }
-        .page { display: none; }
-        .page.active { display: block; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Posture Coach - Entraînement Intelligent</title>
+  <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #10B981;
+      --primary-light: #D1FAE5;
+      --primary-dark: #059669;
+      --secondary: #3B82F6;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --gray-50: #F9FAFB;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-300: #D1D5DB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-600: #4B5563;
+      --gray-700: #374151;
+      --gray-800: #1F2937;
+      --gray-900: #111827;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #F0F9FF 0%, #F0FDF4 100%);
+      color: var(--gray-900);
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .app-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .app-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .app-subtitle {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .main-content {
+      padding: 24px;
+    }
+
+    .screen-nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .screen-tab {
+      padding: 12px 24px;
+      border-radius: 16px;
+      background: var(--gray-100);
+      border: 2px solid transparent;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .screen-tab:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+    }
+
+    .screen-tab.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .screen-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      border: 2px solid var(--gray-200);
+      transition: all 0.3s;
+    }
+
+    .screen-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      border-color: var(--primary);
+    }
+
+    .screen-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 16px 20px;
+      font-weight: 600;
+    }
+
+    .screen-body {
+      padding: 20px;
+    }
+
+    .screen-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gray-800);
+      margin-bottom: 16px;
+    }
+
+    .screen-description {
+      font-size: 14px;
+      color: var(--gray-600);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .feature-list {
+      list-style: none;
+      margin: 16px 0;
+    }
+
+    .feature-item {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--gray-200);
+      font-size: 14px;
+      color: var(--gray-700);
+    }
+
+    .feature-item:last-child {
+      border-bottom: none;
+    }
+
+    .feature-item::before {
+      content: "✓";
+      color: var(--primary);
+      margin-right: 8px;
+      font-weight: bold;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin: 4px;
+    }
+
+    .badge-success { background: var(--primary-light); color: var(--primary-dark); }
+    .badge-warning { background: #FEF3C7; color: var(--warning); }
+    .badge-danger { background: #FEE2E2; color: var(--danger); }
+    .badge-info { background: #DBEAFE; color: var(--secondary); }
+
+    .score-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      color: white;
+      margin: 16px 0;
+    }
+
+    .score-green { background: linear-gradient(135deg, var(--success) 0%, #059669 100%); }
+    .score-orange { background: linear-gradient(135deg, var(--warning) 0%, #D97706 100%); }
+    .score-red { background: linear-gradient(135deg, var(--danger) 0%, #DC2626 100%); }
+
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+    }
+
+    .button-secondary {
+      background: var(--gray-100);
+      color: var(--gray-700);
+      border: 2px solid var(--gray-300);
+    }
+
+    .button:hover {
+      transform: scale(1.05);
+    }
+
+    .form-group {
+      margin: 16px 0;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--gray-300);
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+
+    .alert {
+      padding: 16px;
+      border-radius: 12px;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+
+    .alert-success {
+      background: var(--primary-light);
+      border-left: 4px solid var(--primary);
+      color: var(--primary-dark);
+    }
+
+    .alert-warning {
+      background: #FEF3C7;
+      border-left: 4px solid var(--warning);
+      color: #D97706;
+    }
+
+    .alert-danger {
+      background: #FEE2E2;
+      border-left: 4px solid var(--danger);
+      color: #DC2626;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 20px;
+      background: var(--gray-50);
+      border-radius: 16px;
+      margin-top: 24px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--gray-700);
+    }
+
+    .legend-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+    }
+
+    .legend-dot.green { background: var(--success); }
+    .legend-dot.orange { background: var(--warning); }
+    .legend-dot.red { background: var(--danger); }
+
+    .workflow-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--primary-light) 0%, #ECFDF5 100%);
+      border-radius: 12px;
+      margin: 8px 0;
+    }
+
+    .arrow-icon {
+      font-size: 24px;
+      color: var(--primary);
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 8px; }
+      .app-header { padding: 20px; }
+      .main-content { padding: 16px; }
+      .screen-nav { flex-wrap: wrap; }
+      .screen-tab { padding: 10px 16px; font-size: 14px; }
+      .workflow-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-    <div class="app">
-        <!-- HEADER -->
-        <div class="header">
-            <div class="header-logo serif">LOKKO</div>
-            <div style="display: flex; gap: 16px; align-items: center;">
-                <span style="font-size: 22px; opacity: 0.7;">🔔</span>
-                <span style="font-size: 22px; opacity: 0.7;">👤</span>
-            </div>
-        </div>
+  <div id="root"></div>
 
-        <!-- TABS -->
-        <div class="tabs">
-            <div class="tab tab-active" onclick="showPage('feed')">FEED</div>
-            <div class="tab" onclick="showPage('dressing')">DRESSING</div>
-            <div class="tab" onclick="showPage('bids')">OFFRES</div>
-            <div class="tab" onclick="showPage('exchange')">ÉCHANGE</div>
-        </div>
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
 
-        <!-- FEED PAGE -->
-        <div id="page-feed" class="page active">
-            <div id="feed-container"></div>
-        </div>
+    // Composant d'affichage des écrans
+    const ScreenCard = ({ title, description, features, badges, score, alert, button }) => {
+      return React.createElement('div', { className: 'screen-card' },
+        React.createElement('div', { className: 'screen-header' }, title),
+        React.createElement('div', { className: 'screen-body' },
+          React.createElement('div', { className: 'screen-title' }, title),
+          description && React.createElement('div', { className: 'screen-description' }, description),
+          features && React.createElement('ul', { className: 'feature-list' },
+            features.map((feature, index) =>
+              React.createElement('li', { key: index, className: 'feature-item' }, feature)
+            )
+          ),
+          badges && React.createElement('div', null,
+            badges.map((badge, index) =>
+              React.createElement('span', { key: index, className: `badge ${badge.type}` }, badge.text)
+            )
+          ),
+          score && React.createElement('div', { className: `score-circle ${score.class}` }, score.value),
+          alert && React.createElement('div', { className: `alert ${alert.type}` }, alert.text),
+          button && React.createElement('div', { style: { marginTop: '20px' } },
+            React.createElement('button', { className: `button ${button.class}` }, button.text)
+          )
+        )
+      );
+    };
 
-        <!-- DRESSING PAGE -->
-        <div id="page-dressing" class="page">
-            <div class="empty-state">
-                <h2 class="serif" style="font-size: 26px; margin-bottom: 10px;">Mon Dressing</h2>
-                <p style="color: #8A8A86; margin-bottom: 20px;">Vos pièces en vente et échanges</p>
-                <div class="stat-grid">
-                    <div class="stat-box">
-                        <div class="stat-number">3</div>
-                        <div class="stat-label">Pièces actives</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number">5</div>
-                        <div class="stat-label">Offres reçues</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number">88</div>
-                        <div class="stat-label">Score confiance 🏆</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number">12</div>
-                        <div class="stat-label">Vendus</div>
-                    </div>
-                </div>
-                <div style="font-size: 11px; color: #8A8A86; text-align: center; margin: 20px 0;">Commission Lokko : 8% par vente</div>
-                <button class="btn-primary">+ Ajouter une pièce</button>
-            </div>
-        </div>
+    // Application principale
+    const App = () => {
+      const [activeTab, setActiveTab] = useState('user');
 
-        <!-- BIDS PAGE -->
-        <div id="page-bids" class="page">
-            <div style="padding: 20px;">
-                <h2 class="serif" style="margin-bottom: 16px;">Vos offres</h2>
-                <div id="bids-container"></div>
-            </div>
-        </div>
-
-        <!-- EXCHANGE PAGE -->
-        <div id="page-exchange" class="page">
-            <div class="empty-state">
-                <h2 class="serif" style="font-size: 26px; margin-bottom: 10px;">Loop Bartering</h2>
-                <p style="color: #8A8A86; margin-bottom: 20px;">Proposez des pièces en échange d'autres pièces</p>
-                <div style="background: #1C1C1C; padding: 16px; border-radius: 12px; margin: 10px 0; text-align: center;">
-                    <div style="font-size: 32px; margin-bottom: 8px;">🔄</div>
-                    <div style="font-size: 13px; font-weight: 500; margin-bottom: 4px;">Plusieurs utilisateurs peuvent proposer des pièces</div>
-                    <div style="font-size: 11px; color: #8A8A86;">Vous validez plusieurs échanges en ordre de préférence</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- BID MODAL -->
-    <div id="bid-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h2 class="modal-title">Faire une offre privée</h2>
-            <div style="text-align: center; margin-bottom: 20px;">
-                <img id="modal-product-img" src="" alt="" style="width: 80px; height: 80px; object-fit: cover; border-radius: 12px; margin-bottom: 12px;">
-                <p id="modal-product-name" style="color: #C5A256; font-family: 'Playfair Display', serif; margin-bottom: 4px;"></p>
-                <p id="modal-product-price" style="color: #C5A256; font-size: 14px;"></p>
-            </div>
-            <input type="number" id="bid-amount" class="bid-input" placeholder="Votre offre en €">
-            <p id="min-bid-text" class="min-bid"></p>
-            <button class="btn-primary" onclick="placeBid()">Valider l'offre</button>
-            <button class="btn-secondary" onclick="closeModal()">Annuler</button>
-        </div>
-    </div>
-
-    <script>
-        const products = [
-            {
-                id: 1, title: 'Chanel Classic Flap Bag', brand: 'Chanel', description: 'Authentique, taille petite', price: 3200, estimated: 3500, size: 'S', condition: 'Like New',
-                images: ['https://picsum.photos/400/500?random=1'], trust_score: 92, time_remaining: '46h', owner: 'amina_style', min_bid: 2450
-            },
-            {
-                id: 2, title: 'Nike Air Max 90', brand: 'Nike', description: 'Nouvelles, taille 42', price: 145, estimated: 180, size: 'M', condition: 'New',
-                images: ['https://picsum.photos/400/500?random=2'], trust_score: 88, time_remaining: '38h', owner: 'yassine_lux', min_bid: 126
-            },
-            {
-                id: 3, title: 'Lemarié Paris — Robe Soirée', brand: 'Lemarié', description: 'Pièce unique, parfait état', price: 850, estimated: 1000, size: 'M', condition: 'Like New',
-                images: ['https://picsum.photos/400/500?random=3'], trust_score: 95, time_remaining: '22h', owner: 'sara_chic', min_bid: 700
-            },
-            {
-                id: 4, title: 'Vintage Levi\'s 501', brand: 'Levi\'s', description: 'Années 70, authentique', price: 120, estimated: 150, size: 'L', condition: 'Good',
-                images: ['https://picsum.photos/400/500?random=4'], trust_score: 85, time_remaining: '40h', owner: 'karim_vintage', min_bid: 105
-            },
-            {
-                id: 5, title: 'Rolex Submariner', brand: 'Rolex', description: 'Année 2018, boîte et papiers', price: 6500, estimated: 7200, size: 'S', condition: 'Like New',
-                images: ['https://picsum.photos/400/500?random=5'], trust_score: 97, time_remaining: '15h', owner: 'amina_style', min_bid: 5040
-            },
-            {
-                id: 6, title: 'Adidas Yeezy Boost 350', brand: 'Adidas', description: 'Taille 43, portées 3 fois', price: 220, estimated: 280, size: 'M', condition: 'Good',
-                images: ['https://picsum.photos/400/500?random=6'], trust_score: 90, time_remaining: '28h', owner: 'yassine_lux', min_bid: 196
-            }
-        ];
-
-        const AI_CARD = {
-            id: 'ai_look_1', is_ai_card: true, title: 'Look du Jour', description: 'Pièce IA recommandée pour vous',
-            matching_score: 94, product: {
-                id: 99, brand: 'Exchange', title: 'Maison Margiela Replica', description: 'Pièce d\'échange trouvée par l\'IA',
-                images: ['https://picsum.photos/400/500?random=7'], trust_score: 96
-            }
-        };
-
-        let currentProduct = null;
-        let swipes = [];
-        let bids = [];
-
-        function renderProductCard(product) {
-            if (product.is_ai_card) {
-                return `
-                    <div class="ai-card">
-                        <div class="ai-badge">✨ LOOK DU JOUR — RECOMMANDÉ PAR L'IA</div>
-                        <h3 style="font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 8px;">${product.product.brand} — ${product.product.title}</h3>
-                        <p style="color: #8A8A86; font-size: 14px; margin-bottom: 10px;">${product.product.description}</p>
-                        <div style="background: rgba(197,162,86,0.15); color: #C5A256; font-size: 12px; font-weight: 500; padding: 8px; border-radius: 8px;">
-                            🤖 ${product.matching_score}% de correspondance avec votre style
-                        </div>
-                    </div>
-                `;
-            }
-
-            return `
-                <div class="product-card">
-                    <div style="position: relative;">
-                        <img src="${product.images[0]}" alt="${product.title}" style="width: 100%; height: 480px; object-fit: cover;">
-                        <div class="badge badge-brand">${product.brand}</div>
-                        <div class="badge badge-timer">⏱ ${product.time_remaining} restant</div>
-                    </div>
-                    <div class="product-info">
-                        <div style="display: flex; gap: 8px; margin-bottom: 6px;">
-                            <span class="trust-badge">🏆 ${product.trust_score} IA</span>
-                        </div>
-                        <h3 class="product-title">${product.title}</h3>
-                        <div style="font-family: 'Playfair Display', serif; font-size: 14px; color: #C5A256; margin-bottom: 6px;">${product.brand}</div>
-                        <div class="product-meta">
-                            <span>📏 Taille ${product.size}</span>
-                            <span>✨ ${product.condition}</span>
-                            <span>👤 ${product.owner}</span>
-                        </div>
-                        <div class="price-overlay hidden" id="price-${product.id}">
-                            <div class="price">${product.price} €</div>
-                            <div class="price-label">À partir de</div>
-                        </div>
-                    </div>
-                    <div class="swipe-buttons">
-                        <button class="btn btn-pass" onclick="swipeProduct(${product.id}, 'left')">← Passer</button>
-                        <button class="btn btn-eye" onclick="showPrice(${product.id})">👁</button>
-                        <button class="btn btn-offer" onclick="showBidModal(${product.id})">Offrir →</button>
-                    </div>
-                </div>
-            `;
+      // Données des écrans utilisateur
+      const userScreens = [
+        {
+          title: '1. ACCUEIL',
+          description: 'Écran d\'accueil avec les exercices disponibles et les séances en cours.',
+          features: [
+            'Liste des exercices du pack',
+            'Séances en cours et niveaux (débutant/intermédiaire/avancé)',
+            'Navigation vers les exercices',
+            'Historique et progression',
+            'Profil utilisateur'
+          ],
+          badges: [{ text: 'Débutant', type: 'badge-info' }, { text: 'Intermédiaire', type: 'badge-success' }, { text: 'Avancé', type: 'badge-warning' }]
+        },
+        {
+          title: '2. CHOIX DE LA VUE',
+          description: 'Sélection de la vue pour la séance (face ou profil).',
+          features: [
+            'Choix entre vue de face et vue de profil',
+            'Conseil d\'espace pour le cadrage',
+            'Transition vers la calibration'
+          ],
+          button: { text: 'Choisir la vue', class: 'button-primary' }
+        },
+        {
+          title: '3. CALIBRATION',
+          description: 'Calibration de la distance et des proportions corporelles.',
+          features: [
+            'Mesure de distance AR (1,85m → 2,00m)',
+            'Validation de la taille enregistrée',
+            'Ajustement automatique du modèle à la morphologie',
+            'Messages contextuels (Reculez, Distance OK)'
+          ],
+          alert: { type: 'alert-success', text: 'Distance idéale : 2,00m ✓' },
+          button: { text: 'Commencer la calibration', class: 'button-primary' }
+        },
+        {
+          title: '4. PRÊT POUR LA SÉANCE',
+          description: 'Écran de préparation avant de démarrer la séance.',
+          features: [
+            'Affichage du score initial',
+            'Bouton "Démarrer" avec icône de lecture',
+            'Indicateurs de série et de répétitions',
+            'Temps de séance'
+          ],
+          button: { text: 'Démarrer la séance', class: 'button-primary' }
+        },
+        {
+          title: '5. ENTRAÎNEMENT',
+          description: 'Écran principal de l\'exercice en temps réel.',
+          features: [
+            'Filtre couleur en temps réel (vert/rouge/orange)',
+            'Score circulaire dynamique',
+            'Badges débloqués',
+            'Feedback textuel contextuel',
+            'Score en continu avec mise à jour lissée'
+          ],
+          score: { class: 'score-green', value: '85%' },
+          badges: [{ text: 'Score excellent', type: 'badge-success' }]
+        },
+        {
+          title: '6. ERREURS & CORRECTIONS',
+          description: 'Détection et affichage des erreurs de posture.',
+          features: [
+            'Erreur de posture détectée (score rouge)',
+            'Message de correction contextuel',
+            'Correction en cours (score orange)',
+            'Posture corrigée (score vert)',
+            'Badge déverrouillé'
+          ],
+          alert: { type: 'alert-danger', text: 'ErReur de posture détectée !' },
+          badges: [{ text: 'Constance', type: 'badge-warning' }, { text: 'Série stable', type: 'badge-success' }]
+        },
+        {
+          title: '7. FIN DE SÉANCE',
+          description: 'Résumé de la séance et décompte des badges.',
+          features: [
+            'Score final',
+            'Comparaison avec la dernière séance',
+            'Badges débloqués',
+            'Options "Rejouer" ou "Retour à l\'accueil"'
+          ],
+          score: { class: 'score-green', value: '78%' },
+          badges: [{ text: '+5% par rapport à la dernière fois', type: 'badge-success' }]
+        },
+        {
+          title: '8. HISTORIQUE',
+          description: 'Historique des séances et scores.',
+          features: [
+            'Liste chronologique des séances',
+            'Scores par date',
+            'Progression sur le temps',
+            'Export des données'
+          ],
+          badges: [{ text: '10.08.2023 - 89%', type: 'badge-info' }, { text: '21.08.2023 - 94%', type: 'badge-success' }]
+        },
+        {
+          title: '9. AUTO-CAPTURE',
+          description: 'Guide de positionnement pour l\'ajout d\'un nouvel exercice.',
+          features: [
+            'Sélection d\'exercice de la bibliothèque',
+            'Guide de positionnement avec silhouette générique',
+            'Capture face puis profil',
+            'Contrôle qualité automatique',
+            'Validation et activation de l\'exercice'
+          ],
+          alert: { type: 'alert-warning', text: 'Guide de positionnement : placez-vous dans le cadre' }
+        },
+        {
+          title: '10. PARAMÈTRES',
+          description: 'Paramètres de l\'utilisateur et gestion des données.',
+          features: [
+            'Hauteur / Poids',
+            'Retour sonore (bip/voix)',
+            'Consentement biométriques',
+            'Suppression des données (RGPD)',
+            'Badges et motivation'
+          ],
+          button: { text: 'Supprimer mes données', class: 'button-secondary' }
         }
+      ];
 
-        function showPrice(productId) {
-            const priceEl = document.getElementById('price-' + productId);
-            if (priceEl) {
-                priceEl.classList.toggle('hidden');
-            }
+      // Données des écrans coach
+      const coachScreens = [
+        {
+          title: 'C1. CONNEXION COACH',
+          description: 'Connexion au compte coach avec accès réservé.',
+          features: [
+            'Email et mot de passe',
+            'Option "Se souvenir de moi"',
+            'Connexion avec Face ID',
+            'Mot de passe oublié'
+          ],
+          button: { text: 'Se connecter', class: 'button-primary' }
+        },
+        {
+          title: 'C2. TABLEAU DE BORD CLIENTS',
+          description: 'Liste des clients avec pack standard actif.',
+          features: [
+            'Recherche de client',
+            'Liste des clients avec progression',
+            'Navigation vers les fiches clients'
+          ],
+          badges: [{ text: 'Sarah Martin - 1/10 exercices', type: 'badge-info' }, { text: 'Thomas Bernard - 3/10 exercices', type: 'badge-success' }]
+        },
+        {
+          title: 'C3. FICHE CLIENT',
+          description: 'Fiche détaillée d\'un client avec ses exercices.',
+          features: [
+            'Photo et informations du client',
+            'Date d\'achat et type de pack',
+            'Email et numéro de téléphone',
+            'Taille et poids',
+            'Exercices enregistrés'
+          ],
+          button: { text: '+ Nouvel exercice', class: 'button-primary' }
+        },
+        {
+          title: 'C4. BIBLIOTHÈQUE D\'EXERCICES',
+          description: 'Grille des exercices disponibles avec typage dynamique/statique.',
+          features: [
+            'Squat, Pompe, Fente, Gainage, Soulevé de terre, Tractions',
+            'Typage dynamique (DTW) ou statique (posture + minuteur)',
+            'Sélection d\'exercice'
+          ],
+          badges: [{ text: 'Dynamique', type: 'badge-success' }, { text: 'Statique', type: 'badge-info' }]
+        },
+        {
+          title: 'C5. CONFIGURATION DES POINTS CLÉS',
+          description: 'Sélection des points clés à surveiller pour l\'exercice.',
+          features: [
+            'Genoux, Hanches, Bas du dos, Chevilles',
+            'Épaules, Nuque (optionnel)',
+            'Validation et continuation'
+          ],
+          button: { text: 'Valider et continuer', class: 'button-primary' }
+        },
+        {
+          title: 'C6-C7. CAPTURE VIDÉO',
+          description: 'Capture vidéo de référence (vue face et profil).',
+          features: [
+            'Capture de 5 secondes (dynamique) ou 2-3 secondes (statique)',
+            'Vérification automatique des points clés',
+            'Option "Refaire" et "Valider"',
+            'Suppression automatique de la vidéo après extraction'
+          ],
+          alert: { type: 'alert-success', text: 'Tous les points clés sont bien détectés ✓' }
+        },
+        {
+          title: 'C8-C9. RÉCAPITULATIF ET SAUVEGARDE',
+          description: 'Récapitulatif de l\'exercice enregistré.',
+          features: [
+            'Exercice enregistré',
+            'Vue face et vue profil',
+            'Points clés surveillés',
+            'Date d\'enregistrement',
+            'Confirmation de réussite'
+          ],
+          alert: { type: 'alert-success', text: 'Squat enregistré avec succès ✓' },
+          button: { text: 'Sauvegarder', class: 'button-primary' }
         }
+      ];
 
-        function swipeProduct(productId, direction) {
-            const product = products.find(p => p.id === productId);
-            swipes.push({ product, direction });
-            document.getElementById('feed-container').innerHTML = 'Produits swipés : ' + swipes.length;
-        }
+      // Navigation entre les onglets
+      const tabs = [
+        { id: 'user', label: 'Utilisateur' },
+        { id: 'coach', label: 'Coach' },
+        { id: 'workflow', label: 'Workflows' }
+      ];
 
-        function showBidModal(productId) {
-            const product = products.find(p => p.id === productId);
-            currentProduct = product;
-            document.getElementById('modal-product-img').src = product.images[0];
-            document.getElementById('modal-product-name').textContent = product.brand + ' — ' + product.title;
-            document.getElementById('modal-product-price').textContent = 'Prix départ : ' + product.price + ' €';
-            document.getElementById('min-bid-text').textContent = 'Offre minimale : ' + product.min_bid + ' € (70% de l\'estimation ' + product.estimated + ' €)';
-            document.getElementById('bid-modal').style.display = 'flex';
-            document.getElementById('bid-amount').focus();
-        }
+      return React.createElement('div', { className: 'app-container' },
+        React.createElement('div', { className: 'app-header' },
+          React.createElement('div', { className: 'app-title' }, 'Posture Coach'),
+          React.createElement('div', { className: 'app-subtitle' }, 'Application d\'entraînement physique avec vision par ordinateur')
+        ),
+        React.createElement('div', { className: 'main-content' },
+          React.createElement('div', { className: 'screen-nav' },
+            tabs.map(tab =>
+              React.createElement('div', {
+                key: tab.id,
+                className: `screen-tab ${activeTab === tab.id ? 'active' : ''}`,
+                onClick: () => setActiveTab(tab.id)
+              }, tab.label)
+            )
+          ),
 
-        function closeModal() {
-            document.getElementById('bid-modal').style.display = 'none';
-        }
+          // Contenu selon l'onglet actif
+          activeTab === 'user' && React.createElement('div', { className: 'workflow-grid' },
+            userScreens.map((screen, index) =>
+              React.createElement(ScreenCard, {
+                key: index,
+                ...screen
+              })
+            )
+          ),
 
-        function placeBid() {
-            const amount = parseFloat(document.getElementById('bid-amount').value);
-            if (amount < currentProduct.min_bid) {
-                alert('Offre minimale : ' + currentProduct.min_bid + ' €');
-                return;
-            }
-            bids.push({ product: currentProduct, amount });
-            closeModal();
-            showPage('bids');
-            renderBids();
-        }
+          activeTab === 'coach' && React.createElement('div', { className: 'workflow-grid' },
+            coachScreens.map((screen, index) =>
+              React.createElement(ScreenCard, {
+                key: index,
+                ...screen
+              })
+            )
+          ),
 
-        function renderBids() {
-            const container = document.getElementById('bids-container');
-            if (bids.length === 0) {
-                container.innerHTML = '<div class="empty-state"><h2>Aucune offre</h2><p>Vos offres privées apparaîtront ici</p></div>';
-                return;
-            }
+          activeTab === 'workflow' && React.createElement('div', { className: 'workflow-grid' },
+            React.createElement('div', { className: 'screen-card' },
+              React.createElement('div', { className: 'screen-header' }, 'Workflow Utilisateur'),
+              React.createElement('div', { className: 'screen-body' },
+                React.createElement('div', { className: 'screen-title' }, 'Workflow d\'entraînement'),
+                React.createElement('div', { className: 'workflow-arrow' },
+                  React.createElement('div', { className: 'arrow-icon' }, '1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10')
+                ),
+                React.createElement('div', { className: 'screen-description' },
+                  'L\'utilisateur suit le parcours : Accueil → Choix de vue → Calibration → Prêt pour séance → Entraînement → Erreurs & Corrections → Fin de séance → Historique → Auto-capture → Paramètres'
+                ),
+                React.createElement('div', { className: 'legend' },
+                  React.createElement('div', { className: 'legend-item' },
+                    React.createElement('div', { className: 'legend-dot green' }),
+                    'Posture correcte (Dans la tolérance)'
+                  ),
+                  React.createElement('div', { className: 'legend-item' },
+                    React.createElement('div', { className: 'legend-dot orange' }),
+                    'Posture à corriger (Écart modéré)'
+                  ),
+                  React.createElement('div', { className: 'legend-item' },
+                    React.createElement('div', { className: 'legend-dot red' }),
+                    'Posture incorrecte (Écart important)'
+                  )
+                )
+              )
+            ),
 
-            container.innerHTML = bids.map(bid => `
-                <div style="background: #1C1C1C; padding: 16px; border-radius: 12px; margin-bottom: 12px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <strong>${bid.product.title}</strong>
-                        <span style="color: #C5A256; font-weight: 600;">${bid.amount} €</span>
-                    </div>
-                    <p style="color: #8A8A86; font-size: 13px; margin-bottom: 8px;">${bid.product.brand} — ${bid.product.description}</p>
-                    <div style="display: flex; gap: 8px;">
-                        <span class="trust-badge">⏱ En attente</span>
-                        <span style="font-size: 11px; color: #D45C5C;">12h restants</span>
-                    </div>
-                </div>
-            `).join('');
-        }
+            React.createElement('div', { className: 'screen-card' },
+              React.createElement('div', { className: 'screen-header' }, 'Workflow Coach'),
+              React.createElement('div', { className: 'screen-body' },
+                React.createElement('div', { className: 'screen-title' }, 'Workflow d\'enregistrement'),
+                React.createElement('div', { className: 'workflow-arrow' },
+                  React.createElement('div', { className: 'arrow-icon' }, 'C1 → C2 → C3 → C4 → C5 → C6 → C7 → C8 → C9 → C10')
+                ),
+                React.createElement('div', { className: 'screen-description' },
+                  'Le coach suit le parcours : Connexion → Tableau de bord → Fiche client → Bibliothèque → Points clés → Capture face → Vérification → Capture profil → Vérification → Sauvegarde'
+                ),
+                React.createElement('div', { className: 'screen-description' },
+                  'Les vidéos de référence sont extraites (landmarks) et les vidéos brutes sont supprimées automatiquement après extraction.'
+                )
+              )
+            )
+          )
+        )
+      );
+    };
 
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('tab-active'));
-            document.getElementById('page-' + pageId).classList.add('active');
-            const tabs = document.querySelectorAll('.tab');
-            if (pageId === 'feed') { tabs[0].classList.add('tab-active'); }
-            if (pageId === 'dressing') { tabs[1].classList.add('tab-active'); }
-            if (pageId === 'bids') { tabs[2].classList.add('tab-active'); }
-            if (pageId === 'exchange') { tabs[3].classList.add('tab-active'); }
-
-            if (pageId === 'feed') {
-                document.getElementById('feed-container').innerHTML = '';
-                products.forEach((product, index) => {
-                    document.getElementById('feed-container').innerHTML += renderProductCard(product);
-                    if ((index + 1) % 3 === 0 && index < products.length - 1) {
-                        document.getElementById('feed-container').innerHTML += renderProductCard(AI_CARD);
-                    }
-                });
-            }
-
-            if (pageId === 'bids') {
-                renderBids();
-            }
-        }
-
-        // Initial render
-        document.getElementById('feed-container').innerHTML = '';
-        products.forEach((product, index) => {
-            document.getElementById('feed-container').innerHTML += renderProductCard(product);
-            if ((index + 1) % 3 === 0 && index < products.length - 1) {
-                document.getElementById('feed-container').innerHTML += renderProductCard(AI_CARD);
-            }
-        });
-    </script>
+    // Rendu de l'application
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(App));
+  </script>
 </body>
 </html>
