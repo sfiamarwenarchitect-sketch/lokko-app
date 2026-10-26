@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0A0A0A">
+  <title>LOKKO — Luxury Marketplace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blanc-pur: #FFFFFF;
+      --gris-doux: #F5F5F7;
+      --noir-de-jais: #0A0A0A;
+      --off-white: #F9F9F9;
+      --gris-clair: #E8E8E8;
+      --gris-moyen: #9E9E9E;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--noir-de-jais);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    .lokko-app {
+      width: 100%;
+      height: 100vh;
+      max-width: 430px;
+      margin: 0 auto;
+      background: var(--blanc-pur);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-serif { font-family: 'Playfair Display', serif; }
+    .brand-sans { font-family: 'Inter', sans-serif; }
+
+    /* Screen backgrounds */
+    .screen-white {
+      width: 100%;
+      height: 100%;
+      background: var(--blanc-pur);
+      overflow-y: auto;
+    }
+
+    .lokko-screen-black {
+      width: 100%;
+      height: 100%;
+      background: var(--noir-de-jais);
+      position: relative;
+    }
+
+    .screen-header {
+      padding: 48px 24px 16px;
+      text-align: center;
+    }
+
+    .screen-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: 2px;
+    }
+
+    .screen-content { padding: 24px; }
+
+    .search-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--gris-clair);
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      outline: none;
+      background: var(--gris-doux);
+    }
+
+    /* Dressing */
+    .dressing-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 2px;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--gris-doux);
+    }
+
+    .tab {
+      padding: 8px 24px;
+      border-radius: 20px;
+      border: 1px solid var(--gris-clair);
+      background: var(--blanc-pur);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gris-moyen);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      background: var(--noir-de-jais);
+      color: var(--blanc-pur);
+      border-color: var(--noir-de-jais);
+    }
+
+    .dressing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      padding: 2px;
+    }
+
+    .dressing-item {
+      aspect-ratio: 3/4;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .dressing-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .item-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 24px 12px 12px;
+      background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+      color: white;
+    }
+
+    .item-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      display: block;
+    }
+
+    .item-status {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    /* Product card (swipe) */
+    .product-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
+    }
+
+    .product-card.swipe-left {
+      transform: translateX(-130%) rotate(-15deg);
+      opacity: 0;
+    }
+
+    .product-card.swipe-right {
+      transform: translateX(130%) rotate(15deg);
+      opacity: 0;
+    }
+
+    .product-card.swipe-up {
+      transform: translateY(-130%) scale(0.95);
+      opacity: 0;
+    }
+
+    .card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 100px 24px 28px;
+      background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+      color: white;
+    }
+
+    .card-brand {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    .card-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      margin-top: 8px;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .card-price.visible {
+      opacity: 0.5;
+      transform: translateY(0);
+    }
+
+    .card-meta {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .trust-badge, .timer-badge {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.12);
+      padding: 3px 8px;
+      border-radius: 10px;
+    }
+
+    .action-bar {
+      position: absolute;
+      bottom: 110px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      z-index: 20;
+    }
+
+    .action-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 22px;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(8px);
+      background: rgba(255,255,255,0.15);
+      color: white;
+    }
+
+    .action-btn.eye-btn {
+      background: white;
+      color: var(--noir-de-jais);
+      width: 62px;
+      height: 62px;
+      font-size: 26px;
+    }
+
+    .action-btn:active {
+      transform: scale(0.88);
+    }
+
+    /* Feed end */
+    .feed-end {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      flex-direction: column;
+      color: white;
+    }
+
+    .feed-end h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .feed-end p {
+      font-size: 14px;
+      opacity: 0.7;
+    }
+
+    /* Bottom navigation */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: var(--blanc-pur);
+      border-top: 1px solid var(--gris-doux);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 50;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      padding: 8px 12px;
+      border: none;
+      background: none;
+      color: var(--gris-moyen);
+      font-family: 'Inter', sans-serif;
+      transition: color 0.2s;
+    }
+
+    .nav-item.active { color: var(--noir-de-jais); }
+
+    .nav-icon { font-size: 22px; }
+
+    .nav-label {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .nav-publish {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--noir-de-jais);
+      color: var(--blanc-pur);
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      margin-top: -20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    /* Profile */
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--gris-doux);
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .profile-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .trust-score {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 14px;
+      background: var(--gris-doux);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+    }
+
+    .style-slider-group { margin-bottom: 28px; padding: 0 24px; }
+
+    .style-slider-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--gris-moyen);
+      margin-bottom: 12px;
+    }
+
+    .style-slider {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 4px;
+      background: var(--gris-clair);
+      border-radius: 2px;
+      outline: none;
+    }
+
+    .style-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--noir-de-jais);
+      cursor: pointer;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--gris-moyen);
+    }
+
+    /* Studio */
+    .studio-screen {
+      padding: 48px 24px;
+    }
+
+    .studio-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .studio-subtitle {
+      font-size: 12px;
+      color: var(--gris-moyen);
+      text-align: center;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .studio-step { margin-bottom: 24px; }
+
+    .studio-step-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--gris-moyen);
+      margin-bottom: 10px;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .photo-slot {
+      aspect-ratio: 1;
+      border: 2px dashed var(--gris-clair);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--gris-clair);
+      background: var(--gris-doux);
+    }
+
+    .photo-slot.filled {
+      border-style: solid;
+      border-color: var(--noir-de-jais);
+      background: var(--noir-de-jais);
+      color: var(--blanc-pur);
+    }
+
+    .studio-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--gris-clair);
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      outline: none;
+      background: var(--blanc-pur);
+      margin-bottom: 8px;
+    }
+
+    .studio-ai-tag {
+      display: inline-block;
+      padding: 4px 10px;
+      background: var(--gris-doux);
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--gris-moyen);
+      margin: 4px 4px 4px 0;
+    }
+
+    .toggle-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .toggle-option {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid var(--gris-clair);
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .toggle-option.active {
+      background: var(--noir-de-jais);
+      color: var(--blanc-pur);
+      border-color: var(--noir-de-jais);
+    }
+
+    .btn-publish {
+      width: 100%;
+      padding: 18px;
+      border: none;
+      border-radius: 14px;
+      background: var(--noir-de-jais);
+      color: var(--blanc-pur);
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 24px;
+    }
+
+    /* Bid sheet */
+    .sheet-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: flex-end;
+      z-index: 100;
+    }
+
+    .sheet-content {
+      background: var(--blanc-pur);
+      border-radius: 20px 20px 0 0;
+      padding: 24px;
+      padding-bottom: calc(24px + env(safe-area-inset-bottom));
+      max-height: 70vh;
+      width: 100%;
+    }
+
+    .sheet-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--gris-clair);
+      border-radius: 2px;
+      margin: 0 auto 16px;
+    }
+
+    .sheet-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .sheet-subtitle {
+      font-size: 13px;
+      color: var(--gris-moyen);
+      margin-bottom: 20px;
+    }
+
+    .bid-input-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .bid-input {
+      flex: 1;
+      padding: 14px 16px;
+      border: 1px solid var(--gris-clair);
+      border-radius: 12px;
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 400;
+      outline: none;
+    }
+
+    .bid-currency {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--gris-moyen);
+    }
+
+    .bid-rule {
+      font-size: 12px;
+      color: var(--gris-moyen);
+      margin-bottom: 20px;
+      padding: 10px 12px;
+      background: var(--gris-doux);
+      border-radius: 8px;
+    }
+
+    .bid-rule strong { color: var(--noir-de-jais); }
+
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 14px;
+      background: var(--noir-de-jais);
+      color: white;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-cancel {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--gris-clair);
+      border-radius: 14px;
+      background: var(--blanc-pur);
+      color: var(--gris-moyen);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // ==================== DONNEES ====================
+    const MOCK_PRODUCTS = [
+      { id: 1, brand: 'Chanel', title: 'Classic Flap Bag', price: 4200, currency: '€', image: 'https://images.unsplash.com/photo-1548031762-8ae7b1b20b35?w=800&h=1200&fit=crop', category: 'Sac', seller: 'Amina T.', trust: 96, timer: '47:12:33' },
+      { id: 2, brand: 'Hermès', title: 'Birkin 30 — Noir Gold', price: 12500, currency: '€', image: 'https://images.unsplash.com/photo-1566150706505-5db913b6e6f7?w=800&h=1200&fit=crop', category: 'Sac', seller: 'Leila M.', trust: 98, timer: '23:45:10' },
+      { id: 3, brand: 'Dior', title: 'Lady Dior — Rose', price: 3800, currency: '€', image: 'https://images.unsplash.com/photo-1594271804399-c33b40e32130?w=800&h=1200&fit=crop', category: 'Sac', seller: 'Yassine B.', trust: 92, timer: '71:30:00' },
+      { id: 4, brand: 'Vogue', title: 'Trench Coat — Camel', price: 850, currency: '€', image: 'https://images.unsplash.com/photo-1548621336-0e27c7a8b12b?w=800&h=1200&fit=crop', category: 'Vêtement', seller: 'Sofia K.', trust: 89, timer: '11:59:59' },
+      { id: 5, brand: 'Nike', title: 'Air Max 1 — Heritage', price: 320, currency: '€', image: 'https://images.unsplash.com/photo-1542292179-06993e9a03df?w=800&h=1200&fit=crop', category: 'Chaussure', seller: 'Rami H.', trust: 94, timer: '48:00:00' },
+      { id: 6, brand: 'Gucci', title: 'Marmont Bag — Noir', price: 2400, currency: '€', image: 'https://images.unsplash.com/photo-1585128744913-ff175e5ac2a0?w=800&h=1200&fit=crop', category: 'Sac', seller: 'Zahra S.', trust: 97, timer: '10:05:44' }
+    ];
+
+    const DRESSING_ITEMS = [
+      { id: 1, brand: 'Chanel', title: 'Classic Flap Bag', price: 4200, status: 'Enchère ouverte', type: 'vente', image: 'https://images.unsplash.com/photo-1548031762-8ae7b1b20b35?w=400&h=533&fit=crop' },
+      { id: 2, brand: 'Dior', title: 'Lady Dior', price: 3800, status: 'Timer 12h', type: 'vente', image: 'https://images.unsplash.com/photo-1594271804399-c33b40e32130?w=400&h=533&fit=crop' },
+      { id: 3, brand: 'Vintage', title: 'Rolex Datejust', price: 6500, status: 'Échange', type: 'echange', image: 'https://images.unsplash.com/photo-1547913247-953d4e7b8099?w=400&h=533&fit=crop' },
+      { id: 4, brand: 'Gucci', title: 'Marmont', price: 2400, status: 'Vendu', type: 'vente', image: 'https://images.unsplash.com/photo-1585128744913-ff175e5ac2a0?w=400&h=533&fit=crop' },
+      { id: 5, brand: 'Nike', title: 'Air Max 1', price: 320, status: 'Échange', type: 'echange', image: 'https://images.unsplash.com/photo-1542292179-06993e9a03df?w=400&h=533&fit=crop' }
+    ];
+
+    // ==================== SWIPE FEED ====================
+    function SwipeFeed() {
+      const [currentIndex, setCurrentIndex] = useState(0);
+      const [priceVisible, setShowPrice] = useState(false);
+      const [swipeDir, setShowSwipe] = useState(null);
+      const [bidProduct, setBidProduct] = useState(null);
+      const touchStart = useRef(null);
+
+      const currentProduct = MOCK_PRODUCTS[currentIndex];
+      const isLast = currentIndex >= MOCK_PRODUCTS.length - 1;
+
+      useEffect(() => {
+        if (swipeDir) return;
+        const timer = setTimeout(() => { setShowPrice(true); }, 3000);
+        return () => clearTimeout(timer);
+      }, [currentIndex, swipeDir]);
+
+      const handleSwipe = (dir) => {
+        setShowSwipe(dir);
+        setTimeout(() => {
+          if (currentIndex < MOCK_PRODUCTS.length - 1) {
+            setCurrentIndex(prev => prev + 1);
+          }
+          setShowSwipe(null);
+          setShowPrice(false);
+        }, 350);
+      };
+
+      const handleTouchStart = (e) => {
+        touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      };
+
+      const handleTouchEnd = (e) => {
+        if (!touchStart.current) return;
+        const touch = e.changedTouches[0];
+        const dx = touch.clientX - touchStart.current.x;
+        const dy = touch.clientY - touchStart.current.y;
+        if (Math.abs(dx) > 80 && dx < 0) handleSwipe('left');
+        else if (Math.abs(dx) > 80 && dx > 0) handleSwipe('right');
+        else if (Math.abs(dy) > 80 && dy < 0) handleSwipe('up');
+        touchStart.current = null;
+      };
+
+      if (isLast) {
+        return React.createElement('div', { className: 'lokko-screen-black' },
+          React.createElement('div', { className: 'feed-end' },
+            React.createElement('h2', { className: 'brand-serif' }, 'FIN DU FEED'),
+            React.createElement('p', { className: 'brand-sans' }, 'Revenez plus tard')
+          )
+        );
+      }
+
+      if (!currentProduct) return null;
+
+      const swipeClass = swipeDir === 'left' ? 'swipe-left' : 
+                         swipeDir === 'right' ? 'swipe-right' : 
+                         swipeDir === 'up' ? 'swipe-up' : '';
+
+      return React.createElement('div', { className: 'lokko-screen-black' },
+        React.createElement('div', {
+          className: 'product-card ' + swipeClass,
+          onTouchStart: handleTouchStart,
+          onTouchEnd: handleTouchEnd,
+          style: { backgroundImage: 'url(' + currentProduct.image + ')' }
+        },
+          React.createElement('div', { className: 'card-overlay' },
+            React.createElement('h2', { className: 'brand-serif card-brand' }, currentProduct.brand),
+            React.createElement('p', { className: 'brand-sans card-title' }, currentProduct.title),
+            React.createElement('div', { className: 'card-price' },
+              currentProduct.price + ' ' + currentProduct.currency
+            ),
+            React.createElement('div', { className: 'card-meta' },
+              React.createElement('span', { className: 'trust-badge' }, currentProduct.seller + ' \u2022 Trust ' + currentProduct.trust + '%'),
+              React.createElement('span', { className: 'timer-badge' }, '\u2656 ' + currentProduct.timer)
+            )
+          ),
+          React.createElement('div', { className: 'action-bar' },
+            React.createElement('button', { className: 'action-btn', onClick: () => setBidProduct(currentProduct) }, '\u21c4'),
+            React.createElement('button', { className: 'action-btn eye-btn', onClick: () => setBidProduct(currentProduct) }, '\U0001f441'),
+            React.createElement('button', { className: 'action-btn', onClick: () => setBidProduct(currentProduct) }, '\U0001f517')
+          )
+        ),
+        bidProduct ? React.createElement('div', { className: 'sheet-overlay' },
+          React.createElement('div', { className: 'sheet-content' },
+            React.createElement('div', { className: 'sheet-handle' }),
+            React.createElement('h3', { className: 'sheet-title' }, bidProduct.brand + ' ' + bidProduct.title),
+            React.createElement('p', { className: 'sheet-subtitle' }, 'Offre priv\u00e9e \u2014 Ench\u00e8re boucle'),
+            React.createElement('div', { className: 'bid-rule' },
+              'R\u00e8gle des 70% : l\'offre doit \u00eatre \u2265 ' + Math.round(currentProduct.price * 0.70) + '€ (70% de l\'estimation)'
+            ),
+            React.createElement('button', { className: 'btn-submit', onClick: () => setBidProduct(null) }, 'Fermer')
+          )
+        ) : null
+      );
+    }
+
+    // ==================== SEARCH SCREEN ====================
+    function SearchScreen() {
+      return React.createElement('div', { className: 'screen-white' },
+        React.createElement('div', { className: 'screen-header' },
+          React.createElement('h2', { className: 'brand-serif' }, 'Recherche')
+        ),
+        React.createElement('div', { className: 'screen-content' },
+          React.createElement('input', { className: 'search-input', placeholder: 'Rechercher une pi\u00e8ce...' })
+        )
+      );
+    }
+
+    // ==================== STUDIO SCREEN ====================
+    function StudioScreen() {
+      return React.createElement('div', { className: 'screen-white' },
+        React.createElement('div', { className: 'studio-screen' },
+          React.createElement('div', { className: 'studio-title' }, 'Studio D\u00e9p\u00f4t'),
+          React.createElement('div', { className: 'studio-subtitle' }, 'Cr\u00e9ation assist\u00e9e par l\'IA'),
+          React.createElement('div', { className: 'studio-step' },
+            React.createElement('div', { className: 'studio-step-label' }, '1. Photos obligatoires'),
+            React.createElement('div', { className: 'photo-grid' },
+              React.createElement('div', { className: 'photo-slot filled' }, '\U0001f4d7'),
+              React.createElement('div', { className: 'photo-slot' }, '+'),
+              React.createElement('div', { className: 'photo-slot' }, '+'),
+              React.createElement('div', { className: 'photo-slot' }, '+')
+            ),
+            React.createElement('div', { className: 'studio-step-label' }, '1 photo d\'ensemble + 3 d\u00e9tails')
+          ),
+          React.createElement('div', { className: 'studio-step' },
+            React.createElement('div', { className: 'studio-step-label' }, '2. Scan IA'),
+            React.createElement('span', { className: 'studio-ai-tag' }, '\U0001f3e7 Marque d\u00e9tect\u00e9e'),
+            React.createElement('span', { className: 'studio-ai-tag' }, '\U0001f4c2 Cat\u00e9gorie'),
+            React.createElement('span', { className: 'studio-ai-tag' }, '\U0001f4cf Taille')
+          ),
+          React.createElement('div', { className: 'studio-step' },
+            React.createElement('div', { className: 'studio-step-label' }, '3. Mode de vente'),
+            React.createElement('div', { className: 'toggle-group' },
+              React.createElement('div', { className: 'toggle-option active' }, '\U0001f4b0 Ench\u00e8re'),
+              React.createElement('div', { className: 'toggle-option' }, '\u21c4 \u00c9change')
+            )
+          ),
+          React.createElement('button', { className: 'btn-publish' }, 'Publier sur LOKKO')
+        )
+      );
+    }
+
+    // ==================== DRESSING SCREEN ====================
+    function DressingScreen() {
+      const [tab, setTab] = useState('vente');
+      const filteredItems = DRESSING_ITEMS.filter(i => i.type === tab);
+
+      return React.createElement('div', { className: 'screen-white' },
+        React.createElement('div', { className: 'screen-header' },
+          React.createElement('h2', { className: 'brand-serif' }, 'Dressing')
+        ),
+        React.createElement('div', { className: 'dressing-tabs' },
+          React.createElement('button', {
+            className: 'tab' + (tab === 'vente' ? ' active' : ''),
+            onClick: () => setTab('vente')
+          }, 'Vente'),
+          React.createElement('button', {
+            className: 'tab' + (tab === 'echange' ? ' active' : ''),
+            onClick: () => setTab('echange')
+          }, '\u00c9change')
+        ),
+        React.createElement('div', { className: 'dressing-grid' },
+          filteredItems.map(item =>
+            React.createElement('div', { key: item.id, className: 'dressing-item' },
+              React.createElement('img', { src: item.image, alt: item.title }),
+              React.createElement('div', { className: 'item-info' },
+                React.createElement('span', { className: 'item-brand brand-serif' }, item.brand),
+                React.createElement('span', { className: 'item-status' }, item.status)
+              )
+            )
+          )
+        )
+      );
+    }
+
+    // ==================== PROFILE SCREEN ====================
+    function ProfileScreen() {
+      return React.createElement('div', { className: 'screen-white' },
+        React.createElement('div', { className: 'screen-header' },
+          React.createElement('div', { className: 'profile-avatar' }, 'M'),
+          React.createElement('div', { className: 'profile-name' }, 'Marwen'),
+          React.createElement('div', { className: 'trust-score' }, '\u2b50 Trust Score: 94%')
+        ),
+        React.createElement('div', { className: 'style-slider-group' },
+          React.createElement('div', { className: 'style-slider-label' }, 'Style'),
+          React.createElement('input', { className: 'style-slider', type: 'range', min: 0, max: 100, defaultValue: 65 }),
+          React.createElement('div', { className: 'slider-labels' },
+            React.createElement('span', null, 'Minimaliste'),
+            React.createElement('span', null, 'Avant-gardiste')
+          )
+        ),
+        React.createElement('div', { className: 'style-slider-group' },
+          React.createElement('div', { className: 'style-slider-label' }, 'Budget'),
+          React.createElement('input', { className: 'style-slider', type: 'range', min: 0, max: 100, defaultValue: 72 }),
+          React.createElement('div', { className: 'slider-labels' },
+            React.createElement('span', null, '300\u20ac'),
+            React.createElement('span', null, '3 000\u20ac')
+          )
+        )
+      );
+    }
+
+    // ==================== NAVIGATION ====================
+    function Navigation({ activeTab, onTabChange }) {
+      return React.createElement('div', { className: 'bottom-nav' },
+        React.createElement('button', {
+          className: 'nav-item' + (activeTab === 'swipe' ? ' active' : ''),
+          onClick: () => onTabChange('swipe')
+        },
+          React.createElement('span', { className: 'nav-icon' }, '\u25c9'),
+          React.createElement('span', { className: 'nav-label' }, 'Swipe')
+        ),
+        React.createElement('button', {
+          className: 'nav-item' + (activeTab === 'search' ? ' active' : ''),
+          onClick: () => onTabChange('search')
+        },
+          React.createElement('span', { className: 'nav-icon' }, '\U0001f50d'),
+          React.createElement('span', { className: 'nav-label' }, 'Recherche')
+        ),
+        React.createElement('button', {
+          className: 'nav-publish',
+          onClick: () => onTabChange('publish')
+        }, '+'),
+        React.createElement('button', {
+          className: 'nav-item' + (activeTab === 'dressing' ? ' active' : ''),
+          onClick: () => onTabChange('dressing')
+        },
+          React.createElement('span', { className: 'nav-icon' }, '\U0001f457'),
+          React.createElement('span', { className: 'nav-label' }, 'Dressing')
+        ),
+        React.createElement('button', {
+          className: 'nav-item' + (activeTab === 'profile' ? ' active' : ''),
+          onClick: () => onTabChange('profile')
+        },
+          React.createElement('span', { className: 'nav-icon' }, '\U0001f464'),
+          React.createElement('span', { className: 'nav-label' }, 'Profil')
+        )
+      );
+    }
+
+    // ==================== APP PRINCIPALE ====================
+    function App() {
+      const [activeTab, setActiveTab] = useState('swipe');
+
+      if (activeTab === 'swipe') {
+        return React.createElement('div', { className: 'lokko-app' },
+          React.createElement(SwipeFeed),
+          React.createElement(Navigation, { activeTab: activeTab, onTabChange: setActiveTab })
+        );
+      }
+
+      const screens = {
+        search: SearchScreen,
+        publish: StudioScreen,
+        dressing: DressingScreen,
+        profile: ProfileScreen
+      };
+
+      const Screen = screens[activeTab];
+
+      return React.createElement('div', { className: 'lokko-app' },
+        React.createElement(Screen),
+        React.createElement(Navigation, { activeTab: activeTab, onTabChange: setActiveTab })
+      );
+    }
+
+    // Montage
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(App));
+  </script>
+</body>
+</html>

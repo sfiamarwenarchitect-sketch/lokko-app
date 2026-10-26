@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>LOKKO — Luxury Marketplace</title>
+  <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ==================== LOKKO DESIGN SYSTEM — Ultra Luxe Minimaliste ==================== */
+    :root {
+      --blanc-pur: #FFFFFF;
+      --gris-doux: #F5F5F7;
+      --noir-de-jais: #000000;
+      --off-white: #F9F9F9;
+      --gris-clair: #E8E8E8;
+      --gris-moyen: #9E9E9E;
+      --noir-translucide: rgba(0, 0, 0, 0.85);
+      --or-discret: #C4A26D;
+      --blanc-leg: rgba(255, 255, 255, 0.92);
+      --font-serif: 'Playfair Display', 'Cormorant Garamond', serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--noir-de-jais);
+      color: var(--noir-de-jais);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ==================== APP CONTAINER ==================== */
+    .lokko-app {
+      width: 100vw;
+      height: 100vh;
+      max-width: 430px;
+      margin: 0 auto;
+      background: var(--blanc-pur);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ==================== SWIPE FEED — Plein écran ==================== */
+    .swipe-feed {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      background: var(--noir-de-jais);
+    }
+
+    .card-stack {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .swipe-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
+      background-size: cover;
+      background-position: center;
+      will-change: transform, opacity;
+    }
+
+    .swipe-card.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.9);
+    }
+
+    /* ====== OVERLAY — Silence Visuel ====== */
+    .card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 100px 24px 28px;
+      background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+      color: var(--blanc-pur);
+    }
+
+    .card-brand {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
+    }
+
+    .card-title {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    /* Prix — Silence visuel (masqué, fondu après 3s) */
+    .card-price {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 400;
+      margin-top: 8px;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .card-price.visible {
+      opacity: 0.5;
+      transform: translateY(0);
+    }
+
+    /* Trust badge discret */
+    .trust-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.12);
+      padding: 3px 8px;
+      border-radius: 10px;
+      margin-top: 6px;
+    }
+
+    /* ====== BARRE D'ACTION IA (3 boutons) ====== */
+    .action-bar {
+      position: absolute;
+      bottom: 110px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      z-index: 20;
+    }
+
+    .action-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 22px;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .action-btn.barter-btn {
+      background: rgba(255,255,255,0.15);
+      color: var(--blanc-pur);
+    }
+
+    .action-btn.eye-btn {
+      background: var(--blanc-pur);
+      color: var(--noir-de-jais);
+      width: 62px;
+      height: 62px;
+      font-size: 26px;
+    }
+
+    .action-btn.watch-btn {
+      background: rgba(255,255,255,0.15);
+      color: var(--blanc-pur);
+    }
+
+    .action-btn:active {
+      transform: scale(0.88);
+    }
+
+    /* ====== NAVIGATION 5 ONGLETS ==================== */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: var(--blanc-pur);
+      border-top: 1px solid var(--gris-doux);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 50;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      padding: 8px 12px;
+      border: none;
+      background: none;
+      color: var(--gris-moyen);
+      font-family: var(--font-sans);
+      transition: color 0.2s;
+    }
+
+    .nav-item.active {
+      color: var(--noir-de-jais);
+    }
+
+    .nav-item .nav-icon {
+      font-size: 22px;
+    }
+
+    .nav-item .nav-label {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* Publier bouton central */
+    .nav-publish {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--noir-de-jais);
+      color: var(--blanc-pur);
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      margin-top: -20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    /* ==================== ECRAN DRESSING ==================== */
+    .dressing-screen {
+      width: 100%;
+      height: 100%;
+      background: var(--blanc-pur);
+      overflow-y: auto;
+    }
+
+    .dressing-header {
+      padding: 48px 24px 16px;
+      text-align: center;
+    }
+
+    .dressing-brand {
+      font-family: var(--font-serif);
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      color: var(--noir-de-jais);
+    }
+
+    .dressing-subtitle {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gris-moyen);
+      margin-top: 4px;
+    }
+
+    .dressing-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 2px;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--gris-doux);
+    }
+
+    .dressing-tab {
+      padding: 8px 24px;
+      border-radius: 20px;
+      border: 1px solid var(--gris-clair);
+      background: var(--blanc-pur);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gris-moyen);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dressing-tab.active {
+      background: var(--noir-de-jais);
+      color: var(--blanc-pur);
+      border-color: var(--noir-de-jais);
+    }
+
+    /* Grille pièces dressing */
+    .dressing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      padding: 2px;
+    }
+
+    .dressing-item {
+      aspect-ratio: 3/4;
+      background: var(--gris-doux);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .dressing-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .dressing-item-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 24px 12px 12px;
+      background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+      color: var(--blanc-pur);
+    }
+
+    .dressing-item-brand {
+      font-family: var(--font-serif);
+      font-size: 14px;
+    }
+
+    .dressing-item-status {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .status-en-vente { background: #E8F5E9; color: #2E7D32; }
+    .status-timer { background: #FFF3E0; color: #E65100; }
+    .status-echange { background: #F3E5F5; color: #6A1B9A; }
+
+    /* ==================== BIDDING BOTTOM SHEET ==================== */
+    .bottom-sheet-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      display: flex;
+      align-items: flex-end;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .bottom-sheet {
+      background: var(--blanc-pur);
+      border-radius: 20px 20px 0 0;
+      padding: 24px;
+      padding-bottom: calc(24px + env(safe-area-inset-bottom));
+      max-height: 70vh;
+      width: 100%;
+      animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .sheet-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--gris-clair);
+      border-radius: 2px;
+      margin: 0 auto 16px;
+    }
+
+    .sheet-title {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .sheet-subtitle {
+      font-size: 13px;
+      color: var(--gris-moyen);
+      margin-bottom: 20px;
+    }
+
+    .bid-input-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .bid-input {
+      flex: 1;
+      padding: 14px 16px;
+      border: 1px solid var(--gris-clair);
+      border-radius: 12px;
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 400;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .bid-input:focus {
+      border-color: var(--noir-de-jais);
+    }
+
+    .bid-currency {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--gris-moyen);
+    }
+
+    .bid-rule {
+      font-size: 12px;
+      color: var(--gris-moyen);
+      margin-bottom: 20px;
+      padding: 10px 12px;
+      background: var(--gris-doux);
+      border-radius: 8px;
+    }
+
+    .bid-rule strong {
+      color: var(--noir-de-jais);
+    }
+
+    .btn-submit-bid {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 14px;
+      background: var(--noir-de-jais);
+      color: var(--blanc-pur);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-submit-bid:active {
+      opacity: 0.75;
+    }
+
+    .btn-cancel-bid {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--gris-clair);
+      border-radius: 14px;
+      background: var(--blanc-pur);
+      color: var(--gris-moyen);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    /* ==================== ECRAN PUBLIER (STUDIO) ==================== */
+    .studio-screen {
+      width: 100%;
+      height: 100%;
+      background: var(--blanc-pur);
+      overflow-y: auto;
+      padding: 48px 24px;
+    }
+
+    .studio-title {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .studio-subtitle {
+      font-size: 12px;
+      color: var(--gris-moyen);
+      text-align: center;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .studio-step {
+      margin-bottom: 24px;
+    }
+
+    .studio-step-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--gris-moyen);
+      margin-bottom: 10px;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .photo-slot {
+      aspect-ratio: 1;
+      border: 2px dashed var(--gris-clair);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--gris-clair);
+      background: var(--gris-doux);
+    }
+
+    .photo-slot.filled {
+      border-style: solid;
+      border-color: var(--noir-de-jais);
+      background: var(--noir-de-jais);
+      color: var(--blanc-pur);
+    }
+
+    .studio-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--gris-clair);
+      border-radius: 12px;
+      font-family: var(--font-sans);
+      font-size: 16px;
+      outline: none;
+      background: var(--blanc-pur);
+    }
+
+    .studio-input:focus {
+      border-color: var(--noir-de-jais);
+    }
+
+    .studio-ai-tag {
+      display: inline-block;
+      padding: 4px 10px;
+      background: var(--gris-doux);
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--gris-moyen);
+      margin: 4px 4px 4px 0;
+    }
+
+    .toggle-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .toggle-option {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid var(--gris-clair);
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .toggle-option.active {
+      background: var(--noir-de-jais);
+      color: var(--blanc-pur);
+      border-color: var(--noir-de-jais);
+    }
+
+    .btn-publish {
+      width: 100%;
+      padding: 18px;
+      border: none;
+      border-radius: 14px;
+      background: var(--noir-de-jais);
+      color: var(--blanc-pur);
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 24px;
+    }
+
+    /* ==================== ECRAN PROFIL IA ==================== */
+    .profile-screen {
+      width: 100%;
+      height: 100%;
+      background: var(--blanc-pur);
+      overflow-y: auto;
+      padding: 48px 24px;
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--gris-doux);
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--noir-de-jais);
+    }
+
+    .profile-name {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .profile-trust {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .trust-score {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 14px;
+      background: var(--gris-doux);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .style-slider-group {
+      margin-bottom: 28px;
+    }
+
+    .style-slider-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--gris-moyen);
+      margin-bottom: 12px;
+    }
+
+    .style-slider {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 4px;
+      background: var(--gris-clair);
+      border-radius: 2px;
+      outline: none;
+    }
+
+    .style-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--noir-de-jais);
+      cursor: pointer;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--gris-moyen);
+    }
+
+    /* ==================== ECRAN RECHERCHE ==================== */
+    .search-screen {
+      width: 100%;
+      height: 100%;
+      background: var(--blanc-pur);
+      overflow-y: auto;
+      padding: 48px 24px;
+    }
+
+    .search-title {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--gris-clair);
+      border-radius: 12px;
+      font-family: var(--font-sans);
+      font-size: 16px;
+      outline: none;
+      background: var(--gris-doux);
+      margin-bottom: 24px;
+    }
+
+    .size-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .size-chip {
+      padding: 8px 16px;
+      border: 1px solid var(--gris-clair);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      background: var(--blanc-pur);
+      transition: all 0.2s;
+    }
+
+    .size-chip.active {
+      background: var(--noir-de-jais);
+      color: var(--blanc-pur);
+      border-color: var(--noir-de-jais);
+    }
+
+    .brand-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .brand-card {
+      aspect-ratio: 1;
+      background: var(--gris-doux);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .brand-card:hover {
+      background: var(--gris-clair);
+    }
+
+    /* ==================== ANIMATIONS ==================== */
+    .swipe-left {
+      transform: translateX(-130%) rotate(-15deg) !important;
+      opacity: 0 !important;
+    }
+
+    .swipe-right {
+      transform: translateX(130%) rotate(15deg) !important;
+      opacity: 0 !important;
+    }
+
+    .swipe-up {
+      transform: translateY(-130%) scale(0.95) !important;
+      opacity: 0 !important;
+    }
+
+    .swipe-indicator {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 24px;
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-style: italic;
+      opacity: 0;
+      transition: opacity 0.15s;
+      pointer-events: none;
+      z-index: 30;
+      background: rgba(0,0,0,0.4);
+      border-radius: 12px;
+      color: white;
+    }
+
+    .swipe-indicator.left {
+      left: 20px;
+    }
+
+    .swipe-indicator.right {
+      right: 20px;
+    }
+
+    .swipe-indicator.visible {
+      opacity: 1;
+    }
+
+    /* Notification bubble */
+    .notification-bubble {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 24px;
+      height: 24px;
+      background: var(--noir-de-jais);
+      color: var(--blanc-pur);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      z-index: 60;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // ==================== DONNEES PRODUITS MOCK ====================
+    const MOCK_PRODUCTS = [
+      { id: 1, brand: 'Chanel', title: 'Classic Flap Bag', price: 4200, currency: '€', image: 'https://images.unsplash.com/photo-1548031762-8ae7b1b20b35?w=600&h=800&fit=crop', category: 'Sac', seller: 'Amina T.', trust: 96, status: 'Enchère ouverte', timer: '47:12:33' },
+      { id: 2, brand: 'Hermès', title: 'Birkin 30 — Noir Gold', price: 12500, currency: '€', image: 'https://images.unsplash.com/photo-1566150706505-5db913b6e6f7?w=600&h=800&fit=crop', category: 'Sac', seller: 'Leila M.', trust: 98, status: 'Enchère ouverte', timer: '23:45:10' },
+      { id: 3, brand: 'Dior', title: 'Lady Dior — Rose', price: 3800, currency: '€', image: 'https://images.unsplash.com/photo-1594271804399-c33b40e32130?w=600&h=800&fit=crop', category: 'Sac', seller: 'Yassine B.', trust: 92, status: 'Enchère ouverte', timer: '71:30:00' },
+      { id: 4, brand: 'Vogue', title: 'Trench Coat — Camel', price: 850, currency: '€', image: 'https://images.unsplash.com/photo-1548621336-0e27c7a8b12b?w=600&h=800&fit=crop', category: 'Vêtement', seller: 'Sofia K.', trust: 89, status: 'Enchère ouverte', timer: '11:59:59' },
+      { id: 5, brand: 'Nike', title: 'Air Max 1 — Heritage', price: 320, currency: '€', image: 'https://images.unsplash.com/photo-1542292179-06993e9a03df?w=600&h=800&fit=crop', category: 'Chaussure', seller: 'Rami H.', trust: 94, status: 'Enchère ouverte', timer: '48:00:00' },
+      { id: 6, brand: 'Apple', title: 'iPhone 15 Pro — Titanium', price: 1100, currency: '€', image: 'https://images.unsplash.com/photo-1592176010802-9c86f63e425b?w=600&h=800&fit=crop', category: 'Tech', seller: 'Nour D.', trust: 91, status: 'Enchère ouverte', timer: '35:22:15' },
+      { id: 7, brand: 'Gucci', title: 'Marmont Bag — Noir', price: 2400, currency: '€', image: 'https://images.unsplash.com/photo-1585128744913-ff175e5ac2a0?w=600&h=800&fit=crop', category: 'Sac', seller: 'Zahra S.', trust: 97, status: 'Enchère ouverte', timer: '10:05:44' },
+      { id: 8, brand: 'Vintage', title: 'Rolex Datejust — Or', price: 6500, currency: '€', image: 'https://images.unsplash.com/photo-1547913247-953d4e7b8099?w=600&h=800&fit=crop', category: 'Montre', seller: 'Karim A.', trust: 99, status: 'Enchère ouverte', timer: '68:12:30' },
+    ];
+
+    // Dressing mock
+    const DRESSING_ITEMS = [
+      { id: 1, brand: 'Chanel', title: 'Classic Flap Bag', price: 4200, status: 'Enchère ouverte', type: 'vente', image: 'https://images.unsplash.com/photo-1548031762-8ae7b1b20b35?w=300&h=400&fit=crop' },
+      { id: 2, brand: 'Dior', title: 'Lady Dior', price: 3800, status: 'Timer 12h', type: 'vente', image: 'https://images.unsplash.com/photo-1594271804399-c33b40e32130?w=300&h=400&fit=crop' },
+      { id: 3, brand: 'Vintage', title: 'Rolex', price: 6500, status: 'Échange', type: 'echange', image: 'https://images.unsplash.com/photo-1547913247-953d4e7b8099?w=300&h=400&fit=crop' },
+      { id: 4, brand: 'Gucci', title: 'Marmont', price: 2400, status: 'Vendu', type: 'vente', image: 'https://images.unsplash.com/photo-1585128744913-ff175e5ac2a0?w=300&h=400&fit=crop' },
+      { id: 5, brand: 'Nike', title: 'Air Max 1', price: 320, status: 'Échange', type: 'echange', image: 'https://images.unsplash.com/photo-1542292179-06993e9a03df?w=300&h=400&fit=crop' },
+      { id: 6, brand: 'Nike', title: 'Trench Coat', price: 850, status: 'Pause', type: 'vente', image: 'https://images.unsplash.com/photo-1548621336-0e27c7a8b12b?w=300&h=400&fit=crop' },
+    ];
+
+    // ==================== COMPOSANT SWIPE CARD ====================
+    const SwipeCard = ({ product, onSwipe, onBid, onEye }) => {
+      const [priceVisible, setPriceVisible] = useState(false);
+      const [swipeDir, setSwipeDir] = useState(null);
+      const [priceTimer, setPriceTimer] = useState(null);
+      const cardRef = useRef(null);
+
+      // Silence visuel — prix apparaît après 3s d'immobilité
+      useEffect(() => {
+        const timer = setTimeout(() => {
+          if (!swipeDir) setPriceVisible(true);
+        }, 3000);
+        setPriceTimer(timer);
+        return () => clearTimeout(timer);
+      }, [swipeDir]);
+
+      const handleEye = () => {
+        setPriceVisible(true);
+        onEye(product);
+        clearTimeout(priceTimer);
+      };
+
+      const handleSwipe = (dir) => {
+        setSwipeDir(dir);
+        if (dir === 'up') {
+          onBid(product);
+        }
+        setTimeout(() => {
+          onSwipe(product.id, dir);
+        }, 400);
+      };
+
+      const getStatusBadge = (status) => {
+        if (status.includes('Timer') || status.includes('12h')) {
+          return '<span class="status-badge status-timer">⏱ Timer 12h</span>';
+        }
+        if (status.includes('Échange')) {
+          return '<span class="status-badge status-echange">⇄ Échange</span>';
+        }
+        if (status.includes('Vendu')) {
+          return '<span class="status-badge status-en-vente">✓ Vendu</span>';
+        }
+        return '';
+      };
+
+      return React.createElement('div', {
+        className: `swipe-card ${swipeDir === 'left' ? 'swipe-left' : ''} ${swipeDir === 'right' ? 'swipe-right' : ''} ${swipeDir === 'up' ? 'swipe-up' : ''}`,
+        style: { backgroundImage: `url(${product.image})` },
+        onTouchStart: (e) => {
+          const touch = e.touches[0];
+          cardRef.current = { startX: touch.clientX, startY: touch.clientY };
+        },
+        onTouchEnd: (e) => {
+          if (!cardRef.current) return;
+          const touch = e.changedTouches[0];
+          const dx = touch.clientX - cardRef.current.startX;
+          const dy = touch.clientY - cardRef.current.startY;
+          if (Math.abs(dx) > 80 && dx < 0) handleSwipe('left');
+          else if (Math.abs(dx) > 80 && dx > 0) handleSwipe('right');
+          else if (Math.abs(dy) > 80 && dy < 0) handleSwipe('up');
+          cardRef.current = null;
+        }
+      },
+        // Indicateurs de swipe
+        React.createElement('div', { className: 'swipe-indicator left' }),
+        React.createElement('div', { className: "swipe-indicator right"}),
+        // Overlay info
+        React.createElement('div', { className: 'card-overlay' },
+          React.createElement('div', { className: 'card-brand' }, product.brand),
+          React.createElement('div', { className: 'card-title' }, product.title),
+          React.createElement('div', { className: `card-price ${priceVisible ? 'visible' : ''}` },
+            `${product.price} ${product.currency}`
+          ),
+          React.createElement('div', { className: 'trust-badge' },
+            '👁', product.seller, `• Trust ${product.trust}%`
+          ),
+          product.status === 'Enchère ouverte' && React.createElement('div', { className: 'trust-badge', style: { marginLeft: '6px' }},
+            '⏱', product.timer
+          )
+        ),
+        // Barre d'action IA
+        React.createElement('div', { className: 'action-bar' },
+          React.createElement('button', { className: 'action-btn barter-btn', onClick: () => handleSwipe('up') }, '⇄'),
+          React.createElement('button', { className: 'action-btn eye-btn', onClick: handleEye }, '👁'),
+          React.createElement('button', { className: 'action-btn watch-btn', onClick: handleEye }, '🔖')
+        ),
+        // Boutons swipe (invisible overlay)
+        React.createElement('div', {
+          style: {
+            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 10,
+            display: 'flex'
+          }
+        },
+          React.createElement('div', {
+            style: { flex: 1 },
+            onTouchEnd: () => handleSwipe('left')
+          }),
+          React.createElement('div', {
+            style: { flex: 1, justifyContent: 'center', display: 'flex' },
+            onTouchEnd: () => handleSwipe('up')
+          }),
+          React.createElement('div', {
+            style: { flex: 1 },
+            onTouchEnd: () => handleSwipe('right')
+          })
+        )
+      );
+    };
+
+    // ==================== COMPOSANT BID SHEET ====================
+    const BidSheet = ({ product, onClose }) => {
+      const [bidAmount, setBidAmount] = useState(Math.round(product.price * 0.75));
+      const minBid = Math.round(product.price * 0.70);
+
+      return React.createElement('div', { className: 'bottom-sheet-overlay', onClick: onClose },
+        React.createElement('div', { className: 'bottom-sheet', onClick: (e) => e.stopPropagation() },
+          React.createElement('div', { className: 'sheet-handle' }),
+          React.createElement('div', { className: 'sheet-title' }, product.brand + ' ' + product.title),
+          React.createElement('div', { className: 'sheet-subtitle' }, 'Offre privée — Enchère boucle'),
+          React.createElement('div', { className: 'bid-input-group' },
+            React.createElement('input', {
+              className: 'bid-input',
+              type: 'number',
+              value: bidAmount,
+              onChange: (e) => setBidAmount(parseInt(e.target.value) || 0),
+              onFocus: (e) => e.target.select()
+            }),
+            React.createElement('span', { className: 'bid-currency' }, product.currency)
+          ),
+          React.createElement('div', { className: 'bid-rule' },
+            'Règle des 70% : l\'offre doit être ≥ <strong>',
+            minBid, product.currency,
+            '</strong> (70% de l\'estimation du vendeur)'
+          ),
+          React.createElement('button', {
+            className: 'btn-submit-bid',
+            onClick: onClose,
+            disabled: bidAmount < minBid
+          }, 'Soumettre l\'offre'),
+          React.createElement('button', {
+            className: 'btn-cancel-bid',
+            onClick: onClose
+          }, 'Annuler')
+        )
+      );
+    };
+
+    // ==================== ECRAN DRESSING ====================
+    const DressingScreen = () => {
+      const [tab, setTab] = useState('vente');
+
+      const filteredItems = tab === 'vente'
+        ? DRESSING_ITEMS.filter(i => i.type === 'vente')
+        : DRESSING_ITEMS.filter(i => i.type === 'echange');
+
+      return React.createElement('div', { className: 'dressing-screen' },
+        React.createElement('div', { className: 'dressing-header' },
+          React.createElement('div', { className: 'dressing-brand' }, 'LOKKO'),
+          React.createElement('div', { className: 'dressing-subtitle' }, 'Votre Réservé')
+        ),
+        React.createElement('div', { className: 'dressing-tabs' },
+          React.createElement('button', {
+            className: `dressing-tab ${tab === 'vente' ? 'active' : ''}`,
+            onClick: () => setTab('vente')
+          }, 'Vente'),
+          React.createElement('button', {
+            className: `dressing-tab ${tab === 'echange' ? 'active' : ''}`,
+            onClick: () => setTab('echange')
+          }, 'Échange')
+        ),
+        React.createElement('div', { className: 'dressing-grid' },
+          filteredItems.map(item =>
+            React.createElement('div', { key: item.id, className: 'dressing-item' },
+              React.createElement('img', { src: item.image, alt: item.title }),
+              React.createElement('div', { className: 'dressing-item-info' },
+                React.createElement('div', { className: 'dressing-item-brand' }, item.brand),
+                React.createElement('div', { className: 'dressing-item-status' }, item.status)
+              )
+            )
+          )
+        )
+      );
+    };
+
+    // ==================== ECRAN STUDIO (PUBLIER) ====================
+    const StudioScreen = () => {
+      const [step, setStep] = useState(1);
+      const [aiTags, setAiTags] = useState([]);
+
+      return React.createElement('div', { className: 'studio-screen' },
+        React.createElement('div', { className: 'studio-title' }, 'Studio Dépôt'),
+        React.createElement('div', { className: 'studio-subtitle' }, 'Création assistée par l\'IA'),
+
+        React.createElement('div', { className: 'studio-step' },
+          React.createElement('div', { className: 'studio-step-label' }, '1. Photos obligatoires'),
+          React.createElement('div', { className: 'photo-grid' },
+            React.createElement('div', { className: 'photo-slot filled' }, '📷'),
+            React.createElement('div', { className: 'photo-slot' }, '+'),
+            React.createElement('div', { className: 'photo-slot' }, '+'),
+            React.createElement('div', { className: 'photo-slot' }, '+')
+          ),
+          React.createElement('div', { className: 'studio-step-label', style: { marginTop: '12px', fontSize: '10px', color: '#999' } },
+            '1 photo d\'ensemble + 3 détails (étiquette, composition, usures)'
+          )
+        ),
+
+        React.createElement('div', { className: 'studio-step' },
+          React.createElement('div', { className: 'studio-step-label' }, '2. Scan IA — Détection automatique'),
+          React.createElement('div', { style: { marginBottom: '8px' } },
+            React.createElement('span', { className: 'studio-ai-tag' }, '🏷 Marque détectée'),
+            React.createElement('span', { className: 'studio-ai-tag' }, '📂 Catégorie'),
+            React.createElement('span', { className: 'studio-ai-tag' }, '📏 Taille')
+          ),
+          React.createElement('input', { className: 'studio-input', placeholder: 'Nom de la pièce...', style: { marginBottom: '8px' } }),
+          React.createElement('input', { className: 'studio-input', placeholder: 'Prix de départ (€)', type: 'number', style: { marginBottom: '8px' } }),
+          React.createElement('input', { className: 'studio-input', placeholder: 'Durée de l\'enchère', defaultValue: '48h' })
+        ),
+
+        React.createElement('div', { className: 'studio-step' },
+          React.createElement('div', { className: 'studio-step-label' }, '3. Mode de vente'),
+          React.createElement('div', { className: 'toggle-group' },
+            React.createElement('div', { className: 'toggle-option active' }, '💰 Enchère'),
+            React.createElement('div', { className: 'toggle-option' }, '⇄ Échange')
+          )
+        ),
+
+        React.createElement('button', { className: 'btn-publish' }, 'Publier sur LOKKO')
+      );
+    };
+
+    // ==================== ECRAN RECHERCHE ====================
+    const SearchScreen = () => {
+      const [activeSize, setActiveSize] = useState(null);
+      const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+      const brands = ['Chanel', 'Hermès', 'Dior', 'Vintage', 'Nike', 'Gucci', 'Apple', 'Rolex', 'Prada'];
+
+      return React.createElement('div', { className: 'search-screen' },
+        React.createElement('div', { className: 'search-title' }, 'Recherche'),
+        React.createElement('input', { className: 'search-input', placeholder: 'Rechercher une pièce...' }),
+
+        React.createElement('div', { className: 'studio-step-label' }, 'Mes tailles activées'),
+        React.createElement('div', { className: 'size-chips' },
+          sizes.map(s =>
+            React.createElement('div', {
+              key: s,
+              className: `size-chip ${activeSize === s ? 'active' : ''}`,
+              onClick: () => setActiveSize(activeSize === s ? null : s)
+            }, s)
+          )
+        ),
+
+        React.createElement('div', { className: 'studio-step-label', style: { marginTop: '24px' } }, 'Marques populaires'),
+        React.createElement('div', { className: 'brand-list' },
+          brands.map(b =>
+            React.createElement('div', { key: b, className: 'brand-card' }, b)
+          )
+        )
+      );
+    };
+
+    // ==================== ECRAN PROFIL IA ====================
+    const ProfileScreen = () => {
+      return React.createElement('div', { className: 'profile-screen' },
+        React.createElement('div', { className: 'profile-avatar' }, 'M'),
+        React.createElement('div', { className: 'profile-name' }, 'Marwen'),
+        React.createElement('div', { className: 'profile-trust' },
+          React.createElement('div', { className: 'trust-score' }, '⭐ Trust Score: 94%')
+        ),
+
+        React.createElement('div', { className: 'style-slider-group' },
+          React.createElement('div', { className: 'style-slider-label' }, 'Style — Minimaliste ↔ Avant-gardiste'),
+          React.createElement('input', { className: 'style-slider', type: 'range', min: 0, max: 100, defaultValue: 65 }),
+          React.createElement('div', { className: 'slider-labels' },
+            React.createElement('span', null, 'Minimaliste'),
+            React.createElement('span', null, 'Avant-gardiste')
+          )
+        ),
+
+        React.createElement('div', { className: 'style-slider-group' },
+          React.createElement('div', { className: 'style-slider-label' }, 'Budget — Économie ↔ Luxe'),
+          React.createElement('input', { className: 'style-slider', type: 'range', min: 0, max: 100, defaultValue: 72 }),
+          React.createElement('div', { className: 'slider-labels' },
+            React.createElement('span', null, '300€'),
+            React.createElement('span', null, '3 000€')
+          )
+        ),
+
+        React.createElement('div', { className: 'style-slider-group' },
+          React.createElement('div', { className: 'style-slider-label' }, 'Rareté — Courant ↔ Rare'),
+          React.createElement('input', { className: 'style-slider', type: 'range', min: 0, max: 100, defaultValue: 55 }),
+          React.createElement('div', { className: 'slider-labels' },
+            React.createElement('span', null, 'Courant'),
+            React.createElement('span', null, 'Rare')
+          )
+        )
+      );
+    };
+
+    // ==================== APPLICATION PRINCIPALE ====================
+    const App = () => {
+      const [activeTab, setActiveTab] = useState('swipe');
+      const [currentCardIndex, setCurrentCardIndex] = useState(0);
+      const [bidProduct, setBidProduct] = useState(null);
+      const [favorites, setFavorites] = useState([]);
+      const [notifs, setNotifs] = useState(3);
+
+      const handleSwipe = (productId, dir) => {
+        if (dir === 'right') {
+          const product = MOCK_PRODUCTS[currentCardIndex];
+          if (product) setFavorites([...favorites, product]);
+        }
+        setCurrentCardIndex(prev => Math.min(prev + 1, MOCK_PRODUCTS.length));
+      };
+
+      const handleBid = (product) => {
+        setBidProduct(product);
+      };
+
+      const handleEye = (product) => {
+        // Lève le silence visuel + affichage trust
+      };
+
+      // Contenu selon l'onglet
+      let content;
+      if (activeTab === 'swipe') {
+        const product = MOCK_PRODUCTS[currentCardIndex];
+        if (product) {
+          content = React.createElement(SwipeCard, {
+            product: product,
+            onSwipe: handleSwipe,
+            onBid: handleBid,
+            onEye: handleEye
+          });
+        } else {
+          content = React.createElement('div', {
+            style: {
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              height: '100%', background: '#000', color: '#fff', fontFamily: "'Playfair Display', serif"
+            }
+          }, 'Fin du feed — Revenir plus tard');
+        }
+      } else if (activeTab === 'search') {
+        content = React.createElement(SearchScreen);
+      } else if (activeTab === 'publish') {
+        content = React.createElement(StudioScreen);
+      } else if (activeTab === 'dressing') {
+        content = React.createElement(DressingScreen);
+      } else if (activeTab === 'profile') {
+        content = React.createElement(ProfileScreen);
+      }
+
+      return React.createElement('div', { className: 'lokko-app' },
+        // Contenu
+        content,
+
+        // Bid sheet overlay
+        bidProduct && React.createElement(BidSheet, {
+          product: bidProduct,
+          onClose: () => setBidProduct(null)
+        }),
+
+        // Navigation (sauf sur écran studio)
+        activeTab !== 'publish' && React.createElement('div', { className: 'bottom-nav' },
+          React.createElement('button', {
+            className: `nav-item ${activeTab === 'swipe' ? 'active' : ''}`,
+            onClick: () => setActiveTab('swipe')
+          },
+            React.createElement('span', { className: 'nav-icon' }, '◉'),
+            React.createElement('span', { className: 'nav-label' }, 'Swipe')
+          ),
+          React.createElement('button', {
+            className: `nav-item ${activeTab === 'search' ? 'active' : ''}`,
+            onClick: () => setActiveTab('search')
+          },
+            React.createElement('span', { className: 'nav-icon' }, '🔍'),
+            React.createElement('span', { className: 'nav-label' }, 'Recherche')
+          ),
+          React.createElement('button', {
+            className: 'nav-publish',
+            onClick: () => setActiveTab('publish')
+          }, '+'),
+          React.createElement('button', {
+            className: `nav-item ${activeTab === 'dressing' ? 'active' : ''}`,
+            onClick: () => setActiveTab('dressing')
+          },
+            React.createElement('span', { className: 'nav-icon' }, '👗'),
+            React.createElement('span', { className: 'nav-label' }, 'Dressing')
+          ),
+          React.createElement('button', {
+            className: `nav-item ${activeTab === 'profile' ? 'active' : ''}`,
+            onClick: () => setActiveTab('profile')
+          },
+            React.createElement('span', { className: 'nav-icon' }, '👤'),
+            React.createElement('span', { className: 'nav-label' }, 'Profil')
+          )
+        )
+      );
+    };
+
+    // Montage React
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(App));
+  </script>
+</body>
+</html>

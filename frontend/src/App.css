@@ -1,392 +1,507 @@
-/* LOKKO — Luxury Fashion Marketplace CSS */
+/* LOKKO — Ultra Luxe Minimaliste Design System */
 
 :root {
-  --black: #0A0A0A;
-  --off-black: #141414;
-  --white: #F5F5F0;
-  --off-white: #E8E8E3;
-  --gold: #C5A256;
-  --gold-light: #D4B76A;
-  --muted: #8A8A86;
-  --card-bg: #1C1C1C;
-  --accent: #C5A256;
-  --success: #4CAF50;
-  --timer-red: #D45C5C;
+  --blanc-pur: #FFFFFF;
+  --gris-doux: #F5F5F7;
+  --noir-de-jais: #0A0A0A;
+  --off-white: #F9F9F9;
+  --gris-clair: #E8E8E8;
+  --gris-moyen: #9E9E9E;
+  --or-discret: #C4A26D;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 body {
+  margin: 0;
+  padding: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--black);
-  color: var(--white);
-  overflow-x: hidden;
+  background: var(--noir-de-jais);
   -webkit-font-smoothing: antialiased;
-  font-size: 16px;
-}
-
-/* Serif for brand names */
-.serif {
-  font-family: 'Playfair Display', serif;
-}
-
-/* App Container */
-.app-container {
-  max-width: 420px;
-  margin: 0 auto;
-  min-height: 100vh;
-  position: relative;
-}
-
-/* Header */
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(10, 10, 10, 0.95);
-  backdrop-filter: blur(20px);
-  padding: 16px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid rgba(245, 245, 240, 0.08);
-}
-
-.header-logo {
-  font-family: 'Playfair Display', serif;
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 4px;
-  color: var(--white);
-}
-
-.header-icon {
-  font-size: 22px;
-  opacity: 0.7;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.header-icon:hover { opacity: 1; }
-
-/* Swipe Feed */
-.swipe-feed {
-  padding: 12px 16px;
-  padding-bottom: 100px;
-}
-
-.product-card {
-  background: var(--card-bg);
-  border-radius: 12px;
+  -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
-  margin-bottom: 16px;
-  position: relative;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s ease;
 }
 
-.product-card:active {
-  transform: scale(0.98);
-}
-
-.product-image-container {
-  position: relative;
+#root {
   width: 100%;
-  height: 520px;
+  height: 100vh;
   overflow: hidden;
-  background: #1C1C1C;
 }
 
-.product-image {
+/* App container */
+.lokko-app {
+  width: 100%;
+  height: 100vh;
+  max-width: 430px;
+  margin: 0 auto;
+  background: var(--blanc-pur);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Screen backgrounds */
+.screen-white {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-/* Price overlay (hidden by default) */
-.price-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 20px 24px 40px;
-  background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.6) 60%, transparent 100%);
-  transition: opacity 0.5s ease;
-}
-
-.price-hidden { opacity: 0; }
-.price-visible { opacity: 1; }
-
-.price-value {
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--white);
-  font-family: 'Playfair Display', serif;
-}
-
-.price-label {
-  font-size: 11px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  margin-top: 2px;
-}
-
-/* Timer badge */
-.timer-badge {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: rgba(212, 92, 92, 0.85);
-  color: #FFF;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 6px 12px;
-  border-radius: 20px;
-  backdrop-filter: blur(8px);
-}
-
-/* Brand badge */
-.brand-badge {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  background: rgba(245, 245, 240, 0.15);
-  color: var(--white);
-  font-size: 11px;
-  font-weight: 500;
-  padding: 5px 12px;
-  border-radius: 20px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  backdrop-filter: blur(8px);
-}
-
-/* Swipe Buttons */
-.swipe-buttons {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  max-width: 420px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  padding: 16px 20px 32px;
-  background: linear-gradient(to top, rgba(10,10,10,1) 60%, rgba(10,10,10,0.95) 80%, transparent 100%);
-}
-
-.swipe-btn {
-  flex: 1;
-  max-width: 130px;
-  padding: 14px 10px;
-  border: none;
-  border-radius: 12px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  letter-spacing: 0.5px;
-}
-
-.swipe-btn-pass {
-  background: var(--card-bg);
-  color: var(--muted);
-  border: 1px solid rgba(245, 245, 240, 0.1);
-}
-
-.swipe-btn-eye {
-  background: var(--gold);
-  color: var(--black);
-  font-size: 20px;
-}
-
-.swipe-btn-offer {
-  background: var(--white);
-  color: var(--black);
-}
-
-/* Product Info */
-.product-info {
-  padding: 16px 20px;
-}
-
-.product-title {
-  font-size: 18px;
-  font-weight: 500;
-  margin-bottom: 4px;
-}
-
-.product-brand {
-  font-family: 'Playfair Display', serif;
-  font-size: 14px;
-  color: var(--gold);
-  margin-bottom: 6px;
-}
-
-.product-meta {
-  font-size: 12px;
-  color: var(--muted);
-  display: flex;
-  gap: 12px;
-}
-
-.product-meta span {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-/* Bid Modal */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(10, 10, 10, 0.8);
-  z-index: 200;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
-
-.modal-content {
-  background: var(--off-black);
-  border-radius: 24px 24px 0 0;
-  padding: 28px 24px 40px;
-  max-width: 420px;
-  width: 100%;
-  max-height: 70vh;
+  background: var(--blanc-pur);
   overflow-y: auto;
 }
 
-.modal-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 22px;
-  margin-bottom: 20px;
-}
-
-.bid-input {
+.lokko-screen-black {
   width: 100%;
-  padding: 16px;
-  background: var(--card-bg);
-  border: 1px solid rgba(245, 245, 240, 0.1);
-  border-radius: 12px;
-  color: var(--white);
-  font-size: 20px;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 16px;
+  height: 100%;
+  background: var(--noir-de-jais);
+  position: relative;
 }
 
-.bid-input:focus {
+/* Brand typography */
+.brand-serif {
+  font-family: 'Playfair Display', 'Cormorant Garamond', 'Georgia', serif;
+}
+
+.brand-sans {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Screen header */
+.screen-header {
+  padding: 48px 24px 16px;
+  text-align: center;
+}
+
+.screen-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+.screen-subtitle {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gris-moyen);
+  margin-top: 4px;
+}
+
+/* Screen content */
+.screen-content {
+  padding: 24px;
+}
+
+/* Search input */
+.search-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--gris-clair);
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
   outline: none;
-  border-color: var(--gold);
+  background: var(--gris-doux);
 }
 
-.min-bid-hint {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.modal-btn {
-  width: 100%;
-  padding: 16px;
-  border: none;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-bottom: 10px;
-}
-
-.modal-btn-primary {
-  background: var(--gold);
-  color: var(--black);
-}
-
-.modal-btn-secondary {
-  background: var(--card-bg);
-  color: var(--white);
-}
-
-/* Empty State */
-.empty-state {
+/* Dressing tabs */
+.dressing-tabs {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  padding: 80px 20px;
-  text-align: center;
-}
-
-.empty-state h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: 26px;
-  margin-bottom: 10px;
-}
-
-.empty-state p {
-  color: var(--muted);
-  font-size: 14px;
-}
-
-/* Tabs */
-.tabs {
-  display: flex;
-  border-bottom: 1px solid rgba(245, 245, 240, 0.08);
+  gap: 2px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--gris-doux);
 }
 
 .tab {
-  flex: 1;
-  padding: 14px 0;
-  text-align: center;
+  padding: 8px 24px;
+  border-radius: 20px;
+  border: 1px solid var(--gris-clair);
+  background: var(--blanc-pur);
+  font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 500;
-  color: var(--muted);
+  color: var(--gris-moyen);
   cursor: pointer;
-  border-bottom: 2px solid transparent;
   transition: all 0.2s;
 }
 
-.tab-active {
-  color: var(--white);
-  border-bottom-color: var(--gold);
+.tab.active {
+  background: var(--noir-de-jais);
+  color: var(--blanc-pur);
+  border-color: var(--noir-de-jais);
 }
 
-/* Trust Score Badge */
-.trust-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(197, 162, 86, 0.15);
-  color: var(--gold);
-  font-size: 11px;
+/* Dressing grid */
+.dressing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  padding: 2px;
+}
+
+.dressing-item {
+  aspect-ratio: 3/4;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.dressing-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.item-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px 12px 12px;
+  background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+  color: white;
+}
+
+.item-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  display: block;
+}
+
+.item-status {
+  font-size: 10px;
   font-weight: 500;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+/* Product card (swipe) */
+.product-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
+}
+
+.product-card.swipe-left {
+  transform: translateX(-130%) rotate(-15deg);
+  opacity: 0;
+}
+
+.product-card.swipe-right {
+  transform: translateX(130%) rotate(15deg);
+  opacity: 0;
+}
+
+.product-card.swipe-up {
+  transform: translateY(-130%) scale(0.95);
+  opacity: 0;
+}
+
+/* Card overlay */
+.card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 100px 24px 28px;
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+  color: white;
+}
+
+.card-brand {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+/* Price - silence visuel */
+.card-price {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  margin-top: 8px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.card-price.visible {
+  opacity: 0.5;
+  transform: translateY(0);
+}
+
+.card-meta {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.trust-badge, .timer-badge {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.12);
   padding: 3px 8px;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
-/* Animations */
+/* Action bar */
+.action-bar {
+  position: absolute;
+  bottom: 110px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  z-index: 20;
+}
+
+.action-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 22px;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+  background: rgba(255,255,255,0.15);
+  color: white;
+}
+
+.action-btn.eye-btn {
+  background: white;
+  color: var(--noir-de-jais);
+  width: 62px;
+  height: 62px;
+  font-size: 26px;
+}
+
+.action-btn:active {
+  transform: scale(0.88);
+}
+
+/* Bid sheet */
+.sheet-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: flex-end;
+  z-index: 100;
+  animation: fadeIn 0.2s ease;
+}
+
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.fade-in {
-  animation: fadeIn 0.4s ease forwards;
+.sheet-content {
+  background: var(--blanc-pur);
+  border-radius: 20px 20px 0 0;
+  padding: 24px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  max-height: 70vh;
+  width: 100%;
+  animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }
 
-.pulse {
-  animation: pulse 2s infinite;
+.sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--gris-clair);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+.sheet-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.sheet-subtitle {
+  font-size: 13px;
+  color: var(--gris-moyen);
+  margin-bottom: 20px;
+}
+
+.bid-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.bid-input {
+  flex: 1;
+  padding: 14px 16px;
+  border: 1px solid var(--gris-clair);
+  border-radius: 12px;
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 400;
+  outline: none;
+}
+
+.bid-currency {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--gris-moyen);
+}
+
+.bid-rule {
+  font-size: 12px;
+  color: var(--gris-moyen);
+  margin-bottom: 20px;
+  padding: 10px 12px;
+  background: var(--gris-doux);
+  border-radius: 8px;
+}
+
+.bid-rule strong {
+  color: var(--noir-de-jais);
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 14px;
+  background: var(--noir-de-jais);
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--gris-clair);
+  border-radius: 14px;
+  background: var(--blanc-pur);
+  color: var(--gris-moyen);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* Feed end */
+.feed-end {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  flex-direction: column;
+  color: white;
+}
+
+.feed-end h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.feed-end p {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* Bottom navigation */
+.bottom-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: var(--blanc-pur);
+  border-top: 1px solid var(--gris-doux);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 50;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  color: var(--gris-moyen);
+  font-family: 'Inter', sans-serif;
+  transition: color 0.2s;
+}
+
+.nav-item.active {
+  color: var(--noir-de-jais);
+}
+
+.nav-icon {
+  font-size: 22px;
+}
+
+.nav-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Publish button */
+.nav-publish {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--noir-de-jais);
+  color: var(--blanc-pur);
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  margin-top: -20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }

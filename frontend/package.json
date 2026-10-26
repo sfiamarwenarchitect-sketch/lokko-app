@@ -1,6 +1,7 @@
 {
   "name": "lokko-frontend",
   "version": "1.0.0",
+  "description": "LOKKO - Luxury Marketplace with AI",
   "private": true,
   "dependencies": {
     "react": "^18.2.0",
@@ -10,7 +11,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "test": "react-scripts test"
   },
   "browserslist": {
     "production": [">0.2%", "not dead", "not op_mini all"],
