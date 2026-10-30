@@ -3,539 +3,325 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#0D0D0D">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <title>LOKKO — Le luxe, en silence</title>
+  <meta name="theme-color" content="#000000">
+  <title>LOKKO</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800;1,900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    /* ═══════════════════════════════════════════════════
-       LOKKO — Design System · UI/UX Spec v1.0
-       Noir profond #0D0D0D · Blanc cassé #F5F0EB
-       Or champagne #C9A84C · Anthracite #2A2A2A
-       Playfair Display · Inter · JetBrains Mono
-       ═══════════════════════════════════════════════════ */
-    :root {
-      --noir: #0D0D0D;
-      --anthra: #2A2A2A;
-      --blanc: #F5F0EB;
-      --or: #C9A84C;
-      --or-soft: rgba(201,168,76,.14);
-      --or-line: rgba(201,168,76,.38);
-      --rouge: #E63946;
-      --vert: #4CAF7D;
-      --orange: #E8963C;
-      --bleu: #5B8DEF;
-      --violet: #B9A7EE;
-      --muted: #8A857E;
-      --faint: rgba(245,240,235,.45);
-      --hair: rgba(245,240,235,.1);
-      --serif: 'Playfair Display', Georgia, serif;
-      --sans: 'Inter', -apple-system, sans-serif;
-      --mono: 'JetBrains Mono', monospace;
-      --ease: cubic-bezier(.22,.61,.36,1);
+    /* ═══════════════════════════════════════════
+       LOKKO × NIKE — Noir & blanc pur. Rien d'autre.
+       ═══════════════════════════════════════════ */
+    :root{
+      --noir:#000; --blanc:#fff; --g90:#1A1A1A; --g70:#4D4D4D;
+      --g50:gray; --g30:#B3B3B3; --g10:#EBEBEB; --g05:#F6F6F6;
+      --display:'Archivo', 'Helvetica Now', Impact, sans-serif;
+      --body:'Inter', -apple-system, sans-serif;
+      --mono:'JetBrains Mono', monospace;
+      --ease:cubic-bezier(.22,.61,.36,1);
     }
-    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-    html,body { height:100%; }
-    body {
-      font-family:var(--sans); background:#000; color:var(--blanc);
-      overflow:hidden; -webkit-font-smoothing:antialiased;
-    }
-    ::selection { background:var(--or); color:var(--noir); }
-    button { font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; }
-    ::-webkit-scrollbar { display:none; }
-    .app {
-      width:100%; height:100dvh; max-width:430px; margin:0 auto;
-      background:var(--noir); position:relative; overflow:hidden;
-      display:flex; flex-direction:column;
-    }
-    /* Grain texture — fini mat premium */
-    .grain {
-      position:absolute; inset:0; z-index:290; pointer-events:none; opacity:.05;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
-    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%}
+    body{font-family:var(--body);background:var(--noir);color:var(--noir);overflow:hidden;-webkit-font-smoothing:antialiased}
+    ::selection{background:var(--noir);color:var(--blanc)}
+    button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+    ::-webkit-scrollbar{display:none}
+    .app{width:100%;height:100dvh;max-width:430px;margin:0 auto;background:var(--blanc);position:relative;overflow:hidden;display:flex;flex-direction:column}
+
+    .up{display:inline-block;transform:translateY(14px);transition:transform .25s,opacity .25s;opacity:0}
+    .up.on{transform:none;opacity:1}
 
     /* ═══ SPLASH ═══ */
-    .splash {
-      position:absolute; inset:0; z-index:400; background:var(--noir);
-      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px;
-      animation:splashOut .7s var(--ease) 1.7s forwards;
-    }
-    .splash .wordmark {
-      font-family:var(--serif); font-size:38px; font-weight:500; letter-spacing:16px; margin-left:16px;
-      animation:wordIn 1s var(--ease) both;
-    }
-    .splash .rule {
-      width:64px; height:1px; background:var(--or); transform-origin:center;
-      animation:ruleIn .9s var(--ease) .35s both;
-    }
-    .splash .tag {
-      font-size:10px; letter-spacing:4px; text-transform:uppercase; color:var(--muted);
-      animation:wordIn .9s var(--ease) .6s both;
-    }
-    @keyframes wordIn { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none} }
-    @keyframes ruleIn { from{transform:scaleX(0)} to{transform:scaleX(1)} }
-    @keyframes splashOut { to{opacity:0; visibility:hidden} }
+    .splash{position:absolute;inset:0;z-index:500;background:var(--noir);color:var(--blanc);display:flex;flex-direction:column;justify-content:flex-end;padding:44px;animation:splashOut .6s var(--ease) 1.5s forwards}
+    .splash .wm{font-family:var(--display);font-style:italic;font-weight:900;font-size:64px;letter-spacing:-2px;line-height:.95;text-transform:uppercase;animation:wordIn .7s var(--ease) both}
+    .splash .wm span{display:block;font-size:11px;font-style:normal;font-weight:700;letter-spacing:5px;margin-top:14px;color:var(--g50)}
+    @keyframes wordIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+    @keyframes splashOut{to{opacity:0;visibility:hidden}}
 
     /* ═══ ONBOARDING ═══ */
-    .onboard { position:absolute; inset:0; z-index:300; background:var(--noir); padding:calc(env(safe-area-inset-top,0px)+88px) 28px 40px; display:flex; flex-direction:column; animation:fadeIn .5s }
-    .onboard h1 { font-family:var(--serif); font-size:30px; font-weight:500; line-height:1.25; }
-    .onboard h1 em { color:var(--or); font-style:italic; }
-    .onboard .ob-sub { font-size:13px; color:var(--muted); margin-top:10px; line-height:1.6; }
-    .ob-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:26px; }
-    .ob-chip {
-      border:1px solid var(--hair); border-radius:16px; padding:18px 14px;
-      font-size:13px; font-weight:500; color:rgba(245,240,235,.85); text-align:left;
-      min-height:64px; display:flex; align-items:center; gap:10px; transition:all .2s var(--ease);
-    }
-    .ob-chip svg { width:18px; height:18px; stroke:var(--muted); transition:stroke .2s }
-    .ob-chip.on { border-color:var(--or); background:var(--or-soft); color:var(--blanc); }
-    .ob-chip.on svg { stroke:var(--or); }
-    .ob-actions { margin-top:auto; display:flex; flex-direction:column; gap:8px; }
+    .onboard{position:absolute;inset:0;z-index:400;background:var(--blanc);padding:calc(env(safe-area-inset-top,0px)+90px) 28px 40px;display:flex;flex-direction:column;animation:fadeIn .4s}
+    .onboard h1{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:34px;line-height:1.05;letter-spacing:-.5px}
+    .onboard .ob-sub{font-size:13px;color:var(--g70);margin-top:12px;line-height:1.6}
+    .ob-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:28px}
+    .ob-chip{border:1.5px solid var(--noir);border-radius:999px;padding:16px;font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:12px;letter-spacing:.5px;min-height:56px;display:flex;align-items:center;justify-content:center;transition:all .18s}
+    .ob-chip.on{background:var(--noir);color:var(--blanc)}
+    .ob-actions{margin-top:auto;display:flex;flex-direction:column;gap:10px}
+
+    /* ═══ BOUTONS NIKE ═══ */
+    .btn-black{width:100%;min-height:56px;border-radius:999px;background:var(--noir);color:var(--blanc);font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:13px;letter-spacing:2px;display:flex;align-items:center;justify-content:center;transition:transform .15s,opacity .2s}
+    .btn-black:active{transform:scale(.97);opacity:.85}
+    .btn-white{width:100%;min-height:56px;border-radius:999px;background:var(--blanc);color:var(--noir);border:1.5px solid var(--noir);font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:13px;letter-spacing:2px;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s}
+    .btn-white:active{transform:scale(.97)}
+    .btn-ghost{width:100%;min-height:48px;border-radius:999px;color:var(--g70);font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;justify-content:center}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
     /* ═══ TOP BAR ═══ */
-    .topbar {
-      position:absolute; top:0; left:0; right:0; z-index:60;
-      display:flex; justify-content:space-between; align-items:center;
-      padding:calc(env(safe-area-inset-top,0px) + 14px) 22px 0; height:calc(env(safe-area-inset-top,0px) + 58px);
-      pointer-events:none;
-    }
-    .topbar .brand { font-family:var(--serif); font-size:16px; letter-spacing:7px; font-weight:600; margin-left:4px; }
-    .timer-chip {
-      display:flex; align-items:center; gap:7px; pointer-events:auto;
-      font-family:var(--mono); font-size:11.5px; letter-spacing:1.5px;
-      color:var(--blanc); background:rgba(13,13,13,.5);
-      backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
-      padding:8px 13px; border-radius:99px; border:1px solid var(--hair);
-    }
-    .timer-chip.urgent { color:#FF7A85; border-color:rgba(230,57,70,.4); }
-    .timer-chip svg { width:12px; height:12px; }
+    .topbar{position:absolute;top:0;left:0;right:0;z-index:60;display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top,0px)+14px) 20px 0;height:calc(env(safe-area-inset-top,0px)+56px);pointer-events:none}
+    .topbar .wm{font-family:var(--display);font-style:italic;font-weight:900;text-transform:uppercase;font-size:19px;letter-spacing:-.5px;margin-left:4px}
+    .timer-chip{display:flex;align-items:center;gap:7px;pointer-events:auto;font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:1px;background:rgba(255,255,255,.85);backdrop-filter:blur(12px);padding:8px 13px;border-radius:999px;border:1.5px solid var(--noir)}
+    .timer-chip.urgent{background:var(--noir);color:var(--blanc)}
+    .timer-chip svg{width:12px;height:12px;stroke:currentColor}
 
-    /* ═══ FEED ═══ */
-    .feed { flex:1; position:relative; overflow:hidden; }
-    .card {
-      position:absolute; inset:0; background-size:cover; background-position:center;
-      will-change:transform,opacity; touch-action:none;
-      transition:transform .45s var(--ease), opacity .45s ease;
-      animation:cardIn .55s var(--ease) both;
-    }
-    @keyframes cardIn { from{opacity:.6; transform:scale(1.045)} to{opacity:1; transform:none} }
-    .card.dragging { transition:none; animation:none; }
-    .card.out-left  { transform:translateX(-115%) rotate(-9deg); opacity:0; }
-    .card.out-right { transform:translateX(115%) rotate(9deg); opacity:0; }
-    .card.out-up    { transform:translateY(-115%) scale(.93); opacity:0; }
-    .card::after {
-      content:''; position:absolute; inset:0; pointer-events:none;
-      background:
-        linear-gradient(to top, rgba(13,13,13,.96) 2%, rgba(13,13,13,.72) 20%, rgba(13,13,13,.18) 42%, transparent 58%),
-        linear-gradient(to bottom, rgba(13,13,13,.62) 0%, transparent 26%);
-    }
-    .card.select::after {
-      background:
-        linear-gradient(to top, rgba(13,13,13,.96) 2%, rgba(13,13,13,.72) 20%, rgba(13,13,13,.18) 42%, transparent 58%),
-        linear-gradient(to bottom, rgba(13,13,13,.62) 0%, transparent 26%),
-        radial-gradient(ellipse at 90% 8%, rgba(201,168,76,.22), transparent 42%);
-    }
-    .card-content {
-      position:absolute; left:0; right:0; bottom:0; z-index:2; padding:0 26px 128px;
-      animation:contentUp .6s var(--ease) .08s both; pointer-events:none;
-    }
-    @keyframes contentUp { from{opacity:0; transform:translateY(16px)} to{opacity:1; transform:none} }
+    /* ═══ FEED — STACK PHYSIQUE ═══ */
+    .feed{flex:1;position:relative;background:var(--blanc);overflow:hidden}
+    .card{position:absolute;inset:10px 10px 10px;border-radius:4px;overflow:hidden;background-size:cover;background-position:center;will-change:transform,opacity;touch-action:none;box-shadow:0 1px 0 var(--g10)}
+    .card.behind{transform:scale(.945) translateY(12px);z-index:1}
+    .card.behind .card-content{opacity:0}
+    .card.fg{z-index:2;animation:cardIn .45s var(--ease) both}
+    @keyframes cardIn{from{transform:scale(1.03)}to{transform:none}}
+    .card.dragging{transition:none;animation:none}
+    .card.fly{transition:transform .42s var(--ease),opacity .42s}
+    .card.out-left{transform:translate(-130%,calc(var(--dy,0)*1px)) rotate(-10deg)!important;opacity:0}
+    .card.out-right{transform:translate(130%,calc(var(--dy,0)*1px)) rotate(10deg)!important;opacity:0}
+    .card.out-up{transform:translate(0,-130%) scale(.92)!important;opacity:0}
+    .card.snap{transition:transform .32s var(--ease)}
+    .card::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,rgba(0,0,0,.25) 26%,transparent 45%),linear-gradient(to bottom,rgba(0,0,0,.4) 0%,transparent 18%)}
+    .card-content{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:0 22px calc(env(safe-area-inset-bottom,0px)+150px);color:var(--blanc);pointer-events:none;transition:opacity .2s}
 
-    .eyebrow {
-      display:inline-flex; align-items:center; gap:7px;
-      font-size:9.5px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase;
-      padding:6px 12px; border-radius:99px; margin-bottom:12px;
-    }
-    .eyebrow svg { width:10px; height:10px; }
-    .eb-verified { background:rgba(76,175,125,.14); color:#8AD4AC; border:1px solid rgba(76,175,125,.32); }
-    .eb-warning  { background:rgba(232,150,60,.14); color:#F0B26F; border:1px solid rgba(232,150,60,.32); }
-    .eb-verified svg { fill:#8AD4AC; }
-    .eb-warning svg { stroke:#F0B26F; }
+    /* stamps façon tampon */
+    .stamp{position:absolute;top:78px;z-index:9;font-family:var(--display);font-weight:900;font-size:26px;letter-spacing:2px;text-transform:uppercase;padding:8px 18px;border:3.5px solid;border-radius:8px;opacity:0;transition:opacity .12s;pointer-events:none;background:rgba(255,255,255,.12);backdrop-filter:blur(4px)}
+    .stamp.s-l{left:22px;transform:rotate(-14deg);color:#fff;border-color:#fff}
+    .stamp.s-r{right:22px;transform:rotate(14deg);color:#fff;border-color:#fff}
+    .stamp.s-u{top:130px;left:50%;margin-left:-80px;width:160px;text-align:center;transform:rotate(-3deg);color:#fff;border-color:#fff}
+    .stamp.show{opacity:1}
 
-    .status-line {
-      position:absolute; top:calc(env(safe-area-inset-top,0px) + 66px); left:26px; right:26px;
-      display:flex; align-items:center; gap:8px; z-index:3;
-      animation:contentUp .6s var(--ease) .18s both;
-    }
-    .cycle-chip {
-      display:inline-flex; align-items:center; gap:6px;
-      font-family:var(--mono); font-size:9.5px; font-weight:500; letter-spacing:1.5px;
-      padding:6px 11px; border-radius:99px;
-      background:var(--or-soft); color:var(--or); border:1px solid var(--or-line);
-    }
-    .select-chip {
-      display:inline-flex; align-items:center; gap:6px;
-      font-size:9px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase;
-      padding:6px 11px; border-radius:99px;
-      background:linear-gradient(135deg, #E4C878, var(--or) 55%, #A8863A); color:#1E1600;
-      box-shadow:0 2px 14px rgba(201,168,76,.35);
-    }
-    .select-chip svg { width:9px; height:9px; fill:#1E1600; }
+    .cycle-chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:2px;padding:6px 11px;border-radius:999px;background:rgba(255,255,255,.92);color:var(--noir);margin-bottom:12px;text-transform:uppercase}
+    .p-brand{font-family:var(--display);font-weight:900;font-style:italic;text-transform:uppercase;font-size:34px;letter-spacing:-1px;line-height:1}
+    .p-title{font-family:var(--display);font-weight:600;text-transform:uppercase;font-size:13px;letter-spacing:1.5px;margin-top:6px;color:rgba(255,255,255,.85)}
+    .p-meta{font-size:11px;color:rgba(255,255,255,.6);margin-top:6px}
+    .price-zone{height:44px;margin-top:12px;position:relative}
+    .price-blur{display:inline-flex;align-items:center;gap:3px;font-family:var(--mono);font-size:15px;letter-spacing:6px;color:rgba(255,255,255,.65);background:rgba(0,0,0,.55);backdrop-filter:blur(8px);padding:9px 20px 9px 25px;border-radius:999px;border:1px solid rgba(255,255,255,.35);transition:all .45s var(--ease)}
+    .price-real{position:absolute;left:2px;top:-2px;font-family:var(--display);font-weight:900;font-size:32px;letter-spacing:-1px;opacity:0;transform:translateY(12px);transition:all .55s var(--ease);text-shadow:0 2px 16px rgba(0,0,0,.4)}
+    .price-real .cur{font-size:16px;font-weight:700;margin-left:5px;color:rgba(255,255,255,.7)}
+    .price-zone.revealed .price-blur{opacity:0;transform:scale(.95)}
+    .price-zone.revealed .price-real{opacity:1;transform:none}
+    .price-hint{position:absolute;left:4px;top:50px;font-size:8.5px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4);transition:opacity .4s;font-weight:600}
+    .price-zone.revealed .price-hint{opacity:0}
+    .tap-detail{position:absolute;top:calc(env(safe-area-inset-top,0px)+64px);right:16px;z-index:4;font-size:8.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--noir);background:rgba(255,255,255,.9);padding:7px 12px;border-radius:999px;animation:fadeIn 1s .5s both}
 
-    .progress-line {
-      position:absolute; left:26px; right:26px; bottom:122px; height:2px; z-index:3;
-      background:rgba(245,240,235,.12); border-radius:1px; overflow:hidden;
-    }
-    .progress-line i { display:block; height:100%; border-radius:1px; background:var(--blanc); transition:background .3s }
-    .progress-line i.warn { background:var(--orange); }
-    .progress-line i.crit { background:var(--rouge); }
-
-    .p-brand {
-      font-family:var(--serif); font-size:32px; font-weight:600; letter-spacing:1.5px; line-height:1.05;
-      text-shadow:0 2px 24px rgba(0,0,0,.4);
-    }
-    .p-title { font-size:12.5px; font-weight:300; letter-spacing:2.8px; text-transform:uppercase; color:rgba(245,240,235,.78); margin-top:6px; }
-    .p-divider { width:34px; height:1px; background:var(--or); opacity:.7; margin:13px 0; }
-    .p-meta { font-size:11.5px; color:var(--faint); letter-spacing:.3px; }
-
-    /* Silence Visuel */
-    .price-zone { height:40px; margin-top:13px; position:relative; }
-    .price-blur {
-      display:inline-flex; align-items:center; gap:3px;
-      font-family:var(--mono); font-size:17px; letter-spacing:7px; color:rgba(245,240,235,.55);
-      background:var(--anthra); padding:8px 20px 8px 26px; border-radius:99px; border:1px solid var(--hair);
-      transition:all .5s var(--ease);
-    }
-    .price-real {
-      position:absolute; left:2px; top:-4px;
-      font-family:var(--serif); font-size:30px; font-weight:500;
-      opacity:0; transform:translateY(12px); transition:all .6s var(--ease);
-      text-shadow:0 2px 20px rgba(0,0,0,.5);
-    }
-    .price-real .cur { font-size:17px; color:var(--muted); margin-left:6px; font-style:italic; }
-    .price-zone.revealed .price-blur { opacity:0; transform:translateY(-10px) scale(.96); }
-    .price-zone.revealed .price-real { opacity:1; transform:none; }
-    .price-hint {
-      position:absolute; left:4px; top:48px; font-size:9px; letter-spacing:2.5px;
-      text-transform:uppercase; color:rgba(245,240,235,.3); transition:opacity .5s;
-    }
-    .price-zone.revealed .price-hint { opacity:0; }
-
-    /* ═══ LOOK DU JOUR ═══ */
-    .look-wrap { display:flex; gap:10px; margin-top:16px; }
-    .look-item { flex:1; }
-    .look-item .im { aspect-ratio:3/4; border-radius:14px; background-size:cover; background-position:center; border:1px solid var(--hair); }
-    .look-item .rl { font-size:8.5px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); text-align:center; margin-top:7px; }
-    .look-head { display:flex; align-items:center; gap:10px; margin-bottom:2px; }
-    .look-head svg { width:17px; height:17px; stroke:var(--or); }
-    .look-kicker { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--or); font-weight:600; }
-    .look-cta {
-      margin-top:18px; width:100%; min-height:50px; border-radius:99px;
-      border:1px solid var(--or-line); background:var(--or-soft); color:var(--or);
-      font-size:11px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase;
-    }
+    /* barre progression */
+    .prog{position:absolute;left:10px;right:10px;top:10px;height:3px;z-index:5;background:rgba(255,255,255,.3)}
+    .prog i{display:block;height:100%;background:var(--blanc)}
 
     /* ═══ ACTIONS ═══ */
-    .actions {
-      position:absolute; left:0; right:0; bottom:calc(env(safe-area-inset-bottom,0px) + 112px);
-      display:flex; justify-content:center; align-items:center; gap:26px; z-index:6;
-      animation:contentUp .6s var(--ease) .25s both;
-    }
-    .act {
-      width:54px; height:54px; border-radius:50%;
-      display:flex; align-items:center; justify-content:center;
-      background:rgba(42,42,42,.66); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
-      border:1px solid rgba(245,240,235,.13);
-      box-shadow:0 4px 18px rgba(0,0,0,.35);
-      transition:transform .16s var(--ease), background .2s;
-    }
-    .act:active { transform:scale(.86); }
-    .act svg { width:20px; height:20px; stroke:var(--blanc); }
-    .act-eye {
-      width:66px; height:66px; border-radius:50%;
-      background:linear-gradient(145deg, #E8CD80, var(--or) 50%, #AC8A3C);
-      display:flex; align-items:center; justify-content:center;
-      box-shadow:0 8px 30px rgba(201,168,76,.4), inset 0 1px 0 rgba(255,255,255,.35);
-      transition:transform .16s var(--ease); border:none;
-    }
-    .act-eye:active { transform:scale(.86); }
-    .act-eye svg { width:25px; height:25px; stroke:#1E1600; stroke-width:1.7; }
-    .act-tip {
-      position:absolute; left:0; right:0; bottom:calc(env(safe-area-inset-bottom,0px) + 90px);
-      display:flex; justify-content:center; gap:26px; z-index:6; pointer-events:none;
-      animation:fadeIn 1s .8s both;
-    }
-    .act-tip span { width:54px; text-align:center; font-size:8.5px; letter-spacing:1.8px; text-transform:uppercase; color:rgba(245,240,235,.38); }
-    .act-tip span:nth-child(2) { width:66px; }
+    .actions{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px)+96px);display:flex;justify-content:center;align-items:center;gap:18px;z-index:8}
+    .act{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--blanc);border:1.5px solid var(--noir);box-shadow:0 4px 16px rgba(0,0,0,.14);transition:transform .15s,background .15s}
+    .act:active{transform:scale(.86)}
+    .act svg{width:21px;height:21px;stroke:var(--noir)}
+    .act.solid{background:var(--noir);border-color:var(--noir);width:66px;height:66px}
+    .act.solid svg{stroke:var(--blanc);width:25px;height:25px}
+    .act-tip{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px)+76px);display:flex;justify-content:center;gap:18px;z-index:8;pointer-events:none}
+    .act-tip span{width:54px;text-align:center;font-size:8px;letter-spacing:1.8px;text-transform:uppercase;color:var(--blanc);font-weight:700;opacity:.9}
+    .act-tip span:nth-child(2){width:66px}
+    .undo{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px)+96px);right:18px;z-index:9;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;color:#fff}
+    .undo svg{width:18px;height:18px;stroke:#fff}
 
-    /* Gestes */
-    .hint {
-      position:absolute; top:50%; transform:translateY(-50%); z-index:8; pointer-events:none;
-      display:flex; flex-direction:column; align-items:center; gap:9px; opacity:0; transition:opacity .18s;
-    }
-    .hint .ic { width:58px; height:58px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:1.5px solid currentColor; backdrop-filter:blur(8px); background:rgba(13,13,13,.35); }
-    .hint .ic svg { width:25px; height:25px; stroke:currentColor; }
-    .hint b { font-size:9px; letter-spacing:2.5px; text-transform:uppercase; font-weight:600; }
-    .hint.h-l { left:30px; color:#FF7A85; }
-    .hint.h-r { right:30px; color:#8AD4AC; }
-    .hint.h-u { top:26%; left:50%; transform:translateX(-50%); color:var(--or); }
-    .hint.show { opacity:1; }
+    /* ═══ NAV NIKE ═══ */
+    .nav{position:absolute;bottom:0;left:0;right:0;z-index:70;height:calc(env(safe-area-inset-bottom,0px)+74px);background:var(--blanc);border-top:1px solid var(--g10);display:flex;align-items:center;justify-content:space-around;padding-bottom:calc(env(safe-area-inset-bottom,0px)+2px)}
+    .nav-item{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:48px;min-height:44px;justify-content:center;color:var(--g50);transition:color .2s}
+    .nav-item svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.6}
+    .nav-item span{font-family:var(--display);font-weight:700;font-size:8px;letter-spacing:1.5px;text-transform:uppercase}
+    .nav-item.active{color:var(--noir)}
+    .nav-plus{width:52px;height:52px;border-radius:50%;background:var(--noir);color:var(--blanc);display:flex;align-items:center;justify-content:center;margin-top:-24px;box-shadow:0 6px 18px rgba(0,0,0,.3);transition:transform .15s}
+    .nav-plus:active{transform:scale(.9)}
+    .nav-plus svg{width:22px;height:22px;stroke:var(--blanc);stroke-width:2.4}
 
-    /* ═══ NAV ═══ */
-    .nav {
-      position:absolute; bottom:0; left:0; right:0; z-index:70;
-      height:calc(env(safe-area-inset-bottom,0px) + 82px);
-      background:rgba(13,13,13,.9); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
-      border-top:1px solid var(--hair);
-      display:flex; align-items:center; justify-content:space-around;
-      padding-bottom:calc(env(safe-area-inset-bottom,0px) + 4px);
-    }
-    .nav-item {
-      display:flex; flex-direction:column; align-items:center; gap:5px;
-      min-width:48px; min-height:46px; justify-content:center; color:var(--muted); position:relative;
-      transition:color .22s;
-    }
-    .nav-item svg { width:21px; height:21px; stroke:currentColor; }
-    .nav-item span { font-size:8.5px; letter-spacing:1.5px; text-transform:uppercase; font-weight:500; }
-    .nav-item.active { color:var(--blanc); }
-    .nav-item.active::after {
-      content:''; position:absolute; top:-13px; width:4px; height:4px; border-radius:50%; background:var(--or);
-      box-shadow:0 0 8px var(--or);
-    }
-    .nav-plus {
-      width:56px; height:56px; border-radius:50%;
-      background:linear-gradient(145deg,#E8CD80,var(--or) 50%,#AC8A3C); color:var(--noir);
-      display:flex; align-items:center; justify-content:center; margin-top:-30px;
-      box-shadow:0 8px 26px rgba(201,168,76,.45), inset 0 1px 0 rgba(255,255,255,.4);
-      transition:transform .16s var(--ease);
-    }
-    .nav-plus:active { transform:scale(.9); }
-    .nav-plus svg { width:23px; height:23px; stroke:var(--noir); stroke-width:2.2; }
+    /* ═══ FICHE PRODUIT DÉTAILLÉE ═══ */
+    .detail{position:absolute;inset:0;z-index:120;background:var(--blanc);display:flex;flex-direction:column;animation:slideIn .38s var(--ease)}
+    @keyframes slideIn{from{transform:translateY(4%);opacity:0}to{transform:none;opacity:1}}
+    .detail-nav{position:absolute;top:calc(env(safe-area-inset-top,0px)+10px);left:0;right:0;display:flex;justify-content:space-between;padding:0 14px;z-index:5}
+    .icon-btn{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border:1px solid var(--g10);display:flex;align-items:center;justify-content:center}
+    .icon-btn svg{width:17px;height:17px;stroke:var(--noir)}
+    .detail-body{flex:1;overflow-y:auto;padding-bottom:calc(env(safe-area-inset-bottom,0px)+110px)}
+    .gal{position:relative}
+    .gal-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth}
+    .gal-item{flex:0 0 100%;height:470px;scroll-snap-align:center;background-size:cover;background-position:center}
+    .gal-dots{position:absolute;bottom:14px;left:0;right:0;display:flex;justify-content:center;gap:6px}
+    .gal-dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.45);transition:all .2s}
+    .gal-dots i.on{background:var(--blanc);width:18px;border-radius:3px}
+    .gal-count{position:absolute;bottom:10px;right:16px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.9)}
+    .gal-zoom{position:absolute;top:calc(env(safe-area-inset-top,0px)+64px);left:16px;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:rgba(255,255,255,.92);border:1px solid var(--g10);padding:6px 10px;border-radius:999px}
+    .d-head{padding:22px 22px 0}
+    .d-sold{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--g50)}
+    .d-brand{font-family:var(--display);font-weight:900;font-style:italic;text-transform:uppercase;font-size:30px;letter-spacing:-1px;margin-top:6px;line-height:1}
+    .d-name{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:15px;letter-spacing:.5px;margin-top:4px}
+    .d-price{font-family:var(--display);font-weight:900;font-size:26px;margin-top:14px;letter-spacing:-.5px}
+    .d-price .rev{font-family:var(--mono);font-size:10px;font-weight:400;color:var(--g50);display:block;margin-top:5px;letter-spacing:0}
+    .d-cyc{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;border:1.5px solid var(--noir);border-radius:999px;padding:7px 12px;text-transform:uppercase;font-weight:500}
+    .d-sect{margin:26px 22px 0;border-top:1px solid var(--g10);padding-top:20px}
+    .d-sect h4{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:12px;letter-spacing:2px;margin-bottom:14px}
+    .spec-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--g05);font-size:13px}
+    .spec-row:last-child{border-bottom:none}
+    .spec-row .k{color:var(--g70)}
+    .spec-row .v{font-weight:600}
+    .d-desc{font-size:13.5px;line-height:1.7;color:#333}
+    /* rapport trust */
+    .trust-box{border:1.5px solid var(--noir);border-radius:16px;padding:18px}
+    .trust-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+    .trust-head .sc{font-family:var(--display);font-weight:900;font-size:38px;line-height:1}
+    .trust-head .lb{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:11px;letter-spacing:2px;background:var(--noir);color:var(--blanc);padding:7px 12px;border-radius:999px}
+    .trust-bar{height:6px;background:var(--g10);border-radius:3px;overflow:hidden;margin-bottom:16px}
+    .trust-bar i{display:block;height:100%;background:var(--noir)}
+    .check-row{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:12.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;font-family:var(--display)}
+    .check-row .ok{width:20px;height:20px;border-radius:50%;background:var(--noir);color:var(--blanc);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .check-row .ok svg{width:11px;height:11px;stroke:var(--blanc);stroke-width:3}
+    .check-row .det{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--g50);font-weight:400;letter-spacing:0;text-transform:none}
+    /* vendeur */
+    .seller-row{display:flex;align-items:center;gap:14px}
+    .seller-av{width:54px;height:54px;border-radius:50%;background:var(--noir);color:var(--blanc);font-family:var(--display);font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center}
+    .seller-row .nm{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:14px;letter-spacing:.5px}
+    .seller-row .st{font-size:11.5px;color:var(--g70);margin-top:3px}
+    .seller-row .sc{margin-left:auto;font-family:var(--mono);font-size:13px;font-weight:500}
+    /* sticky CTA */
+    .d-cta{position:absolute;bottom:0;left:0;right:0;background:var(--blanc);border-top:1px solid var(--g10);padding:14px 20px calc(env(safe-area-inset-bottom,0px)+16px);display:flex;gap:10px;z-index:6}
 
-    /* ═══ SHEETS ═══ */
-    .overlay {
-      position:absolute; inset:0; z-index:200; background:rgba(0,0,0,.66); backdrop-filter:blur(6px);
-      display:flex; align-items:flex-end; animation:fadeIn .25s;
-    }
-    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-    .sheet {
-      width:100%; background:#121212; border-radius:26px 26px 0 0; border-top:1px solid rgba(245,240,235,.14);
-      padding:14px 26px calc(env(safe-area-inset-bottom,0px) + 30px);
-      max-height:86dvh; overflow-y:auto;
-      animation:slideup .38s var(--ease);
-      box-shadow:0 -18px 60px rgba(0,0,0,.6);
-    }
-    @keyframes slideup { from{transform:translateY(100%)} to{transform:none} }
-    .sheet-handle { width:42px; height:4px; border-radius:2px; background:var(--anthra); margin:0 auto 20px; }
-    .sheet-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
-    .sheet-title { font-family:var(--serif); font-size:25px; font-weight:600; letter-spacing:.5px; }
-    .sheet-close { width:44px; height:44px; margin:-11px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--muted); }
-    .sheet-close svg { width:17px; height:17px; stroke:currentColor; }
-    .prod-row { display:flex; gap:15px; align-items:center; margin-bottom:22px; }
-    .prod-thumb { width:66px; height:66px; border-radius:16px; background-size:cover; background-position:center; border:1px solid var(--hair); }
-    .prod-row .pb { font-family:var(--serif); font-size:17px; letter-spacing:.5px; }
-    .prod-row .pt { font-size:11.5px; color:var(--muted); margin-top:3px; }
-    .prod-row .pp { font-family:var(--mono); font-size:12.5px; color:var(--or); margin-top:5px; letter-spacing:.5px; }
+    /* ═══ SHEETS (offre, ajustement) ═══ */
+    .overlay{position:absolute;inset:0;z-index:200;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;animation:fadeIn .2s}
+    .sheet{width:100%;background:var(--blanc);border-radius:22px 22px 0 0;padding:12px 24px calc(env(safe-area-inset-bottom,0px)+26px);max-height:88dvh;overflow-y:auto;animation:slideup .35s var(--ease)}
+    @keyframes slideup{from{transform:translateY(100%)}to{transform:none}}
+    .sheet-handle{width:44px;height:4px;border-radius:2px;background:var(--g30);margin:0 auto 18px}
+    .sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .sheet-title{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:22px;letter-spacing:-.3px}
+    .sheet-close{width:44px;height:44px;margin:-11px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--noir)}
+    .sheet-close svg{width:17px;height:17px;stroke:currentColor;stroke-width:2}
+    .prod-row{display:flex;gap:14px;align-items:center;margin-bottom:20px}
+    .prod-thumb{width:64px;height:64px;border-radius:10px;background-size:cover;background-position:center;border:1px solid var(--g10)}
+    .prod-row .pb{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:15px}
+    .prod-row .pt{font-size:11.5px;color:var(--g70);margin-top:2px}
+    .prod-row .pp{font-family:var(--mono);font-size:12px;margin-top:5px;font-weight:500}
+    .field-label{font-family:var(--display);font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+    .offer-input-row{display:flex;align-items:center;gap:10px;border:1.5px solid var(--noir);border-radius:14px;padding:2px 18px;margin-bottom:14px}
+    .offer-input{flex:1;border:none;outline:none;font-family:var(--display);font-weight:900;font-size:30px;padding:12px 0;width:100%;background:none;color:var(--noir)}
+    .offer-cur{font-family:var(--display);font-weight:800;font-size:18px}
+    .mkt{margin:2px 2px 18px}
+    .mkt-track{position:relative;height:10px;background:var(--g05);border:1.5px solid var(--noir);border-radius:5px}
+    .mkt-gold{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,var(--noir) 0 3px,transparent 3px 7px)}
+    .mkt-ai{position:absolute;top:-2px;bottom:-2px;border:1.5px dashed var(--g50);border-radius:6px;background:rgba(0,0,0,.05)}
+    .mkt-dot{position:absolute;top:50%;width:22px;height:22px;border-radius:50%;background:var(--noir);border:3px solid var(--blanc);transform:translate(-50%,-50%);box-shadow:0 2px 8px rgba(0,0,0,.35);transition:left .12s}
+    .mkt-marks{display:flex;justify-content:space-between;margin-top:11px}
+    .mkt-marks span{font-size:8.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--g70)}
+    .mkt-marks .b{color:var(--noir)}
+    .info-banner{display:flex;gap:11px;align-items:flex-start;font-size:12px;line-height:1.55;color:var(--g70);background:var(--g05);border-radius:12px;padding:13px 15px;margin-bottom:18px}
+    .info-banner svg{width:15px;height:15px;stroke:var(--noir);flex-shrink:0;margin-top:1px}
+    .info-banner strong{color:var(--noir)}
+    .pills{display:flex;gap:10px;margin-bottom:20px}
+    .pill{flex:1;padding:13px;text-align:center;border-radius:999px;border:1.5px solid var(--noir);font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--noir);background:var(--blanc);transition:all .18s;min-height:46px}
+    .pill.on{background:var(--noir);color:var(--blanc)}
 
-    .field-label { font-size:9.5px; font-weight:600; letter-spacing:2.2px; text-transform:uppercase; color:var(--muted); margin-bottom:11px; }
-    .offer-input-row {
-      display:flex; align-items:center; gap:10px; background:#1A1A1A;
-      border:1px solid var(--anthra); border-radius:18px; padding:4px 20px; margin-bottom:14px;
-      transition:border .2s;
-    }
-    .offer-input-row:focus-within { border-color:var(--or-line); }
-    .offer-input {
-      flex:1; background:none; border:none; outline:none; width:100%;
-      font-family:var(--serif); font-size:28px; font-weight:500; color:var(--blanc); padding:13px 0;
-    }
-    .offer-cur { font-family:var(--serif); font-size:20px; color:var(--muted); font-style:italic; }
+    /* modale alerte prix */
+    .center-modal{position:absolute;inset:0;z-index:230;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn .2s}
+    .modal-box{width:100%;max-width:380px;background:var(--blanc);border-radius:24px;padding:26px;animation:popin .3s var(--ease)}
+    @keyframes popin{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+    .modal-box h3{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:21px;letter-spacing:-.3px;margin-bottom:8px}
+    .modal-box .sub{font-size:12.5px;color:var(--g70);line-height:1.6;margin-bottom:18px}
+    .price-compare{background:var(--g05);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:9px;margin-bottom:18px}
+    .pc-row{display:flex;justify-content:space-between;font-size:12.5px}
+    .pc-row .l{color:var(--g70)}
+    .pc-row .v{font-family:var(--mono);font-size:12px}
+    .pc-row .v.b{font-weight:500}
+    input[type=range]{width:100%;-webkit-appearance:none;height:4px;border-radius:2px;background:linear-gradient(to right,var(--noir) var(--val,50%),var(--g10) var(--val,50%));outline:none}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:var(--noir);border:3px solid var(--blanc);box-shadow:0 1px 8px rgba(0,0,0,.4);cursor:pointer}
+    .slider-labels{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--g50);margin-top:10px}
+    .slider-labels .now{color:var(--noir);font-weight:500}
+    .modal-note{display:flex;gap:9px;font-size:11px;color:var(--g70);line-height:1.55;margin:14px 0 4px}
+    .modal-note svg{width:13px;height:13px;stroke:var(--g70);flex-shrink:0;margin-top:1px}
+    .adj-counter{font-family:var(--display);font-size:9.5px;letter-spacing:2px;text-transform:uppercase;font-weight:800;margin:10px 0 18px}
 
-    /* Barre de marché */
-    .mkt { margin:4px 2px 20px; }
-    .mkt-track { position:relative; height:8px; background:#1A1A1A; border-radius:4px; border:1px solid var(--anthra); overflow:visible; }
-    .mkt-gold { position:absolute; top:0; bottom:0; border-radius:4px; background:linear-gradient(90deg, rgba(201,168,76,.28), rgba(201,168,76,.65)); }
-    .mkt-ai { position:absolute; top:-3px; bottom:-3px; border-radius:6px; border:1px dashed rgba(245,240,235,.4); }
-    .mkt-dot {
-      position:absolute; top:50%; width:20px; height:20px; border-radius:50%;
-      background:var(--or); border:3px solid #121212; transform:translate(-50%,-50%);
-      box-shadow:0 0 14px rgba(201,168,76,.7); transition:left .15s;
-    }
-    .mkt-marks { display:flex; justify-content:space-between; margin-top:11px; }
-    .mkt-marks span { font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); }
-    .mkt-marks .g { color:var(--or); }
+    /* ═══ DRESSING / RECHERCHE / STUDIO / PROFIL — noir & blanc ═══ */
+    .screen{flex:1;overflow-y:auto;padding-bottom:calc(env(safe-area-inset-bottom,0px)+96px);background:var(--blanc)}
+    .screen-head{padding:calc(env(safe-area-inset-top,0px)+52px) 22px 18px}
+    .screen-kicker{font-family:var(--display);font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--g50);margin-bottom:8px}
+    .screen-title{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:30px;letter-spacing:-.8px}
+    .tabs{display:flex;gap:8px;padding:0 22px 18px}
+    .alert-card{margin:0 18px 16px;padding:15px;background:var(--noir);color:var(--blanc);border-radius:18px;display:flex;gap:14px;align-items:center;cursor:pointer;transition:transform .18s}
+    .alert-card:active{transform:scale(.98)}
+    .alert-card .im{width:56px;height:56px;border-radius:10px;background-size:cover;background-position:center;flex-shrink:0;filter:grayscale(20%)}
+    .alert-card .msg{font-size:11.5px;line-height:1.5;color:rgba(255,255,255,.85)}
+    .alert-card .msg b{font-family:var(--display);font-size:13.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:3px}
+    .alert-card .link{color:var(--blanc);font-family:var(--display);font-size:9.5px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-top:7px;display:inline-block;text-decoration:underline;text-underline-offset:3px}
+    .dgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 18px}
+    .dcard{background:var(--blanc);border:1px solid var(--g10);border-radius:14px;overflow:hidden;position:relative;animation:contentUp .45s var(--ease) both}
+    @keyframes contentUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+    .dcard:nth-child(2){animation-delay:.05s}.dcard:nth-child(3){animation-delay:.1s}.dcard:nth-child(4){animation-delay:.15s}.dcard:nth-child(5){animation-delay:.2s}.dcard:nth-child(6){animation-delay:.25s}
+    .dcard .im{aspect-ratio:3/3.4;background-size:cover;background-position:center}
+    .dcard .info{padding:12px 14px 14px}
+    .dcard .b{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:12.5px;letter-spacing:.3px}
+    .dcard .t{font-size:11px;color:var(--g70);margin-top:2px}
+    .dcard .pr{font-family:var(--mono);font-size:12.5px;margin-top:8px;font-weight:500}
+    .dbadges{position:absolute;top:10px;left:10px;right:10px;display:flex;flex-wrap:wrap;gap:6px}
+    .db{display:inline-flex;align-items:center;gap:4px;font-family:var(--display);font-size:8px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:5px 9px;border-radius:999px}
+    .db svg{width:9px;height:9px}
+    .db-time{background:rgba(255,255,255,.92);color:var(--noir);border:1px solid var(--g10)}.db-time svg{stroke:var(--noir)}
+    .db-urgent{background:var(--noir);color:var(--blanc)}.db-urgent svg{stroke:var(--blanc)}
+    .db-alert{background:var(--noir);color:var(--blanc)}.db-alert svg{stroke:var(--blanc)}
+    .db-cycle{background:var(--blanc);border:1px solid var(--noir);color:var(--noir)}
+    .db-select{background:var(--noir);color:var(--blanc)}.db-select svg{fill:var(--blanc)}
+    .db-sold{background:var(--g10);color:var(--g70)}.db-sold svg{stroke:var(--g70);stroke-width:2.6}
+    .db-swap{background:var(--blanc);border:1px solid var(--noir);color:var(--noir)}.db-swap svg{stroke:var(--noir)}
 
-    .info-banner {
-      display:flex; gap:11px; align-items:flex-start; font-size:12px; line-height:1.55; color:rgba(245,240,235,.68);
-      background:rgba(42,42,42,.42); border:1px solid var(--anthra); border-radius:14px; padding:13px 15px; margin-bottom:20px;
-    }
-    .info-banner svg { width:15px; height:15px; stroke:var(--or); flex-shrink:0; margin-top:1px; }
-    .info-banner strong { color:var(--blanc); font-weight:600; }
-    .pills { display:flex; gap:10px; margin-bottom:22px; }
-    .pill {
-      flex:1; padding:13px; text-align:center; border-radius:99px; border:1px solid var(--anthra);
-      font-size:12.5px; font-weight:500; color:var(--muted); transition:all .2s; min-height:46px;
-    }
-    .pill.on { border-color:var(--or-line); color:var(--or); background:var(--or-soft); font-weight:600; }
-    .btn-primary {
-      width:100%; min-height:57px; border-radius:99px;
-      background:linear-gradient(145deg,#E8CD80,var(--or) 50%,#AC8A3C); color:var(--noir);
-      font-size:12px; font-weight:600; letter-spacing:2.8px; text-transform:uppercase;
-      display:flex; align-items:center; justify-content:center;
-      box-shadow:0 6px 24px rgba(201,168,76,.3), inset 0 1px 0 rgba(255,255,255,.4);
-      transition:transform .16s, opacity .2s;
-    }
-    .btn-primary:active { transform:scale(.98); opacity:.88; }
-    .btn-ghost { width:100%; min-height:49px; border-radius:99px; margin-top:10px; color:var(--muted); font-size:12px; font-weight:500; letter-spacing:1.5px; display:flex; align-items:center; justify-content:center; }
-    .btn-dark { width:100%; min-height:57px; border-radius:99px; background:transparent; border:1px solid rgba(245,240,235,.35); color:var(--blanc); font-size:12px; font-weight:600; letter-spacing:2.8px; text-transform:uppercase; display:flex; align-items:center; justify-content:center; }
+    .search-bar{display:flex;align-items:center;gap:11px;background:var(--g05);border-radius:14px;padding:4px 16px;margin:16px 0 6px}
+    .search-bar svg{width:17px;height:17px;stroke:var(--g70);flex-shrink:0}
+    .search-bar input{flex:1;background:none;border:none;outline:none;font-size:15px;font-family:var(--body);padding:14px 0}
+    .section-title{font-family:var(--display);font-size:9.5px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--g50);margin:28px 0 14px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{padding:11px 18px;border-radius:999px;border:1.5px solid var(--noir);font-family:var(--display);font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;min-height:44px;display:inline-flex;align-items:center;background:var(--blanc);color:var(--noir);transition:all .18s}
+    .chip.on{background:var(--noir);color:var(--blanc)}
+    .trend-row{display:flex;gap:12px;overflow-x:auto;padding:2px 0 12px}
+    .trend-card{flex-shrink:0;width:128px}
+    .trend-card .im{width:128px;height:160px;border-radius:12px;background-size:cover;background-position:center;border:1px solid var(--g10)}
+    .trend-card .b{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:11.5px;margin-top:8px;letter-spacing:.3px}
+    .trend-card .n{font-size:10.5px;color:var(--g70);margin-top:2px}
+    .trend-card .n.hot{color:var(--noir);font-weight:600}
 
-    /* ═══ MODALE CENTRÉE (Alerte Prix) ═══ */
-    .center-modal { position:absolute; inset:0; z-index:220; background:rgba(0,0,0,.72); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; padding:26px; animation:fadeIn .25s; }
-    .modal-box { width:100%; max-width:380px; background:#141414; border:1px solid rgba(245,240,235,.12); border-radius:28px; padding:28px; animation:popin .35s var(--ease); box-shadow:0 30px 80px rgba(0,0,0,.7); }
-    @keyframes popin { from{transform:scale(.9); opacity:0} to{transform:scale(1); opacity:1} }
-    .warn-ic { width:50px; height:50px; border-radius:50%; margin-bottom:16px; background:rgba(232,150,60,.12); border:1px solid rgba(232,150,60,.4); display:flex; align-items:center; justify-content:center; }
-    .warn-ic svg { width:22px; height:22px; stroke:var(--orange); }
-    .modal-box h3 { font-family:var(--serif); font-size:23px; font-weight:600; margin-bottom:7px; }
-    .modal-box .sub { font-size:12.5px; color:var(--muted); line-height:1.6; margin-bottom:20px; }
-    .price-compare { background:#1A1A1A; border:1px solid var(--anthra); border-radius:16px; padding:15px 17px; display:flex; flex-direction:column; gap:9px; margin-bottom:20px; }
-    .pc-row { display:flex; justify-content:space-between; font-size:12.5px; }
-    .pc-row .l { color:var(--muted); }
-    .pc-row .v { font-family:var(--mono); font-size:12px; }
-    .pc-row .v.gold { color:var(--or); font-weight:500; }
-    input[type=range] {
-      width:100%; -webkit-appearance:none; height:3px; border-radius:2px; outline:none;
-      background:linear-gradient(to right, var(--or) var(--val,50%), var(--anthra) var(--val,50%));
-    }
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance:none; width:28px; height:28px; border-radius:50%;
-      background:linear-gradient(145deg,#E8CD80,#AC8A3C); border:3px solid #141414;
-      box-shadow:0 2px 12px rgba(201,168,76,.6); cursor:pointer;
-    }
-    .slider-labels { display:flex; justify-content:space-between; font-family:var(--mono); font-size:10.5px; color:var(--muted); margin-top:10px; }
-    .slider-labels .now { color:var(--or); }
-    .modal-note { display:flex; gap:9px; font-size:11px; color:var(--muted); line-height:1.55; margin:16px 0 6px; }
-    .modal-note svg { width:13px; height:13px; stroke:var(--muted); flex-shrink:0; margin-top:1px; }
-    .adj-counter { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--or); font-weight:600; margin-bottom:20px; }
+    .studio{padding:calc(env(safe-area-inset-top,0px)+52px) 22px 130px}
+    .studio h2{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:30px;letter-spacing:-.8px;line-height:1;margin:6px 0 26px}
+    .step-label{display:flex;align-items:center;gap:11px;margin:24px 0 12px}
+    .step-num{width:26px;height:26px;border-radius:50%;font-family:var(--mono);font-size:11px;background:var(--noir);color:var(--blanc);display:flex;align-items:center;justify-content:center}
+    .step-label span:last-child{font-family:var(--display);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+    .photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+    .pshot{aspect-ratio:1;border-radius:12px;background:var(--g05);border:1.5px dashed var(--g30);display:flex;align-items:center;justify-content:center;color:var(--g30);position:relative;overflow:hidden}
+    .pshot svg{width:20px;height:20px;stroke:currentColor}
+    .pshot.filled{border-style:solid;border-color:var(--noir);background-size:cover;background-position:center}
+    .pshot .ok{position:absolute;bottom:5px;right:5px;width:18px;height:18px;border-radius:50%;background:var(--noir);display:flex;align-items:center;justify-content:center}
+    .pshot .ok svg{width:10px;height:10px;stroke:var(--blanc);stroke-width:2.8}
+    .ai-panel{background:var(--noir);color:var(--blanc);border-radius:18px;padding:18px;margin-top:12px}
+    .ai-head{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+    .ai-head svg{width:15px;height:15px;stroke:var(--blanc)}
+    .ai-head span{font-family:var(--display);font-size:9.5px;letter-spacing:2.5px;text-transform:uppercase;font-weight:800}
+    .ai-field{border-bottom:1px solid rgba(255,255,255,.12);padding:12px 2px;display:flex;justify-content:space-between;align-items:center}
+    .ai-field:last-child{border-bottom:none}
+    .ai-field .k{font-size:10px;color:var(--g30);letter-spacing:1.5px;text-transform:uppercase}
+    .ai-field .v{font-size:13.5px;font-weight:600}
+    .ai-field .v.serif{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:13px;letter-spacing:.3px}
+    .est{font-family:var(--mono);font-size:11.5px;color:var(--blanc)}
 
-    /* ═══ DRESSING ═══ */
-    .screen { flex:1; overflow-y:auto; padding-bottom:calc(env(safe-area-inset-bottom,0px) + 104px); }
-    .screen-head { padding:calc(env(safe-area-inset-top,0px) + 54px) 24px 20px; }
-    .screen-kicker { font-size:9.5px; letter-spacing:3px; text-transform:uppercase; color:var(--or); font-weight:600; margin-bottom:8px; }
-    .screen-title { font-family:var(--serif); font-size:30px; font-weight:600; letter-spacing:.5px; }
-    .tabs { display:flex; gap:9px; padding:0 24px 20px; }
-    .alert-card {
-      margin:0 20px 18px; padding:16px;
-      background:linear-gradient(135deg, rgba(232,150,60,.13), rgba(201,168,76,.05) 70%);
-      border:1px solid rgba(232,150,60,.35); border-radius:20px;
-      display:flex; gap:14px; align-items:center; cursor:pointer; transition:transform .2s;
-    }
-    .alert-card:active { transform:scale(.98); }
-    .alert-card .im { width:58px; height:58px; border-radius:14px; background-size:cover; background-position:center; border:1px solid var(--hair); flex-shrink:0; }
-    .alert-card .msg { font-size:11.5px; line-height:1.5; color:rgba(245,240,235,.85); }
-    .alert-card .msg b { font-family:var(--serif); font-size:14.5px; font-weight:600; display:block; margin-bottom:3px; letter-spacing:.3px; }
-    .alert-card .link { color:var(--or); font-size:10px; font-weight:600; letter-spacing:1.8px; text-transform:uppercase; margin-top:7px; display:inline-block; text-decoration:underline; text-underline-offset:3px; }
-    .dgrid { display:grid; grid-template-columns:1fr 1fr; gap:13px; padding:0 20px; }
-    .dcard {
-      background:#141414; border:1px solid rgba(245,240,235,.07); border-radius:20px; overflow:hidden; position:relative;
-      animation:contentUp .5s var(--ease) both;
-    }
-    .dcard:nth-child(2){animation-delay:.05s} .dcard:nth-child(3){animation-delay:.1s} .dcard:nth-child(4){animation-delay:.15s} .dcard:nth-child(5){animation-delay:.2s} .dcard:nth-child(6){animation-delay:.25s}
-    .dcard.gold { border-color:var(--or-line); }
-    .dcard .im { aspect-ratio:3/3.4; background-size:cover; background-position:center; }
-    .dcard .info { padding:13px 15px 15px; }
-    .dcard .b { font-family:var(--serif); font-size:14.5px; letter-spacing:.5px; }
-    .dcard .t { font-size:10.5px; color:var(--muted); margin-top:2px; }
-    .dcard .pr { font-family:var(--mono); font-size:12.5px; color:var(--or); margin-top:9px; letter-spacing:.5px; }
-    .dbadges { position:absolute; top:11px; left:11px; right:11px; display:flex; flex-wrap:wrap; gap:6px; }
-    .db {
-      display:inline-flex; align-items:center; gap:4px;
-      font-size:8.5px; font-weight:600; letter-spacing:1.3px; text-transform:uppercase;
-      padding:5px 9px; border-radius:99px; backdrop-filter:blur(10px);
-    }
-    .db svg { width:9px; height:9px; }
-    .db-time  { background:rgba(13,13,13,.68); color:var(--blanc); border:1px solid var(--hair); }
-    .db-time svg { stroke:var(--blanc); }
-    .db-urgent{ background:var(--rouge); color:#fff; } .db-urgent svg { stroke:#fff; }
-    .db-alert { background:var(--orange); color:#221300; } .db-alert svg { stroke:#221300; }
-    .db-cycle { background:rgba(91,141,239,.85); color:#fff; }
-    .db-select{ background:linear-gradient(135deg,#E4C878,#AC8A3C); color:#1E1600; } .db-select svg { fill:#1E1600; }
-    .db-sold  { background:rgba(76,175,125,.92); color:#04140c; } .db-sold svg { stroke:#04140c; stroke-width:2.6; }
-    .db-swap  { background:rgba(13,13,13,.68); color:var(--violet); border:1px solid rgba(185,167,238,.4); } .db-swap svg { stroke:var(--violet); }
+    .profile-hero{display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top,0px)+60px) 24px 22px}
+    .ring-wrap{position:relative;width:130px;height:130px;margin-bottom:16px}
+    .ring-wrap svg{width:130px;height:130px;transform:rotate(-90deg)}
+    .ring-bg{fill:none;stroke:var(--g10);stroke-width:3}
+    .ring-fg{fill:none;stroke:var(--noir);stroke-width:3;stroke-linecap:round;stroke-dasharray:352;transition:stroke-dashoffset 1.2s var(--ease)}
+    .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+    .ring-center .n{font-family:var(--display);font-weight:900;font-size:36px}
+    .ring-center .l{font-family:var(--display);font-size:7.5px;letter-spacing:2.5px;text-transform:uppercase;font-weight:800;color:var(--g70)}
+    .profile-hero h2{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:24px;letter-spacing:-.5px}
+    .profile-hero .loc{font-size:10.5px;color:var(--g70);margin-top:5px;letter-spacing:1.5px;text-transform:uppercase}
+    .stats-row{display:flex;margin:20px 22px 0;background:var(--noir);color:var(--blanc);border-radius:18px;padding:16px 0}
+    .stat{flex:1;text-align:center;border-right:1px solid rgba(255,255,255,.15)}
+    .stat:last-child{border-right:none}
+    .stat .n{font-family:var(--display);font-weight:900;font-size:19px}
+    .stat .l{font-family:var(--display);font-size:7.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--g30);margin-top:4px;font-weight:700}
+    .pref-panel{background:var(--g05);border-radius:18px;padding:6px 18px}
+    .pref-row{padding:15px 0;border-bottom:1px solid var(--g10)}
+    .pref-row:last-child{border-bottom:none}
+    .pref-row .k{font-family:var(--display);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--g70);margin-bottom:12px;display:block;font-weight:700}
+    .search-wrap{padding:calc(env(safe-area-inset-top,0px)+52px) 22px 130px}
 
-    /* ═══ STUDIO ═══ */
-    .studio { padding:calc(env(safe-area-inset-top,0px) + 54px) 24px 130px; }
-    .studio h2 { font-family:var(--serif); font-size:30px; font-weight:600; margin-bottom:6px; }
-    .studio .sub { font-size:10px; letter-spacing:2.5px; text-transform:uppercase; color:var(--or); font-weight:600; margin-bottom:30px; }
-    .step-label { display:flex; align-items:center; gap:11px; margin:26px 0 13px; }
-    .step-num { width:26px; height:26px; border-radius:50%; font-family:var(--mono); font-size:11px; background:var(--or-soft); color:var(--or); display:flex; align-items:center; justify-content:center; border:1px solid var(--or-line); }
-    .step-label span:last-child { font-size:10.5px; font-weight:600; letter-spacing:2.2px; text-transform:uppercase; }
-    .photo-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:9px; }
-    .pshot { aspect-ratio:1; border-radius:16px; background:#141414; border:1px dashed var(--anthra); display:flex; align-items:center; justify-content:center; color:#3a3a3a; position:relative; overflow:hidden; }
-    .pshot svg { width:20px; height:20px; stroke:currentColor; }
-    .pshot.filled { border-style:solid; border-color:var(--or-line); background-size:cover; background-position:center; }
-    .pshot .scan {
-      position:absolute; left:0; right:0; height:36%;
-      background:linear-gradient(to bottom, transparent, rgba(201,168,76,.35), transparent);
-      animation:scan 2.2s var(--ease) infinite;
-    }
-    @keyframes scan { 0%{top:-36%} 100%{top:100%} }
-    .pshot .ok { position:absolute; bottom:6px; right:6px; width:18px; height:18px; border-radius:50%; background:var(--or); display:flex; align-items:center; justify-content:center; }
-    .pshot .ok svg { width:10px; height:10px; stroke:var(--noir); stroke-width:2.8; }
-    .ai-panel { background:#141414; border:1px solid var(--anthra); border-radius:20px; padding:18px; margin-top:14px; }
-    .ai-head { display:flex; align-items:center; gap:9px; margin-bottom:6px; }
-    .ai-head svg { width:15px; height:15px; stroke:var(--or); }
-    .ai-head span { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--or); font-weight:600; }
-    .ai-field { border-bottom:1px solid rgba(245,240,235,.06); padding:12px 2px; display:flex; justify-content:space-between; align-items:center; }
-    .ai-field:last-child { border-bottom:none; }
-    .ai-field .k { font-size:10px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
-    .ai-field .v { font-size:13.5px; }
-    .ai-field .v.serif { font-family:var(--serif); font-size:15.5px; }
-    .est { font-family:var(--mono); font-size:11.5px; color:var(--vert); }
-
-    /* ═══ SEARCH ═══ */
-    .search-wrap { padding:calc(env(safe-area-inset-top,0px) + 54px) 24px 130px; }
-    .search-bar { display:flex; align-items:center; gap:11px; background:#141414; border:1px solid var(--anthra); border-radius:18px; padding:4px 17px; margin:18px 0 6px; }
-    .search-bar svg { width:17px; height:17px; stroke:var(--muted); flex-shrink:0; }
-    .search-bar input { flex:1; background:none; border:none; outline:none; color:var(--blanc); font-size:15px; font-family:var(--sans); padding:14px 0; }
-    .section-title { font-size:9.5px; font-weight:600; letter-spacing:2.8px; text-transform:uppercase; color:var(--muted); margin:28px 0 14px; }
-    .chips { display:flex; flex-wrap:wrap; gap:8px; }
-    .chip { padding:11px 18px; border-radius:99px; border:1px solid var(--anthra); font-size:12.5px; color:rgba(245,240,235,.8); min-height:44px; display:inline-flex; align-items:center; transition:all .2s; background:none; }
-    .chip.on { background:var(--blanc); color:var(--noir); border-color:var(--blanc); font-weight:600; }
-    .trend-row { display:flex; gap:13px; overflow-x:auto; padding:2px 0 12px; }
-    .trend-card { flex-shrink:0; width:124px; }
-    .trend-card .im { width:124px; height:156px; border-radius:16px; background-size:cover; background-position:center; border:1px solid rgba(245,240,235,.07); }
-    .trend-card .b { font-family:var(--serif); font-size:13px; margin-top:9px; }
-    .trend-card .n { font-size:10.5px; color:var(--muted); margin-top:2px; }
-    .trend-card .n.hot { color:var(--or); font-style:italic; }
-
-    /* ═══ PROFIL ═══ */
-    .profile-hero { display:flex; flex-direction:column; align-items:center; padding:calc(env(safe-area-inset-top,0px) + 60px) 24px 26px; }
-    .ring-wrap { position:relative; width:132px; height:132px; margin-bottom:16px; }
-    .ring-wrap svg { width:132px; height:132px; transform:rotate(-90deg); }
-    .ring-bg { fill:none; stroke:#1A1A1A; stroke-width:3; }
-    .ring-fg { fill:none; stroke:url(#goldgrad); stroke-width:3; stroke-linecap:round; stroke-dasharray:352; stroke-dashoffset:21; transition:stroke-dashoffset 1.4s var(--ease); }
-    .ring-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
-    .ring-center .n { font-family:var(--serif); font-size:33px; font-weight:600; }
-    .ring-center .l { font-size:8px; letter-spacing:2.5px; text-transform:uppercase; color:var(--or); font-weight:600; }
-    .profile-hero h2 { font-family:var(--serif); font-size:25px; font-weight:600; }
-    .profile-hero .loc { font-size:11px; color:var(--muted); margin-top:5px; letter-spacing:1px; }
-    .stats-row { display:flex; margin:22px 24px 0; background:#141414; border:1px solid var(--anthra); border-radius:20px; padding:17px 0; }
-    .stat { flex:1; text-align:center; border-right:1px solid var(--anthra); }
-    .stat:last-child { border-right:none; }
-    .stat .n { font-family:var(--serif); font-size:20px; }
-    .stat .n .st { color:var(--or); font-size:14px; }
-    .stat .l { font-size:8px; letter-spacing:1.8px; text-transform:uppercase; color:var(--muted); margin-top:4px; }
-    .pref-panel { background:#141414; border:1px solid var(--anthra); border-radius:20px; padding:8px 18px; }
-    .pref-row { padding:15px 0; border-bottom:1px solid rgba(245,240,235,.06); }
-    .pref-row:last-child { border-bottom:none; }
-    .pref-row .k { font-size:9.5px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:12px; display:block; }
-
-    /* Toast */
-    .toast {
-      position:absolute; top:calc(env(safe-area-inset-top,0px) + 68px); left:50%; transform:translateX(-50%);
-      background:rgba(20,20,20,.92); backdrop-filter:blur(14px); border:1px solid var(--or-line);
-      color:var(--blanc); font-size:11.5px; letter-spacing:.8px; padding:13px 21px; border-radius:99px; z-index:350;
-      animation:toastIn .35s var(--ease); white-space:nowrap; display:flex; align-items:center; gap:9px;
-      box-shadow:0 10px 40px rgba(0,0,0,.5);
-    }
-    .toast svg { width:14px; height:14px; stroke:var(--or); }
-    @keyframes toastIn { from{opacity:0; transform:translate(-50%,-12px)} to{opacity:1; transform:translate(-50%,0)} }
-
-    .feed-end { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; z-index:3; text-align:center; padding:0 40px; }
-    .feed-end .fe-rule { width:54px; height:1px; background:var(--or); opacity:.6; }
-    .feed-end h3 { font-family:var(--serif); font-size:27px; font-weight:500; font-style:italic; }
-    .feed-end p { font-size:10.5px; letter-spacing:2.5px; text-transform:uppercase; color:var(--muted); line-height:1.8; }
+    .toast{position:absolute;top:calc(env(safe-area-inset-top,0px)+66px);left:50%;transform:translateX(-50%);background:var(--noir);color:var(--blanc);font-family:var(--display);font-size:10.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:13px 20px;border-radius:999px;z-index:350;animation:toastIn .3s var(--ease);white-space:nowrap;display:flex;align-items:center;gap:9px}
+    .toast svg{width:13px;height:13px;stroke:var(--blanc)}
+    @keyframes toastIn{from{opacity:0;transform:translate(-50%,-12px)}to{opacity:1;transform:translate(-50%,0)}}
+    .feed-end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:0 40px;z-index:3;background:var(--blanc)}
+    .feed-end h3{font-family:var(--display);font-weight:900;font-style:italic;text-transform:uppercase;font-size:32px;letter-spacing:-1px}
+    .feed-end p{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--g50);line-height:1.9;font-weight:600}
   </style>
 </head>
 <body>
@@ -544,11 +330,10 @@
   <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="text/babel">
-  const { useState, useEffect, useRef } = React;
+  const {useState,useEffect,useRef}=React;
 
-  /* ═══ ICONS — SVG thin-line 1.5px ═══ */
-  const S = { fill:'none', strokeWidth:1.5, strokeLinecap:'round', strokeLinejoin:'round' };
-  const I = {
+  const S={fill:'none',strokeWidth:1.6,strokeLinecap:'round',strokeLinejoin:'round'};
+  const I={
     eye:<svg viewBox="0 0 24 24" {...S}><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>,
     swap:<svg viewBox="0 0 24 24" {...S}><path d="M7 16V4M7 4L3 8M7 4l4 4"/><path d="M17 8v12M17 20l4-4M17 20l-4-4"/></svg>,
     ribbon:<svg viewBox="0 0 24 24" {...S}><path d="M6 3h12l1 7a7 7 0 0 1-7 7 7 7 0 0 1-7-7l1-7z"/><path d="M9 21l3-4 3 4"/></svg>,
@@ -556,199 +341,231 @@
     search:<svg viewBox="0 0 24 24" {...S}><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>,
     dress:<svg viewBox="0 0 24 24" {...S}><path d="M12 3v3M12 6l-6 4v11h12V10l-6-4z"/><path d="M12 6l6 4"/></svg>,
     user:<svg viewBox="0 0 24 24" {...S}><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg>,
-    plus:<svg viewBox="0 0 24 24" {...S} strokeWidth="2.2"><path d="M12 5v14M5 12h14"/></svg>,
-    clock:<svg viewBox="0 0 24 24" {...S} strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>,
+    plus:<svg viewBox="0 0 24 24" {...S} strokeWidth="2.4"><path d="M12 5v14M5 12h14"/></svg>,
+    clock:<svg viewBox="0 0 24 24" {...S}><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>,
     star:<svg viewBox="0 0 24 24" stroke="none"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2l-6.1 3.4 1.4-6.8L2.2 9.1l6.9-.8z"/></svg>,
-    x:<svg viewBox="0 0 24 24" {...S} strokeWidth="1.7"><path d="M18 6L6 18M6 6l12 12"/></svg>,
-    up:<svg viewBox="0 0 24 24" {...S} strokeWidth="1.7"><path d="M12 19V5M5 12l7-7 7 7"/></svg>,
-    heart:<svg viewBox="0 0 24 24" {...S} strokeWidth="1.7"><path d="M12 21S3 14 3 8.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 9 2.5C21 14 12 21 12 21z"/></svg>,
-    check:<svg viewBox="0 0 24 24" {...S} strokeWidth="2.4"><path d="M4 12l5 5L20 6"/></svg>,
-    warn:<svg viewBox="0 0 24 24" {...S} strokeWidth="1.6"><path d="M12 3l10 18H2L12 3z"/><path d="M12 10v5M12 18.4v.3"/></svg>,
-    info:<svg viewBox="0 0 24 24" {...S} strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.8v.3"/></svg>,
-    sparkle:<svg viewBox="0 0 24 24" {...S}><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 17l.8 2.2L22 20l-2.2.8L19 23l-.8-2.2L16 20l2.2-.8L19 17z"/></svg>,
+    x:<svg viewBox="0 0 24 24" {...S} strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>,
+    up:<svg viewBox="0 0 24 24" {...S}><path d="M12 19V5M5 12l7-7 7 7"/></svg>,
+    heart:<svg viewBox="0 0 24 24" {...S}><path d="M12 21S3 14 3 8.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 9 2.5C21 14 12 21 12 21z"/></svg>,
+    check:<svg viewBox="0 0 24 24" {...S} strokeWidth="2.6"><path d="M4 12l5 5L20 6"/></svg>,
+    warn:<svg viewBox="0 0 24 24" {...S}><path d="M12 3l10 18H2L12 3z"/><path d="M12 10v5M12 18.4v.3"/></svg>,
+    info:<svg viewBox="0 0 24 24" {...S}><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.8v.3"/></svg>,
+    undo:<svg viewBox="0 0 24 24" {...S}><path d="M3 10h10a5 5 0 0 1 0 10H8"/><path d="M3 10l4-4M3 10l4 4"/></svg>,
+    arrowL:<svg viewBox="0 0 24 24" {...S} strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>,
     tag:<svg viewBox="0 0 24 24" {...S}><path d="M20 12l-8 8-9-9V3h8l9 9z"/><circle cx="7.5" cy="7.5" r="1"/></svg>,
-    watch:<svg viewBox="0 0 24 24" {...S}><circle cx="12" cy="12" r="6"/><path d="M12 9v3l2 2M9 3h6M9 21h6"/></svg>
+    watch:<svg viewBox="0 0 24 24" {...S}><circle cx="12" cy="12" r="6"/><path d="M12 9v3l2 2M9 3h6M9 21h6"/></svg>,
+    sparkle:<svg viewBox="0 0 24 24" {...S}><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/></svg>,
+    bag:<svg viewBox="0 0 24 24" {...S}><path d="M6 8h12l1.5 13h-15L6 8z"/><path d="M9 11V6a3 3 0 0 1 6 0v5"/></svg>,
+    zoom:<svg viewBox="0 0 24 24" {...S}><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35M8 11h6M11 8v6"/></svg>
   };
 
-  /* ═══ DATA ═══ */
-  const LOOK = { type:'look',
-    kicker:'COMPOSÉ PAR L\'AI STYLIST', title:'Look du Jour',
-    items:[['img/gucci.jpg','SAC'],['img/dior.jpg','PANTALON'],['img/airmax.jpg','CHAUSSURES']] };
+  /* MULTI-VUES : une photo produit = 4 angles (cadrages) */
+  const views = img => ([
+    {url:img,pos:'50% 30%',size:'cover',  label:'VUE 1 · ENSEMBLE'},
+    {url:img,pos:'50% 50%',size:'155%',   label:'VUE 2 · MATIÈRE'},
+    {url:img,pos:'50% 75%',size:'cover',  label:'VUE 3 · COUTURES'},
+    {url:img,pos:'50% 42%',size:'230%',   label:'VUE 4 · LOGO & FERMOIR'}
+  ]);
 
-  const PRODUCTS = [
-    { id:1, brand:'SAINT LAURENT', title:'Sac Rive Gauche — Noir', meta:'Sac · Cuir lisse · Très bon état', price:2900, cur:'€', seller:'Amina T.', trust:96, cycle:1, timer:'11h 42', pct:0.62, img:'img/ysl.jpg' },
-    { id:2, brand:'HERMÈS', title:'Birkin 35 — Autruche', meta:'Sac · Naturel · Comme neuf', price:12500, cur:'€', seller:'Leila M.', trust:98, cycle:1, timer:'23h 45', pct:0.31, select:true, img:'img/birkin.jpg' },
-    { id:3, brand:'DIOR', title:'Saddle Bag — Bleu Logo', meta:'Sac · Toile brodée · Bon état', price:2100, cur:'€', seller:'Yassine B.', trust:92, cycle:2, timer:'07h 12', pct:0.84, img:'img/dior.jpg' },
-    LOOK,
-    { id:4, brand:'GUCCI', title:'Marmont — Chevron Noir', meta:'Sac · Cuir matelassé · Très bon état', price:2400, cur:'€', seller:'Zahra S.', trust:97, cycle:1, timer:'01h 58', pct:0.94, img:'img/gucci.jpg' },
-    { id:5, brand:'ROLEX', title:'Datejust 116234 — Acier', meta:'Montre · 2003 · Révisée', price:8900, cur:'€', seller:'Karim A.', trust:99, cycle:1, timer:'38h 02', pct:0.22, select:true, img:'img/rolex.jpg' },
-    { id:6, brand:'NIKE', title:'Air Max 97 — Argent', meta:'Chaussure · Taille 42 · Portées 3 fois', price:180, cur:'€', seller:'Nour D.', trust:89, cycle:3, timer:'04h 30', pct:0.89, img:'img/airmax.jpg' },
-    { id:7, brand:'VALENTINO', title:'Rockstud — Gris Perle', meta:'Sac · Peau nappa · Neuf avec housse', price:1900, cur:'€', seller:'Sofia K.', trust:95, cycle:1, timer:'30h 10', pct:0.18, img:'img/valentino.jpg' }
+  const PRODUCTS=[
+    {id:1,brand:'SAINT LAURENT',title:'Rive Gauche — Noir',meta:'Sac · Cuir lisse · T.B.E.',price:2900,cur:'€',seller:'Amina T.',sellerInit:'A',trust:96,cycle:1,timer:'11h 42',pct:0.62,img:'img/ysl.jpg',size:'26 × 16 cm',cond:'Très bon état',year:'2021',city:'Tunis — La Marsa',desc:'Sac Rive Gauche en cuir de veau lisse, finition brillant. Porté avec soin, coins impeccables, intérieur propre. Vendu avec dust bag et certificat Lokko Select.'},
+    {id:2,brand:'HERMÈS',title:'Birkin 35 — Autruche Naturel',meta:'Sac · Autruche · Comme neuf',price:12500,cur:'€',seller:'Leila M.',sellerInit:'L',trust:98,cycle:1,timer:'23h 45',pct:0.31,select:1,img:'img/birkin.jpg',size:'35 × 25 cm',cond:'Comme neuf',year:'2022',city:'Tunis — Les Berges',desc:'Birkin 35 en autruche naturel, garniture or. Quilles intactes, craquelure absente, cachetier lisibles. Pièce d\'exception avec boîte, ruban et papiers.'},
+    {id:3,brand:'DIOR',title:'Saddle Bag — Bleu Brodé',meta:'Sac · Toile brodée · Bon état',price:2100,cur:'€',seller:'Yassine B.',sellerInit:'Y',trust:92,cycle:2,timer:'07h 12',pct:0.84,img:'img/dior.jpg',size:'26 × 20 cm',cond:'Bon état',year:'2019',city:'Sfax Centre',desc:'Saddle Bag iconique en toile brodée logo bleu. Légère patine homogène sur les angles, aimant fonctionnel, bandoulière complète. Cycle 2 : prix déjà baissé de 20%.'},
+    {id:4,brand:'GUCCI',title:'Marmont — Chevron Noir',meta:'Sac · Cuir matelassé · T.B.E.',price:2400,cur:'€',seller:'Zahra S.',sellerInit:'Z',trust:97,cycle:1,timer:'01h 58',pct:0.94,img:'img/gucci.jpg',size:'22 × 13 cm',cond:'Très bon état',year:'2023',city:'Sousse',desc:'GG Marmont mini, cuir matelassé chevron, double G laiton vieilli. Chaîne sans micro-rayure, intérieur daim propre. Facture fournie.'},
+    {id:5,brand:'ROLEX',title:'Datejust 116234 — Acier',meta:'Montre · Révisée · 2003',price:8900,cur:'€',seller:'Karim A.',sellerInit:'K',trust:99,cycle:1,timer:'38h 02',pct:0.22,select:1,img:'img/rolex.jpg',size:'36 mm',cond:'Révisée 2025',year:'2003',city:'Tunis — Centre Ville',desc:'Datejust 116234, cadran argenté, lunette cannelée or blanc. Révision complète horloger agréé 2025, bracelet Oyster d\'origine. Boîte et papiers.'},
+    {id:6,brand:'NIKE',title:'Air Max 97 — Argent',meta:'Chaussure · T42 · Portées 3 fois',price:180,cur:'€',seller:'Nour D.',sellerInit:'N',trust:89,cycle:3,timer:'04h 30',pct:0.89,img:'img/airmax.jpg',size:'Pointure 42',cond:'Portées 3 fois',year:'2024',city:'Ariana',desc:'Air Max 97 SE argent métallisé. Semelle sans usure, bulles d\'air intactes, lacets d\'origine. Boîte et paire de lacets de rechange incluse.'},
+    {id:7,brand:'VALENTINO',title:'Rockstud — Gris Perle',meta:'Sac · Nappa · Neuf avec housse',price:1900,cur:'€',seller:'Sofia K.',sellerInit:'S',trust:95,cycle:1,timer:'30h 10',pct:0.18,img:'img/valentino.jpg',size:'25 × 15 cm',cond:'Neuf',year:'2025',city:'Monastir',desc:'Rockstud en nappa gris perle, studs laiton rose. Jamais porté, acheté en boutique, housse et carte d\'authenticité fournis.'}
+  ].map(p=>({...p,views:views(p.img)}));
+
+  const DRESSING=[    {id:'d1',brand:'SAINT LAURENT',title:'Rive Gauche',price:'2 900 €',img:'img/ysl.jpg',badges:[['time','11h'],['cycle','C1/3']]},
+    {id:'d2',brand:'DIOR',title:'Saddle Bag',price:'1 680 €',img:'img/dior.jpg',badges:[['urgent','2h'],['cycle','C2/3']]},
+    {id:'d3',brand:'GUCCI',title:'Marmont',price:'2 400 €',img:'img/gucci.jpg',badges:[['alert','PRIX']]},
+    {id:'d4',brand:'HERMÈS',title:'Birkin 35',price:'12 500 €',img:'img/birkin.jpg',badges:[['select','SELECT'],['time','38h']]},
+    {id:'d5',brand:'ROLEX',title:'Datejust',price:'8 900 €',img:'img/rolex.jpg',badges:[['sold','VENDU']]},
+    {id:'d6',brand:'NIKE',title:'Air Max 97',price:'144 €',img:'img/airmax.jpg',badges:[['swap','ÉCHANGE'],['cycle','C3/3']]}
   ];
 
-  const DRESSING = [
-    { id:'d1', brand:'SAINT LAURENT', title:'Rive Gauche', price:'2 900 €', img:'img/ysl.jpg', badges:[['time','11h'],['cycle','C1/3']] },
-    { id:'d2', brand:'DIOR', title:'Saddle Bag', price:'1 680 €', img:'img/dior.jpg', badges:[['urgent','2h'],['cycle','C2/3']] },
-    { id:'d3', brand:'GUCCI', title:'Marmont', price:'2 400 €', img:'img/gucci.jpg', badges:[['alert','PRIX']], alert:true },
-    { id:'d4', brand:'HERMÈS', title:'Birkin 35', price:'12 500 €', img:'img/birkin.jpg', gold:true, badges:[['select','SELECT'],['time','38h']] },
-    { id:'d5', brand:'ROLEX', title:'Datejust', price:'8 900 €', img:'img/rolex.jpg', badges:[['sold','VENDU']] },
-    { id:'d6', brand:'NIKE', title:'Air Max 97', price:'144 €', img:'img/airmax.jpg', badges:[['swap','ÉCHANGE'],['cycle','C3/3']] }
-  ];
-
-  /* ═══ SPLASH ═══ */
-  const Splash = () => (
+  /* ═══ SPLASH / ONBOARD ═══ */
+  const Splash=()=>(
     <div className="splash">
-      <div className="wordmark">LOKKO</div>
-      <div className="rule"/>
-      <div className="tag">Le luxe, en silence</div>
+      <div className="wm">Lokko.<span>Le luxe, en silence</span></div>
     </div>
   );
 
-  /* ═══ ONBOARDING ═══ */
-  function Onboard({ done }) {
-    const opts = [
-      ['Haute maroquinerie', I.tag], ['Montres', I.watch], ['Sneakers', I.star],
-      ['Prêt-à-porter', I.dress], ['Bijoux', I.sparkle], ['Éditions rares', I.eye]
-    ];
-    const [sel, setSel] = useState(['Haute maroquinerie']);
-    const t = s => setSel(sel.includes(s) ? sel.filter(x=>x!==s) : [...sel,s]);
-    return (
+  function Onboard({done}){
+    const opts=[['Maroquinerie'],['Montres'],['Sneakers'],['Prêt-à-porter'],['Bijoux'],['Pièces rares']];
+    const [sel,setSel]=useState(['Maroquinerie']);
+    const t=s=>setSel(sel.includes(s)?sel.filter(x=>x!==s):[...sel,s]);
+    return(
       <div className="onboard">
-        <h1>Qu'est-ce qui vous<br/><em>correspond</em> ?</h1>
-        <div className="ob-sub">Choisissez vos univers. L'AI Stylist affine votre feed à chaque swipe.</div>
-        <div className="ob-grid">
-          {opts.map(([s,ic]) => (
-            <button key={s} className={'ob-chip'+(sel.includes(s)?' on':'')} onClick={()=>t(s)}>{ic}{s}</button>
-          ))}
-        </div>
+        <h1>Ton<br/>univers.</h1>
+        <div className="ob-sub">Choisis tes catégories. L'IA apprend à chaque swipe.</div>
+        <div className="ob-grid">{opts.map(([s])=><button key={s} className={'ob-chip'+(sel.includes(s)?' on':'')} onClick={()=>t(s)}>{s}</button>)}</div>
         <div className="ob-actions">
-          <button className="btn-primary" onClick={done}>Entrer dans Lokko</button>
-          <button className="btn-ghost" onClick={done}>Passer pour cette fois</button>
+          <button className="btn-black" onClick={done}>Entrer</button>
+          <button className="btn-ghost" onClick={done}>Passer</button>
         </div>
       </div>
     );
   }
 
-  /* ═══ TOP BAR ═══ */
-  const TopBar = ({timer, urgent}) => timer ? (
+  const TopBar=({timer,urgent,white})=>timer?(
     <div className="topbar">
-      <div className="brand">LOKKO</div>
+      <div className="wm" style={white?{color:'#fff'}:{}}>Lokko</div>
       <div className={'timer-chip'+(urgent?' urgent':'')}>{I.clock}{timer}</div>
     </div>
-  ) : (
-    <div className="topbar"><div className="brand">LOKKO</div></div>
-  );
+  ):<div className="topbar"><div className="wm">Lokko</div></div>;
 
-  /* ═══ FEED CARD ═══ */
-  function FeedCard({ p, onNext, onOffer, onToast }) {
-    const [drag, setDrag] = useState(null);
-    const [out, setOut] = useState(null);
-    const rev = useReveal(p.id);
-    const revealed = p.type==='look' ? true : rev;
-    const start = useRef(null);
-    const tx = e => e.touches ? e.touches[0] : e;
+  /* ═══ SWIPE CARD — physique réelle ═══ */
+  function SwipeCard({p,next,onOpen,onOffer,onToast,onFav,onSkip,canUndo,prev}){
+    const [d,setD]=useState(null);
+    const [out,setOut]=useState(null);
+    const [snap,setSnap]=useState(false);
+    const [rev,setRev]=useState(false);
+    const st=useRef(null), t0=useRef(0);
 
-    const down = e => { start.current = tx(e); setDrag({dx:0,dy:0}); };
-    const move = e => {
-      if (!start.current) return;
-      const t = tx(e);
-      setDrag({ dx:t.clientX-start.current.clientX, dy:t.clientY-start.current.clientY });
+    useEffect(()=>{setRev(false);const t=setTimeout(()=>setRev(true),3000);return()=>clearTimeout(t)},[p.id]);
+
+    const tx=e=>e.touches?e.touches[0]:e;
+    const down=e=>{st.current=tx(e);t0.current=Date.now();setSnap(false);setD({dx:0,dy:0})};
+    const move=e=>{if(!st.current)return;const t=tx(e);setD({dx:t.clientX-st.current.clientX,dy:t.clientY-st.current.clientY})};
+    const up=()=>{
+      if(!d)return;
+      const {dx,dy}=d, dt=(Date.now()-t0.current)/1000;
+      const v=Math.abs(dx)/(dt||.3);
+      st.current=null;setD(null);
+      const fast=v>900;
+      if((dy<-110||(dy<-60&&fast))&&Math.abs(dy)>Math.abs(dx)){setOut('up');setTimeout(()=>onOffer(p),300)}
+      else if(dx>90||(dx>50&&fast)){setOut('right');setTimeout(()=>{onToast('Gardé');onFav(p)},360)}
+      else if(dx<-90||(dx<-50&&fast)){setOut('left');setTimeout(onSkip,360)}
+      else{setSnap(true);setD({dx:0,dy:0})}
     };
-    const release = () => {
-      if (!drag) return;
-      const {dx,dy} = drag;
-      start.current=null; setDrag(null);
-      if (dy < -100 && Math.abs(dy) > Math.abs(dx)) { setOut('up'); setTimeout(()=>{ if(p.type==='look') onToast('Look enregistré dans vos favoris'); else onOffer(p); },280); }
-      else if (dx > 80)  { setOut('right'); setTimeout(()=>{onToast('Ajouté aux favoris'); onNext();},400); }
-      else if (dx < -80) { setOut('left'); setTimeout(onNext,400); }
-    };
 
-    const cls = 'card'+(p.select?' select':'')+(drag?' dragging':'')+(out==='left'?' out-left':out==='right'?' out-right':out==='up'?' out-up':'');
-    const st = { backgroundImage:`url(${p.img})` };
-    if (drag) st.transform = `translate(${drag.dx}px,${drag.dy}px) rotate(${(drag.dx/430)*9}deg)`;
-    const pctCls = p.pct > 0.83 ? 'crit' : p.pct > 0.5 ? 'warn' : '';
+    const cls='card '+(out==='left'?'fly out-left':out==='right'?'fly out-right':out==='up'?'fly out-up':'fg')+(d&&!out?' dragging':'')+(snap?' snap':'');
+    const rot=(d?d.dx:0)/20;
+    const style={backgroundImage:`url(${p.img})`,...(d&&!out?{transform:`translate(${d.dx}px,${d.dy}px) rotate(${rot}deg)`,opacity:Math.max(.6,1-Math.abs(d.dx)/700),'--dy':d.dy}:{})};
+    const sL=d&&d.dx<-40?' show':'', sR=d&&d.dx>40?' show':'', sU=d&&d.dy<-50?' show':'';
 
-    if (p.type === 'look') {
-      return (
-        <div className={cls} style={{background:'#0D0D0D', ...(drag?{transform:st.transform}:{})}}
-          onTouchStart={down} onTouchMove={move} onTouchEnd={release}
-          onMouseDown={down} onMouseMove={move} onMouseUp={release}>
-          <div className="status-line"><span className="eyebrow eb-verified" style={{background:'var(--or-soft)',color:'var(--or)',borderColor:'var(--or-line)'}}>{I.sparkle} IA</span></div>
-          <div className="card-content" style={{paddingBottom:'calc(env(safe-area-inset-bottom,0px) + 210px)'}}>
-            <div className="look-kicker">{p.kicker}</div>
-            <div className="p-brand" style={{fontSize:38, fontStyle:'italic', marginTop:6}}>Look du Jour</div>
-            <div className="p-divider"/>
-            <div className="p-meta">Trois pièces d'autres membres, taillées pour vous. Échange possible.</div>
-            <div className="look-wrap">
-              {p.items.map(([im,rl],i)=><div className="look-item" key={i}><div className="im" style={{backgroundImage:`url(${im})`}}/><div className="rl">{rl}</div></div>)}
-            </div>
-            <button className="look-cta" onClick={()=>onToast('Look enregistré')}>Voir le look complet</button>
-          </div>
-          <div className="actions">
-            <button className="act" onClick={()=>{setOut('left');setTimeout(onNext,400);}}>{I.x}</button>
-            <button className="act-eye" onClick={()=>onToast('Look enregistré')}>{I.heart}</button>
-            <button className="act" onClick={()=>{setOut('right');setTimeout(onNext,400);}}>{I.ribbon}</button>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div className={cls} style={st}
-        onTouchStart={down} onTouchMove={move} onTouchEnd={release}
-        onMouseDown={down} onMouseMove={move} onMouseUp={release} onMouseLeave={()=>{start.current=null;setDrag(null);}}>
-        <div className="status-line">
-          {p.select && <span className="select-chip">{I.star} LOKKO SELECT</span>}
-          <span className="cycle-chip">↻ CYCLE {p.cycle}/3</span>
-        </div>
-        <div className={'hint h-l'+(drag&&drag.dx<-30?' show':'')}>{I.x}<span>Ignorer</span></div>
-        <div className={'hint h-r'+(drag&&drag.dx>30?' show':'')}>{I.heart}<span>Favori</span></div>
-        <div className={'hint h-u'+(drag&&drag.dy<-40?' show':'')}>{I.up}<span>Offre</span></div>
-
-        <div className="card-content">
-          <span className={'eyebrow '+(p.trust>=75?'eb-verified':'eb-warning')}>
-            {p.trust>=75?I.star:I.warn} {p.trust>=75?'VÉRIFIÉ':'ATTENTION'} · {p.seller}
-          </span>
+    return <>
+      {next&&<div className="card behind" style={{backgroundImage:`url(${next.img})`}}><div className="card-content"/></div>}
+      <div className={cls} style={style}
+        onTouchStart={down} onTouchMove={move} onTouchEnd={up}
+        onMouseDown={down} onMouseMove={move} onMouseUp={up} onMouseLeave={()=>{st.current=null;setD(null)}}>
+        <div className="prog"><i style={{width:(p.pct*100)+'%',background:p.pct>0.83?'#fff':'#fff'}}/></div>
+        <div className={'stamp s-l'+sL}>Ignorer</div>
+        <div className={'stamp s-r'+sR}>Garder</div>
+        <div className={'stamp s-u'+sU}>Offrir</div>
+        <button className="tap-detail" onClick={(e)=>{e.stopPropagation();onOpen(p)}}>{I.search} Détails</button>
+        <div className="card-content" onClick={()=>onOpen(p)} style={{pointerEvents:'auto'}}>
+          <span className="cycle-chip">{I.clock} Cycle {p.cycle}/3 {p.select?' · SELECT':''}</span>
           <div className="p-brand">{p.brand}</div>
           <div className="p-title">{p.title}</div>
-          <div className="p-divider"/>
-          <div className="p-meta">{p.meta}</div>
-          <div className={'price-zone'+(revealed?' revealed':'')}>
+          <div className="p-meta">{p.meta} · {p.seller}</div>
+          <div className={'price-zone'+(rev?' revealed':'')}>
             <span className="price-blur">•••••</span>
             <span className="price-real">{p.price.toLocaleString('fr-FR')}<span className="cur">{p.cur}</span></span>
-            <span className="price-hint">Silence visuel · le prix se révèle</span>
+            <span className="price-hint">Silence visuel</span>
           </div>
         </div>
+      </div>
+      <div className="actions">
+        <button className="act" onClick={()=>{setOut('right');setTimeout(()=>onFav(p),360)}} title="Favori">{I.heart}</button>
+        <button className="act solid" onClick={()=>{setOut('up');setTimeout(()=>onOffer(p),300)}} title="Faire une offre">{I.tag}</button>
+        <button className="act" onClick={()=>{setOut('left');setTimeout(onSkip,360)}} title="Passer">{I.x}</button>
+      </div>
+      <div className="act-tip"><span>Garder</span><span>Offrir</span><span>Passer</span></div>
+      {canUndo&&<button className="undo" onClick={prev}>{I.undo}</button>}
+    </>;
+  }
 
-        <div className="progress-line"><i className={pctCls} style={{width:(p.pct*100)+'%'}}/></div>
-
-        <div className="actions">
-          <button className="act" onClick={()=>{setOut('up');setTimeout(()=>onOffer(p),280);}}>{I.swap}</button>
-          <button className="act-eye" onClick={()=>onToast('Rapport AI Trust Engine · Score '+p.trust+'%')}>{I.eye}</button>
-          <button className="act" onClick={()=>onToast('Sentinelle de rareté activée')}>{I.ribbon}</button>
+  /* ═══ FICHE PRODUIT DÉTAILLÉE ═══ */
+  function Detail({p,onBack,onOffer,onToast}){
+    const [vi,setVi]=useState(0);
+    const ref=useRef(null);
+    const onScroll=()=>{const el=ref.current;setVi(Math.round(el.scrollLeft/el.clientWidth))};
+    return(
+      <div className="detail">
+        <div className="detail-nav">
+          <button className="icon-btn" onClick={onBack}>{I.arrowL}</button>
+          <button className="icon-btn" onClick={()=>onToast('Partage désactivé — bouche à oreille')}>{I.heart}</button>
         </div>
-        <div className="act-tip"><span>Troc</span><span>Œil</span><span>Sentinelle</span></div>
+        <div className="detail-body">
+          <div className="gal">
+            <div className="gal-track" ref={ref} onScroll={onScroll}>
+              {p.views.map((v,i)=>(
+                <div key={i} className="gal-item" style={{backgroundImage:`url(${v.url})`,backgroundPosition:v.pos,backgroundSize:v.size}}/>
+              ))}
+            </div>
+            <span className="gal-zoom">{I.zoom} {p.views[vi].label}</span>
+            <div className="gal-dots">{p.views.map((_,i)=><i key={i} className={i===vi?'on':''}/>)}</div>
+            <div className="gal-count">{vi+1} / {p.views.length}</div>
+          </div>
+          <div className="d-head">
+            <div className="d-sold">Vendeur privé · {p.city}</div>
+            <div className="d-brand">{p.brand}</div>
+            <div className="d-name">{p.title}</div>
+            <div className="d-price">{p.price.toLocaleString('fr-FR')} {p.cur}
+              <span className="rev">Meilleure offre actuelle : {Math.round(p.price*0.78).toLocaleString('fr-FR')} {p.cur}</span>
+            </div>
+            <div className="d-cyc">{I.clock} Cycle {p.cycle}/3 · fin dans {p.timer}</div>
+          </div>
+          <div className="d-sect">
+            <h4>Description</h4>
+            <p className="d-desc">{p.desc}</p>
+          </div>
+          <div className="d-sect">
+            <h4>Spécifications</h4>
+            <div className="spec-row"><span className="k">Dimensions</span><span className="v">{p.size}</span></div>
+            <div className="spec-row"><span className="k">État</span><span className="v">{p.cond}</span></div>
+            <div className="spec-row"><span className="k">Année</span><span className="v">{p.year}</span></div>
+            <div className="spec-row"><span className="k">Localisation</span><span className="v">{p.city}</span></div>
+            <div className="spec-row"><span className="k">Livraison</span><span className="v">Main propre · Tunis +5 · National +12</span></div>
+          </div>
+          <div className="d-sect">
+            <h4>Rapport AI Trust Engine</h4>
+            <div className="trust-box">
+              <div className="trust-head">
+                <div className="sc">{p.trust}</div>
+                <div className="lb">{p.trust>=75?'Vérifié':'Attention'}</div>
+              </div>
+              <div className="trust-bar"><i style={{width:p.trust+'%'}}/></div>
+              <div className="check-row"><span className="ok">{I.check}</span>Coutures<span className="det">96%</span></div>
+              <div className="check-row"><span className="ok">{I.check}</span>Logo & gravures<span className="det">94%</span></div>
+              <div className="check-row"><span className="ok">{I.check}</span>Étiquette intérieure<span className="det">91%</span></div>
+              <div className="check-row"><span className="ok">{I.check}</span>Hardware<span className="det">89%</span></div>
+            </div>
+          </div>
+          <div className="d-sect">
+            <h4>Vendeur</h4>
+            <div className="seller-row">
+              <div className="seller-av">{p.sellerInit}</div>
+              <div>
+                <div className="nm">{p.seller}</div>
+                <div className="st">{p.trust>=75?'★ Vérifié · ':'⚠ ⋯ '}Répond en &lt;2h · 0 litige</div>
+              </div>
+              <div className="sc">{p.trust}/100</div>
+            </div>
+          </div>
+        </div>
+        <div className="d-cta">
+          <button className="btn-white" onClick={()=>onToast('Sentinelle activée — on vous prévient')}>{I.eye}</button>
+          <button className="btn-black" onClick={()=>{onOffer(p)}}>Faire une offre</button>
+        </div>
       </div>
     );
   }
 
-  function useReveal(dep, ms=3000) {
-    const [shown,setShown] = useState(false);
-    useEffect(()=>{ setShown(false); const t=setTimeout(()=>setShown(true),ms); return ()=>clearTimeout(t); },[dep]);
-    return shown;
-  }
-
-  /* ═══ BID SHEET avec barre de marché ═══ */
-  function BidSheet({ p, onClose, onSubmit }) {
-    const min = Math.round(p.price*0.7);
-    const lo = Math.round(p.price*0.55), hi = Math.round(p.price*1.2);
-    const [amt,setAmt] = useState(Math.round(p.price*0.85));
-    const [dur,setDur] = useState(48);
-    const pos = Math.max(0, Math.min(1, (amt-lo)/(hi-lo)))*100;
-    const g70 = ((min-lo)/(hi-lo))*100;
-    const aiL = ((Math.round(p.price*0.88)-lo)/(hi-lo))*100;
-    const aiR = ((Math.round(p.price*1.12)-lo)/(hi-lo))*100;
-    return (
+  /* ═══ BID SHEET ═══ */
+  function BidSheet({p,onClose,onSubmit}){
+    const min=Math.round(p.price*0.7);
+    const lo=Math.round(p.price*0.55),hi=Math.round(p.price*1.2);
+    const[amt,setAmt]=useState(Math.round(p.price*0.85));
+    const[dur,setDur]=useState(48);
+    const pos=Math.max(0,Math.min(1,(amt-lo)/(hi-lo)))*100;
+    const g70=((min-lo)/(hi-lo))*100;
+    const aiL=((Math.round(p.price*0.88)-lo)/(hi-lo))*100;
+    const aiR=((Math.round(p.price*1.12)-lo)/(hi-lo))*100;
+    return(
       <div className="overlay" onClick={onClose}>
         <div className="sheet" onClick={e=>e.stopPropagation()}>
           <div className="sheet-handle"/>
@@ -761,7 +578,7 @@
             <div>
               <div className="pb">{p.brand}</div>
               <div className="pt">{p.title}</div>
-              <div className="pp">{p.price.toLocaleString('fr-FR')} {p.cur} · Cycle {p.cycle}/3</div>
+              <div className="pp">{p.price.toLocaleString('fr-FR')} {p.cur} · C{p.cycle}/3</div>
             </div>
           </div>
           <div className="field-label">Votre offre</div>
@@ -771,24 +588,22 @@
           </div>
           <div className="mkt">
             <div className="mkt-track">
-              <div className="mkt-gold" style={{left:g70+'%', right:0}}/>
-              <div className="mkt-ai" style={{left:aiL+'%', width:(aiR-aiL)+'%'}}/>
+              <div className="mkt-gold" style={{left:g70+'%',right:0}}/>
+              <div className="mkt-ai" style={{left:aiL+'%',width:(aiR-aiL)+'%'}}/>
               <div className="mkt-dot" style={{left:pos+'%'}}/>
             </div>
-            <div className="mkt-marks">
-              <span>Seuil</span><span className="g">Règle des 70% · {min.toLocaleString('fr-FR')} {p.cur}</span><span>Marché IA</span>
-            </div>
+            <div className="mkt-marks"><span>Seuil</span><span className="b">70% · {min.toLocaleString('fr-FR')} {p.cur}</span><span>Marché IA</span></div>
           </div>
           <div className="info-banner">
             {I.info}
-            <div><strong>Enchère en boucle</strong> — Le vendeur peut accepter plusieurs offres classées. Si la sienne est retenue : <strong>timer de 12h</strong> pour payer, sinon passage au suivant.</div>
+            <div><strong>Enchère en boucle</strong> — Offre visible uniquement par le vendeur. Si retenue : <strong>12h</strong> pour payer, sinon passage au suivant.</div>
           </div>
-          <div className="field-label">Durée de l'enchère</div>
+          <div className="field-label">Durée</div>
           <div className="pills">
-            <button className={'pill'+(dur===48?' on':'')} onClick={()=>setDur(48)}>48 heures</button>
-            <button className={'pill'+(dur===72?' on':'')} onClick={()=>setDur(72)}>72 heures</button>
+            <button className={'pill'+(dur===48?' on':'')} onClick={()=>setDur(48)}>48 h</button>
+            <button className={'pill'+(dur===72?' on':'')} onClick={()=>setDur(72)}>72 h</button>
           </div>
-          <button className="btn-primary" onClick={()=>{onSubmit(); onClose();}}>Soumettre l'offre</button>
+          <button className="btn-black" onClick={()=>{onSubmit();onClose()}}>Soumettre</button>
           <button className="btn-ghost" onClick={onClose}>Annuler</button>
         </div>
       </div>
@@ -796,25 +611,22 @@
   }
 
   /* ═══ ALERTE PRIX ═══ */
-  function AdjustModal({ onClose, onToast }) {
-    const [val,setVal] = useState(1980);
-    return (
+  function AdjustModal({onClose,onToast}){
+    const[val,setVal]=useState(1980);
+    return(
       <div className="center-modal" onClick={onClose}>
         <div className="modal-box" onClick={e=>e.stopPropagation()}>
-          <div className="warn-ic">{I.warn}</div>
-          <h3>Ton article ne se vend pas</h3>
-          <div className="sub">« GUCCI Marmont » — Seulement 3 personnes ont liké ton article en 24h.</div>
+          <h3 style={{marginTop:0}}>Ça ne<br/>se vend pas.</h3>
+          <div className="sub">« GUCCI Marmont » — 3 likes en 24h. Le marché IA dit 1 700 – 2 100 €.</div>
           <div className="price-compare">
             <div className="pc-row"><span className="l">Prix actuel</span><span className="v">2 400 €</span></div>
-            <div className="pc-row"><span className="l">Fourchette marché IA</span><span className="v">1 700 – 2 100 €</span></div>
-            <div className="pc-row"><span className="l">Prix suggéré</span><span className="v gold">★ 1 980 €</span></div>
+            <div className="pc-row"><span className="l">Marché IA</span><span className="v">1 700 – 2 100 €</span></div>
+            <div className="pc-row"><span className="l">Suggéré</span><span className="v b">★ 1 980 €</span></div>
           </div>
-          <input type="range" min="1400" max="2400" step="10" value={val}
-            style={{'--val':((val-1400)/1000*100)+'%'}} onChange={e=>setVal(Number(e.target.value))}/>
+          <input type="range" min="1400" max="2400" step="10" value={val} style={{'--val':((val-1400)/1000*100)+'%'}} onChange={e=>setVal(Number(e.target.value))}/>
           <div className="slider-labels"><span>1 400 €</span><span className="now">{val.toLocaleString('fr-FR')} €</span><span>2 400 €</span></div>
-          <div className="modal-note">{I.clock}<span>Timer : 4h 12min restants — <b>le timer ne repart jamais</b> après un ajustement.</span></div>
-          <div className="adj-counter">Ajustements restants · 2/3</div>
-          <button className="btn-primary" onClick={()=>{onToast('Prix ajusté à '+val.toLocaleString('fr-FR')+' €'); onClose();}}>✓ Ajuster mon prix</button>
+          <div className="adj-counter">Ajustements : 2/3 · le timer ne repart jamais</div>
+          <button className="btn-black" onClick={()=>{onToast('Prix ajusté — '+val.toLocaleString('fr-FR')+' €');onClose()}}>Ajuster</button>
           <button className="btn-ghost" onClick={onClose}>Garder 2 400 €</button>
         </div>
       </div>
@@ -822,172 +634,122 @@
   }
 
   /* ═══ DRESSING ═══ */
-  const dbIcon = k => k==='time'||k==='urgent' ? I.clock : k==='alert' ? I.warn : k==='select' ? I.star : k==='sold' ? I.check : k==='swap' ? I.swap : null;
-  const dbCls = { time:'db-time', urgent:'db-urgent', alert:'db-alert', cycle:'db-cycle', select:'db-select', sold:'db-sold', swap:'db-swap' };
-  function Dressing({ onAlert }) {
-    const [tab,setTab] = useState('vente');
-    return (
-      <>
-        <div className="screen-head">
-          <div className="screen-kicker">ESPACE PRIVÉ</div>
-          <div className="screen-title">Mon Dressing</div>
-        </div>
-        <div className="tabs">
-          <button className={'pill'+(tab==='vente'?' on':'')} onClick={()=>setTab('vente')}>En vente (6)</button>
-          <button className={'pill'+(tab==='vendus'?' on':'')} onClick={()=>setTab('vendus')}>Vendus (12)</button>
-          <button className={'pill'+(tab==='arch'?' on':'')} onClick={()=>setTab('arch')}>Archivés</button>
-        </div>
-        <div className="alert-card" onClick={onAlert}>
-          <div className="im" style={{backgroundImage:'url(img/gucci.jpg)'}}/>
-          <div className="msg">
-            <b>GUCCI Marmont — ⚠ Alerte prix</b>
-            30% au-dessus de la fourchette marché. Ajuste pour relancer la visibilité.
-            <span className="link">Ajuster le prix →</span>
+  const dbIcon=k=>(k==='time'||k==='urgent')?I.clock:k==='alert'?I.warn:k==='select'?I.star:k==='sold'?I.check:k==='swap'?I.swap:null;
+  const dbCls={time:'db-time',urgent:'db-urgent',alert:'db-alert',cycle:'db-cycle',select:'db-select',sold:'db-sold',swap:'db-swap'};
+  function Dressing({onAlert}){
+    const[tab,setTab]=useState('vente');
+    return<>
+      <div className="screen-head"><div className="screen-kicker">Espace privé</div><div className="screen-title">Mon<br/>dressing.</div></div>
+      <div className="tabs">
+        <button className={'pill'+(tab==='vente'?' on':'')} onClick={()=>setTab('vente')}>En vente</button>
+        <button className={'pill'+(tab==='vendus'?' on':'')} onClick={()=>setTab('vendus')}>Vendus</button>
+        <button className={'pill'+(tab==='arch'?' on':'')} onClick={()=>setTab('arch')}>Archivés</button>
+      </div>
+      <div className="alert-card" onClick={onAlert}>
+        <div className="im" style={{backgroundImage:'url(img/gucci.jpg)'}}/>
+        <div className="msg"><b>Gucci Marmont ⚠</b>Prix 30% au-dessus du marché. Ajustez pour relancer la visibilité.
+          <span className="link">Ajuster →</span></div>
+      </div>
+      <div className="dgrid">
+        {DRESSING.map(d=>(
+          <div key={d.id} className="dcard">
+            <div className="im" style={{backgroundImage:`url(${d.img})`}}/>
+            <div className="dbadges">{d.badges.map((b,i)=><span key={i} className={'db '+dbCls[b[0]]}>{dbIcon(b[0])}{b[1]}</span>)}</div>
+            <div className="info"><div className="b">{d.brand}</div><div className="t">{d.title}</div><div className="pr">{d.price}</div></div>
           </div>
-        </div>
-        <div className="dgrid">
-          {DRESSING.map(d => (
-            <div key={d.id} className={'dcard'+(d.gold?' gold':'')}>
-              <div className="im" style={{backgroundImage:`url(${d.img})`}}/>
-              <div className="dbadges">{d.badges.map((b,i)=><span key={i} className={'db '+dbCls[b[0]]}>{dbIcon(b[0])}{b[1]}</span>)}</div>
-              <div className="info">
-                <div className="b">{d.brand}</div>
-                <div className="t">{d.title}</div>
-                <div className="pr">{d.price}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </>
-    );
+        ))}
+      </div>
+    </>;
   }
 
   /* ═══ STUDIO ═══ */
-  function Studio({ onToast }) {
-    return (
+  function Studio({onToast}){
+    return(
       <div className="studio">
-        <div className="screen-kicker">LE STUDIO · ASSISTÉ PAR L'IA</div>
-        <h2>Déposer une<br/>pièce rare</h2>
-        <div className="step-label"><span className="step-num">1</span><span>Flat lay — 4 photos</span></div>
+        <div className="screen-kicker">Le studio</div>
+        <h2>Déposez<br/>une pièce.</h2>
+        <div className="step-label"><span className="step-num">1</span><span>4 photos</span></div>
         <div className="photo-grid">
-          <div className="pshot filled" style={{backgroundImage:'url(img/ysl.jpg)'}}><div className="scan"/><span className="ok">{I.check}</span></div>
+          <div className="pshot filled" style={{backgroundImage:'url(img/ysl.jpg)'}}><span className="ok">{I.check}</span></div>
           <div className="pshot">{I.plus}</div><div className="pshot">{I.plus}</div><div className="pshot">{I.plus}</div>
         </div>
         <div className="step-label"><span className="step-num">2</span><span>Analyse Seller Engine</span></div>
         <div className="ai-panel">
           <div className="ai-head">{I.sparkle}<span>Pré-rempli · 1,8s</span></div>
-          <div className="ai-field"><span className="k">Titre</span><span className="v serif">Saint Laurent Rive Gauche — Noir</span></div>
-          <div className="ai-field"><span className="k">Marque</span><span className="v">YSL · confiance 94%</span></div>
-          <div className="ai-field"><span className="k">Catégorie</span><span className="v">Sacs · Cuir lisse</span></div>
-          <div className="ai-field"><span className="k">État</span><span className="v">Très bon état</span></div>
-          <div className="ai-field"><span className="k">Fourchette marché</span><span className="est">2 600 – 3 200 €</span></div>
-          <div className="ai-field"><span className="k">Anti-doublon</span><span className="v">pHash · aucun match</span></div>
+          <div className="ai-field"><span className="k">Titre</span><span className="v serif">SL Rive Gauche — Noir</span></div>
+          <div className="ai-field"><span className="k">Marque</span><span className="v">YSL · 94%</span></div>
+          <div className="ai-field"><span className="k">Catégorie</span><span className="v">Sacs</span></div>
+          <div className="ai-field"><span className="k">Fourchette</span><span className="est">2 600 – 3 200 €</span></div>
+          <div className="ai-field"><span className="k">Anti-doublon</span><span className="v">pHash · aucun</span></div>
         </div>
         <div className="step-label"><span className="step-num">3</span><span>Mode de vente</span></div>
-        <div className="pills">
-          <button className="pill on">Enchère</button>
-          <button className="pill">Troc</button>
-          <button className="pill">Prix fixe</button>
-        </div>
-        <div className="pills">
-          <button className="pill on">48h</button>
-          <button className="pill">72h</button>
-        </div>
-        <button className="btn-primary" onClick={()=>onToast('Publié · Enchère ouverte 48h')}>Publier l'annonce</button>
+        <div className="pills"><button className="pill on">Enchère</button><button className="pill">Troc</button><button className="pill">Fixe</button></div>
+        <div className="pills"><button className="pill on">48h</button><button className="pill">72h</button></div>
+        <button className="btn-black" onClick={()=>onToast('Publiée · cycle ouvert')}>Publier</button>
       </div>
     );
   }
 
   /* ═══ RECHERCHE ═══ */
-  function Search() {
-    const [size,setSize] = useState('M');
-    return (
+  function Search(){
+    const[size,setSize]=useState('M');
+    return(
       <div className="search-wrap">
-        <div className="screen-kicker">MAISON DES TAILLEURS</div>
-        <div className="screen-title">Recherche</div>
-        <div className="search-bar">{I.search}<input placeholder="Marque, pièce, référence..."/></div>
-        <div className="section-title">ACTIVER MES TAILLES</div>
-        <div className="chips">
-          {['XS','S','M','L','XL','38','39','40','41','42'].map(s =>
-            <button key={s} className={'chip'+(size===s?' on':'')} onClick={()=>setSize(size===s?null:s)}>{s}</button>)}
-        </div>
-        <div className="section-title">TENDANCE · 24H</div>
-        <div className="trend-row">
-          {PRODUCTS.filter(p=>!p.type).slice(0,5).map(p =>
-            <div className="trend-card" key={p.id}>
-              <div className="im" style={{backgroundImage:`url(${p.img})`}}/>
-              <div className="b">{p.brand}</div>
-              <div className="n">{(140-p.id*17)} likes</div>
-            </div>)}
-        </div>
-        <div className="section-title">ILS SONT REPARTIS VITE</div>
-        <div className="trend-row">
-          {PRODUCTS.filter(p=>!p.type).slice(1,4).map(p =>
-            <div className="trend-card" key={p.id}>
-              <div className="im" style={{backgroundImage:`url(${p.img})`}}/>
-              <div className="b">{p.brand}</div>
-              <div className="n hot">Vendu en {p.id}h{p.id*13%60}</div>
-            </div>)}
-        </div>
+        <div className="screen-kicker">Maison</div>
+        <div className="screen-title">Recherche.</div>
+        <div className="search-bar">{I.search}<input placeholder="Marque, pièce..."/></div>
+        <div className="section-title">Mes tailles</div>
+        <div className="chips">{['XS','S','M','L','XL','40','41','42'].map(s=><button key={s} className={'chip'+(size===s?' on':'')} onClick={()=>setSize(size===s?null:s)}>{s}</button>)}</div>
+        <div className="section-title">Tendance 24h</div>
+        <div className="trend-row">{PRODUCTS.slice(0,5).map(p=>
+          <div className="trend-card" key={p.id}>
+            <div className="im" style={{backgroundImage:`url(${p.img})`}}/>
+            <div className="b">{p.brand}</div><div className="n">{140-p.id*17} likes</div>
+          </div>)}</div>
+        <div className="section-title">Repartis vite</div>
+        <div className="trend-row">{PRODUCTS.slice(1,4).map(p=>
+          <div className="trend-card" key={p.id}>
+            <div className="im" style={{backgroundImage:`url(${p.img})`}}/>
+            <div className="b">{p.brand}</div><div className="n hot">Vendu en {p.id}h{p.id*13%60}</div>
+          </div>)}</div>
       </div>
     );
   }
 
   /* ═══ PROFIL ═══ */
-  function Profile() {
-    return (
-      <div>
-        <div className="profile-hero">
-          <div className="ring-wrap">
-            <svg viewBox="0 0 120 120">
-              <defs><linearGradient id="goldgrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#E8CD80"/><stop offset="100%" stopColor="#AC8A3C"/>
-              </linearGradient></defs>
-              <circle className="ring-bg" cx="60" cy="60" r="56"/>
-              <circle className="ring-fg" cx="60" cy="60" r="56" strokeDashoffset={352*(1-0.94)}/>
-            </svg>
-            <div className="ring-center"><div className="n">94</div><div className="l">Trust Score</div></div>
-          </div>
-          <h2>Marwen</h2>
-          <div className="loc">TUNIS · MEMBRE DEPUIS JAN 2025</div>
+  function Profile(){
+    return<div>
+      <div className="profile-hero">
+        <div className="ring-wrap">
+          <svg viewBox="0 0 120 120"><circle className="ring-bg" cx="60" cy="60" r="56"/><circle className="ring-fg" cx="60" cy="60" r="56" strokeDasharray="352" strokeDashoffset={352*(1-0.94)}/></svg>
+          <div className="ring-center"><div className="n">94</div><div className="l">Trust</div></div>
         </div>
-        <div className="stats-row">
-          <div className="stat"><div className="n">47</div><div className="l">Ventes</div></div>
-          <div className="stat"><div className="n">4.8<span className="st">★</span></div><div className="l">Note</div></div>
-          <div className="stat"><div className="n">0</div><div className="l">Litiges</div></div>
-          <div className="stat"><div className="n">2h</div><div className="l">Réponse</div></div>
-        </div>
-        <div className="search-wrap" style={{paddingTop:22}}>
-          <div className="section-title">PRÉFÉRENCES · AI STYLIST</div>
-          <div className="pref-panel">
-            <div className="pref-row">
-              <span className="k">Style — Minimaliste ↔ Avant-gardiste</span>
-              <input type="range" min="0" max="100" defaultValue="62" style={{'--val':'62%'}}/>
-            </div>
-            <div className="pref-row">
-              <span className="k">Budget ciblé</span>
-              <input type="range" min="0" max="100" defaultValue="74" style={{'--val':'74%'}}/>
-            </div>
-            <div className="pref-row">
-              <span className="k">Rareté — Courant ↔ Pièce unique</span>
-              <input type="range" min="0" max="100" defaultValue="88" style={{'--val':'88%'}}/>
-            </div>
-          </div>
-          <div className="section-title">COMpte</div>
-          <div className="chips">
-            <span className="chip">Langue · FR</span><span className="chip">Devise · € / AED</span>
-            <span className="chip">Notifications</span><span className="chip">RGPD · Export</span>
-          </div>
-        </div>
+        <h2>Marwen</h2>
+        <div className="loc">Tunis · Jan 2025</div>
       </div>
-    );
+      <div className="stats-row">
+        <div className="stat"><div className="n">47</div><div className="l">Ventes</div></div>
+        <div className="stat"><div className="n">4.8</div><div className="l">Note</div></div>
+        <div className="stat"><div className="n">0</div><div className="l">Litiges</div></div>
+        <div className="stat"><div className="n">2h</div><div className="l">Réponse</div></div>
+      </div>
+      <div className="search-wrap" style={{paddingTop:20}}>
+        <div className="section-title">AI Stylist</div>
+        <div className="pref-panel">
+          <div className="pref-row"><span className="k">Minimaliste ↔ Avant-garde</span><input type="range" min="0" max="100" defaultValue="62" style={{'--val':'62%'}}/></div>
+          <div className="pref-row"><span className="k">Budget</span><input type="range" min="0" max="100" defaultValue="74" style={{'--val':'74%'}}/></div>
+          <div className="pref-row"><span className="k">Courant ↔ Pièce unique</span><input type="range" min="0" max="100" defaultValue="88" style={{'--val':'88%'}}/></div>
+        </div>
+        <div className="section-title">Compte</div>
+        <div className="chips"><span className="chip">FR</span><span className="chip">€/AED</span><span className="chip">Notif</span><span className="chip">RGPD</span></div>
+      </div>
+    </div>;
   }
 
-  /* ═══ NAV ═══ */
-  const Nav = ({ tab, setTab }) => (
+  const Nav=({tab,setTab})=>(
     <div className="nav">
       <button className={'nav-item'+(tab==='feed'?' active':'')} onClick={()=>setTab('feed')}>{I.home}<span>Feed</span></button>
-      <button className={'nav-item'+(tab==='search'?' active':'')} onClick={()=>setTab('search')}>{I.search}<span>Recherche</span></button>
+      <button className={'nav-item'+(tab==='search'?' active':'')} onClick={()=>setTab('search')}>{I.search}<span>Chercher</span></button>
       <button className="nav-plus" onClick={()=>setTab('sell')}>{I.plus}</button>
       <button className={'nav-item'+(tab==='dressing'?' active':'')} onClick={()=>setTab('dressing')}>{I.dress}<span>Dressing</span></button>
       <button className={'nav-item'+(tab==='profile'?' active':'')} onClick={()=>setTab('profile')}>{I.user}<span>Profil</span></button>
@@ -995,51 +757,56 @@
   );
 
   /* ═══ APP ═══ */
-  function App() {
-    const [phase,setPhase] = useState('splash');
-    const [tab,setTab] = useState('feed');
-    const [idx,setIdx] = useState(0);
-    const [bid,setBid] = useState(null);
-    const [alertOpen,setAlertOpen] = useState(false);
-    const [toast,setToast] = useState(null);
-    const toastT = useRef(null);
+  function App(){
+    const[phase,setPhase]=useState('splash');
+    const[tab,setTab]=useState('feed');
+    const[idx,setIdx]=useState(0);
+    const[hist,setHist]=useState([]);
+    const[open,setOpen]=useState(null);
+    const[bid,setBid]=useState(null);
+    const[alert,setAlert]=useState(false);
+    const[toast,setToast]=useState(null);
+    const tt=useRef(null);
 
-    useEffect(()=>{ const t=setTimeout(()=>setPhase('onboard'),2200); return ()=>clearTimeout(t); },[]);
+    useEffect(()=>{const t=setTimeout(()=>setPhase('onboard'),2100);return()=>clearTimeout(t)},[]);
 
-    const showToast = m => { clearTimeout(toastT.current); setToast(m); toastT.current=setTimeout(()=>setToast(null),2600); };
-    const p = PRODUCTS[idx];
+    const sh=m=>{clearTimeout(tt.current);setToast(m);tt.current=setTimeout(()=>setToast(null),2400)};
+    const next=()=>{setHist(h=>[...h,idx]);setIdx(i=>i+1)};
+    const prev=()=>{setHist(h=>{if(!h.length)return h;setIdx(h[h.length-1]);return h.slice(0,-1)})};
+    const p=PRODUCTS[idx];
 
-    return (
+    return(
       <div className="app">
-        {phase==='splash' && <Splash/>}
-        {phase==='onboard' && <Onboard done={()=>setPhase('app')}/>}
-
-        {phase==='app' && <>
-          {tab==='feed' && (p ? <>
-            <TopBar timer={p.type==='look' ? null : p.timer} urgent={p.pct>0.83}/>
-            <div className="feed"><FeedCard key={p.id} p={p} onNext={()=>setIdx(i=>i+1)} onOffer={setBid} onToast={showToast}/></div>
-          </> : <>
-            <TopBar timer={null}/>
+        {phase==='splash'&&<Splash/>}
+        {phase==='onboard'&&<Onboard done={()=>setPhase('app')}/>}
+        {phase==='app'&&<>
+          {tab==='feed'&&(p?<>
+            <TopBar timer={p.timer} urgent={p.pct>0.83}/>
             <div className="feed">
-              <div className="feed-end">
-                <div className="fe-rule"/>
-                <h3>Le luxe respire.</h3>
-                <p>Revenez demain — l'IA affine<br/>votre sélection en silence</p>
-              </div>
+              <SwipeCard key={p.id} p={p} next={PRODUCTS[idx+1]}
+                onOpen={setOpen} onOffer={setBid} onToast={sh}
+                onFav={()=>next()} onSkip={next}
+                canUndo={hist.length>0} prev={prev}/>
             </div>
+          </>:<>
+            <TopBar/>
+            <div className="feed"><div className="feed-end">
+              <h3>Le luxe<br/>respire.</h3>
+              <p>Revenez demain —<br/>l'IA affine en silence</p>
+              <button className="btn-black" style={{width:200,marginTop:10}} onClick={()=>{setIdx(0);setHist([])}}>Recommencer</button>
+            </div></div>
           </>)}
-          {tab==='search'   && <div className="screen"><Search/></div>}
-          {tab==='sell'      && <div className="screen"><Studio onToast={showToast}/></div>}
-          {tab==='dressing'  && <div className="screen"><Dressing onAlert={()=>setAlertOpen(true)}/></div>}
-          {tab==='profile'   && <div className="screen"><Profile/></div>}
-          {tab!=='feed' && <TopBar timer={null}/>}
+          {tab==='search'&&<div className="screen"><Search/></div>}
+          {tab==='sell'&&<div className="screen"><Studio onToast={sh}/></div>}
+          {tab==='dressing'&&<div className="screen"><Dressing onAlert={()=>setAlert(true)}/></div>}
+          {tab==='profile'&&<div className="screen"><Profile/></div>}
+          {tab!=='feed'&&<TopBar/>}
           <Nav tab={tab} setTab={setTab}/>
         </>}
-
-        {bid && <BidSheet p={bid} onClose={()=>setBid(null)} onSubmit={()=>showToast('Offre soumise · confidentielle')}/>}
-        {alertOpen && <AdjustModal onClose={()=>setAlertOpen(false)} onToast={showToast}/>}
-        {toast && <div className="toast">{I.sparkle}{toast}</div>}
-        <div className="grain"/>
+        {open&&<Detail p={open} onBack={()=>setOpen(null)} onOffer={pp=>{setBid(pp)}} onToast={sh}/>}
+        {bid&&<BidSheet p={bid} onClose={()=>setBid(null)} onSubmit={()=>{sh('Offre envoyée');setOpen(null)}}/>}
+        {alert&&<AdjustModal onClose={()=>setAlert(false)} onToast={sh}/>}
+        {toast&&<div className="toast">{I.check}{toast}</div>}
       </div>
     );
   }
