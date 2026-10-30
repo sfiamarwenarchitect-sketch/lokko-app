@@ -2,951 +2,923 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#0A0A0A">
-  <title>LOKKO — Luxury Marketplace</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0D0D0D">
+  <title>LOKKO — La mode, à ta portée</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
+    /* ============ LOKKO DESIGN SYSTEM — spec UI/UX v1.0 ============ */
     :root {
-      --blanc-pur: #FFFFFF;
-      --gris-doux: #F5F5F7;
-      --noir-de-jais: #0A0A0A;
-      --off-white: #F9F9F9;
-      --gris-clair: #E8E8E8;
-      --gris-moyen: #9E9E9E;
+      --noir: #0D0D0D;
+      --anthracite: #2A2A2A;
+      --blanc-casse: #F5F0EB;
+      --or: #C9A84C;
+      --or-dim: rgba(201,168,76,0.15);
+      --rouge: #E63946;
+      --vert: #4CAF7D;
+      --orange: #E8963C;
+      --hairline: #2A2A2A;
+      --muted: #8A857E;
+      --serif: 'Playfair Display', Georgia, serif;
+      --sans: 'Inter', -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
     }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html, body { height:100%; }
     body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--noir-de-jais);
+      font-family: var(--sans);
+      background: #000;
+      color: var(--blanc-casse);
+      overflow: hidden;
       -webkit-font-smoothing: antialiased;
-      overflow: hidden;
     }
-
-    .lokko-app {
-      width: 100%;
-      height: 100vh;
-      max-width: 430px;
-      margin: 0 auto;
-      background: var(--blanc-pur);
-      position: relative;
-      overflow: hidden;
+    .app {
+      width:100%; height:100dvh; max-width:430px; margin:0 auto;
+      background: var(--noir); position:relative; overflow:hidden;
+      display:flex; flex-direction:column;
     }
+    button { font-family: inherit; cursor:pointer; border:none; background:none; color:inherit; }
 
-    .brand-serif { font-family: 'Playfair Display', serif; }
-    .brand-sans { font-family: 'Inter', sans-serif; }
-
-    /* Screen backgrounds */
-    .screen-white {
-      width: 100%;
-      height: 100%;
-      background: var(--blanc-pur);
-      overflow-y: auto;
+    /* ============ STATUS / TOP BAR ============ */
+    .topbar {
+      position:absolute; top:0; left:0; right:0; z-index:40;
+      display:flex; justify-content:space-between; align-items:center;
+      padding: calc(env(safe-area-inset-top, 0px) + 14px) 20px 0;
+      height: calc(env(safe-area-inset-top, 0px) + 58px);
+      pointer-events:none;
     }
-
-    .lokko-screen-black {
-      width: 100%;
-      height: 100%;
-      background: var(--noir-de-jais);
-      position: relative;
+    .topbar .brand {
+      font-family: var(--serif); font-size:17px; letter-spacing:6px; font-weight:600;
+      color: var(--blanc-casse);
     }
-
-    .screen-header {
-      padding: 48px 24px 16px;
-      text-align: center;
+    .timer-chip {
+      display:flex; align-items:center; gap:6px;
+      font-family: var(--mono); font-size:12px; letter-spacing:1px;
+      color: var(--blanc-casse); background: rgba(13,13,13,0.55);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      padding:7px 12px; border-radius:99px; pointer-events:auto;
+      border: 1px solid rgba(245,240,235,0.08);
     }
+    .timer-chip.urgent { color:#FF6B76; }
+    .timer-chip svg { width:13px; height:13px; }
 
-    .screen-header h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 28px;
-      font-weight: 600;
-      letter-spacing: 2px;
+    /* ============ FEED CARD ============ */
+    .feed { flex:1; position:relative; overflow:hidden; }
+    .card {
+      position:absolute; inset:0;
+      background-size:cover; background-position:center;
+      will-change: transform, opacity;
+      transition: transform 0.42s cubic-bezier(0.22,0.61,0.36,1), opacity 0.42s ease;
+      touch-action: none;
     }
-
-    .screen-content { padding: 24px; }
-
-    .search-input {
-      width: 100%;
-      padding: 14px 16px;
-      border: 1px solid var(--gris-clair);
-      border-radius: 12px;
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      outline: none;
-      background: var(--gris-doux);
+    .card.dragging { transition:none; }
+    .card.out-left  { transform: translateX(-120%) rotate(-10deg); opacity:0; }
+    .card.out-right { transform: translateX(120%) rotate(10deg); opacity:0; }
+    .card.out-up    { transform: translateY(-120%) scale(0.94); opacity:0; }
+    .card::after {
+      content:''; position:absolute; inset:0;
+      background: linear-gradient(to top, rgba(13,13,13,0.92) 0%, rgba(13,13,13,0.35) 34%, transparent 55%),
+                  linear-gradient(to bottom, rgba(13,13,13,0.55) 0%, transparent 22%);
     }
-
-    /* Dressing */
-    .dressing-tabs {
-      display: flex;
-      justify-content: center;
-      gap: 2px;
-      padding: 16px 24px;
-      border-bottom: 1px solid var(--gris-doux);
+    .card-content {
+      position:absolute; left:0; right:0; bottom:0; z-index:2;
+      padding: 0 24px 118px;
     }
-
-    .tab {
-      padding: 8px 24px;
-      border-radius: 20px;
-      border: 1px solid var(--gris-clair);
-      background: var(--blanc-pur);
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--gris-moyen);
-      cursor: pointer;
-      transition: all 0.2s;
+    .status-line {
+      position:absolute; top: calc(env(safe-area-inset-top, 0px) + 64px); left:24px; right:24px;
+      display:flex; align-items:center; gap:10px; z-index:2;
     }
-
-    .tab.active {
-      background: var(--noir-de-jais);
-      color: var(--blanc-pur);
-      border-color: var(--noir-de-jais);
+    .cycle-chip {
+      display:inline-flex; align-items:center; gap:5px;
+      font-size:10px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase;
+      padding:5px 11px; border-radius:99px;
+      background: var(--or-dim); color: var(--or);
+      border: 1px solid rgba(201,168,76,0.3);
     }
-
-    .dressing-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2px;
-      padding: 2px;
+    .select-chip {
+      display:inline-flex; align-items:center; gap:5px;
+      font-size:10px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase;
+      padding:5px 11px; border-radius:99px;
+      background: rgba(13,13,13,0.55); backdrop-filter: blur(10px);
+      border:1px solid rgba(245,240,235,0.14); color: var(--blanc-casse);
     }
-
-    .dressing-item {
-      aspect-ratio: 3/4;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
+    .select-chip svg { width:11px; height:11px; fill:var(--or); }
+    .progress-track {
+      position:absolute; left:24px; right:24px; bottom:114px; height:2px; z-index:2;
+      background: rgba(245,240,235,0.14); border-radius:1px;
     }
+    .progress-fill { height:100%; border-radius:1px; background: var(--blanc-casse); transition: background 0.3s; }
+    .progress-fill.warn { background: var(--orange); }
+    .progress-fill.crit { background: var(--rouge); }
 
-    .dressing-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .badge-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+    .trust-badge {
+      display:inline-flex; align-items:center; gap:5px;
+      font-size:10px; font-weight:600; letter-spacing:1px; text-transform:uppercase;
+      padding:5px 10px; border-radius:99px;
     }
+    .trust-badge.verified { background: rgba(76,175,125,0.16); color:#7BCBA0; border:1px solid rgba(76,175,125,0.35); }
+    .trust-badge.warning  { background: rgba(232,150,60,0.16); color:#F0B26F; border:1px solid rgba(232,150,60,0.35); }
+    .trust-badge svg { width:10px; height:10px; }
 
-    .item-info {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 24px 12px 12px;
-      background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
-      color: white;
+    .p-brand {
+      font-family: var(--serif); font-size:30px; font-weight:600;
+      letter-spacing:1px; line-height:1.1; color: var(--blanc-casse);
     }
+    .p-title { font-size:13px; font-weight:300; letter-spacing:2px; text-transform:uppercase; color:rgba(245,240,235,0.75); margin-top:4px; }
+    .p-meta  { font-size:12px; font-weight:400; color:rgba(245,240,235,0.5); margin-top:6px; }
 
-    .item-brand {
-      font-family: 'Playfair Display', serif;
-      font-size: 14px;
-      display: block;
+    /* Silence Visuel — blurred price pill */
+    .price-zone { height: 34px; margin-top: 14px; position:relative; }
+    .price-blur {
+      display:inline-flex; align-items:center; justify-content:center;
+      font-family: var(--mono); font-size:15px; letter-spacing:6px; color:rgba(245,240,235,0.6);
+      background: var(--anthracite); padding:8px 22px; border-radius:99px;
+      transition: opacity 0.45s ease, transform 0.45s ease;
     }
-
-    .item-status {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      opacity: 0.8;
+    .price-real {
+      position:absolute; left:0; top:0;
+      font-family: var(--serif); font-size:26px; font-weight:500; color: var(--blanc-casse);
+      opacity:0; transform: translateY(10px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
     }
-
-    /* Product card (swipe) */
-    .product-card {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
-      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
+    .price-real .cur { font-size:16px; color: var(--muted); margin-left:4px; }
+    .price-zone.revealed .price-blur { opacity:0; transform: translateY(-8px); }
+    .price-zone.revealed .price-real { opacity:1; transform: translateY(0); }
+    .price-hint {
+      position:absolute; left:0; top:44px; font-size:10px; letter-spacing:2px;
+      text-transform:uppercase; color: rgba(245,240,235,0.35);
+      transition: opacity 0.4s;
     }
+    .price-zone.revealed .price-hint { opacity:0; }
 
-    .product-card.swipe-left {
-      transform: translateX(-130%) rotate(-15deg);
-      opacity: 0;
+    /* ============ ACTION BUTTONS (feed) ============ */
+    .actions {
+      position:absolute; left:0; right:0; bottom: calc(env(safe-area-inset-bottom,0px) + 108px);
+      display:flex; justify-content:center; align-items:center; gap:28px; z-index:5;
     }
-
-    .product-card.swipe-right {
-      transform: translateX(130%) rotate(15deg);
-      opacity: 0;
+    .act {
+      width:52px; height:52px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(42,42,42,0.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border:1px solid rgba(245,240,235,0.12);
+      transition: transform 0.15s ease, background 0.2s;
     }
-
-    .product-card.swipe-up {
-      transform: translateY(-130%) scale(0.95);
-      opacity: 0;
+    .act:active { transform: scale(0.88); }
+    .act svg { width:21px; height:21px; stroke: var(--blanc-casse); }
+    .act-eye {
+      width:64px; height:64px; border-radius:50%;
+      background: var(--or); border:none;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow: 0 6px 24px rgba(201,168,76,0.35);
+      transition: transform 0.15s ease;
     }
-
-    .card-overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 100px 24px 28px;
-      background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
-      color: white;
+    .act-eye:active { transform: scale(0.88); }
+    .act-eye svg { width:26px; height:26px; stroke: var(--noir); }
+    .act-labels {
+      position:absolute; left:0; right:0; bottom: calc(env(safe-area-inset-bottom,0px) + 86px);
+      display:flex; justify-content:center; gap:28px; z-index:5; pointer-events:none;
     }
+    .act-labels span { width:52px; text-align:center; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(245,240,235,0.4); }
+    .act-labels span:nth-child(2) { width:64px; }
 
-    .card-brand {
-      font-size: 28px;
-      font-weight: 600;
-      margin-bottom: 2px;
+    /* Gesture hints */
+    .hint {
+      position:absolute; top:50%; transform:translateY(-50%);
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+      opacity:0; transition: opacity 0.15s; z-index:6; pointer-events:none;
     }
-
-    .card-title {
-      font-size: 13px;
-      font-weight: 300;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      opacity: 0.8;
+    .hint.left  { left:28px; }
+    .hint.right { right:28px; }
+    .hint.up    { top:28%; left:50%; transform:translateX(-50%); }
+    .hint .ic {
+      width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+      border:2px solid currentColor;
     }
+    .hint .ic svg { width:26px; height:26px; stroke:currentColor; }
+    .hint span { font-size:10px; letter-spacing:2px; text-transform:uppercase; }
+    .hint.left  { color:#FF6B76; }
+    .hint.right { color:#7BCBA0; }
+    .hint.up    { color: var(--or); }
+    .hint.show  { opacity:1; }
 
-    .card-price {
-      font-family: 'Playfair Display', serif;
-      font-size: 22px;
-      margin-top: 8px;
-      opacity: 0;
-      transform: translateY(6px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+    /* ============ BOTTOM NAV ============ */
+    .nav {
+      position:absolute; bottom:0; left:0; right:0; z-index:50;
+      height: calc(env(safe-area-inset-bottom,0px) + 78px);
+      background: rgba(13,13,13,0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-top:1px solid var(--hairline);
+      display:flex; align-items:center; justify-content:space-around;
+      padding-bottom: env(safe-area-inset-bottom,0px);
     }
-
-    .card-price.visible {
-      opacity: 0.5;
-      transform: translateY(0);
-    }
-
-    .card-meta {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-      flex-wrap: wrap;
-    }
-
-    .trust-badge, .timer-badge {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      background: rgba(255,255,255,0.12);
-      padding: 3px 8px;
-      border-radius: 10px;
-    }
-
-    .action-bar {
-      position: absolute;
-      bottom: 110px;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      z-index: 20;
-    }
-
-    .action-btn {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 22px;
-      transition: all 0.25s ease;
-      backdrop-filter: blur(8px);
-      background: rgba(255,255,255,0.15);
-      color: white;
-    }
-
-    .action-btn.eye-btn {
-      background: white;
-      color: var(--noir-de-jais);
-      width: 62px;
-      height: 62px;
-      font-size: 26px;
-    }
-
-    .action-btn:active {
-      transform: scale(0.88);
-    }
-
-    /* Feed end */
-    .feed-end {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      flex-direction: column;
-      color: white;
-    }
-
-    .feed-end h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 28px;
-      margin-bottom: 8px;
-    }
-
-    .feed-end p {
-      font-size: 14px;
-      opacity: 0.7;
-    }
-
-    /* Bottom navigation */
-    .bottom-nav {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 70px;
-      background: var(--blanc-pur);
-      border-top: 1px solid var(--gris-doux);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 50;
-    }
-
     .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      cursor: pointer;
-      padding: 8px 12px;
-      border: none;
-      background: none;
-      color: var(--gris-moyen);
-      font-family: 'Inter', sans-serif;
-      transition: color 0.2s;
+      display:flex; flex-direction:column; align-items:center; gap:4px;
+      min-width:44px; min-height:44px; justify-content:center;
+      color: var(--muted); transition: color 0.2s;
+    }
+    .nav-item svg { width:22px; height:22px; stroke:currentColor; }
+    .nav-item span { font-size:9px; letter-spacing:1.2px; text-transform:uppercase; font-weight:500; }
+    .nav-item.active { color: var(--blanc-casse); }
+    .nav-plus {
+      width:56px; height:56px; border-radius:50%;
+      background: var(--or); color: var(--noir);
+      display:flex; align-items:center; justify-content:center;
+      margin-top:-26px; box-shadow: 0 6px 22px rgba(201,168,76,0.4);
+      transition: transform 0.15s;
+    }
+    .nav-plus:active { transform: scale(0.9); }
+    .nav-plus svg { width:24px; height:24px; stroke:var(--noir); stroke-width:2.2; }
+
+    /* ============ SHEETS / MODALS ============ */
+    .overlay {
+      position:absolute; inset:0; z-index:100;
+      background: rgba(0,0,0,0.62); backdrop-filter: blur(4px);
+      display:flex; align-items:flex-end;
+      animation: fadein 0.25s ease;
+    }
+    @keyframes fadein { from{opacity:0} to{opacity:1} }
+    .sheet {
+      width:100%; background: var(--noir);
+      border-radius:24px 24px 0 0; border-top:1px solid var(--hairline);
+      padding: 12px 24px calc(env(safe-area-inset-bottom,0px) + 28px);
+      max-height: 82dvh; overflow-y:auto;
+      animation: slideup 0.32s cubic-bezier(0.22,0.61,0.36,1);
+    }
+    @keyframes slideup { from{transform:translateY(100%)} to{transform:translateY(0)} }
+    .sheet-handle { width:40px; height:4px; border-radius:2px; background:var(--anthracite); margin:0 auto 18px; }
+    .sheet-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+    .sheet-title { font-family: var(--serif); font-size:24px; font-weight:600; }
+    .sheet-close {
+      width:44px; height:44px; margin:-11px -11px 0 0; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      color: var(--muted);
+    }
+    .sheet-close svg { width:18px; height:18px; stroke:currentColor; }
+    .prod-row { display:flex; gap:14px; align-items:center; margin-bottom:20px; }
+    .prod-thumb { width:64px; height:64px; border-radius:14px; background-size:cover; background-position:center; flex-shrink:0; }
+    .prod-row .pb { font-family:var(--serif); font-size:17px; }
+    .prod-row .pt { font-size:12px; color:var(--muted); margin-top:2px; }
+    .prod-row .pp { font-family:var(--mono); font-size:13px; color:var(--or); margin-top:4px; }
+
+    .field-label { font-size:10px; font-weight:600; letter-spacing:1.8px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+    .offer-input-row {
+      display:flex; align-items:center; gap:10px;
+      background: var(--anthracite); border:1px solid var(--hairline);
+      border-radius:16px; padding:4px 18px; margin-bottom:12px;
+    }
+    .offer-input-row:focus-within { border-color: var(--or); }
+    .offer-input {
+      flex:1; background:none; border:none; outline:none; width:100%;
+      font-family: var(--serif); font-size:26px; color: var(--blanc-casse); padding:12px 0;
+    }
+    .offer-cur { font-family:var(--serif); font-size:19px; color:var(--muted); }
+    .info-banner {
+      display:flex; gap:10px; align-items:flex-start;
+      font-size:12px; line-height:1.5; color:rgba(245,240,235,0.7);
+      background: rgba(42,42,42,0.5); border:1px solid var(--hairline);
+      border-radius:12px; padding:12px 14px; margin-bottom:18px;
+    }
+    .info-banner svg { width:15px; height:15px; stroke:var(--or); flex-shrink:0; margin-top:1px; }
+    .info-banner strong { color: var(--blanc-casse); font-weight:600; }
+    .pills { display:flex; gap:10px; margin-bottom:22px; }
+    .pill {
+      flex:1; padding:13px; text-align:center; border-radius:99px;
+      border:1px solid var(--hairline); background:transparent;
+      font-size:13px; font-weight:500; color:var(--muted);
+      transition: all 0.2s; min-height:44px;
+    }
+    .pill.on { border-color: var(--or); color: var(--or); background: var(--or-dim); }
+    .btn-primary {
+      width:100%; min-height:56px; border-radius:99px;
+      background: var(--or); color: var(--noir);
+      font-size:13px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+      display:flex; align-items:center; justify-content:center;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .btn-primary:active { transform:scale(0.98); opacity:0.85; }
+    .btn-ghost {
+      width:100%; min-height:48px; border-radius:99px; margin-top:10px;
+      color: var(--muted); font-size:13px; font-weight:500; letter-spacing:1px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .btn-dark {
+      width:100%; min-height:56px; border-radius:99px;
+      background: transparent; border:1px solid var(--blanc-casse);
+      color: var(--blanc-casse); font-size:13px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+      display:flex; align-items:center; justify-content:center;
     }
 
-    .nav-item.active { color: var(--noir-de-jais); }
-
-    .nav-icon { font-size: 22px; }
-
-    .nav-label {
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
+    /* ============ DRESSING ============ */
+    .screen { flex:1; overflow-y:auto; padding-bottom: calc(env(safe-area-inset-bottom,0px) + 96px); }
+    .screen-head { padding: calc(env(safe-area-inset-top,0px) + 52px) 24px 18px; display:flex; justify-content:space-between; align-items:baseline; }
+    .screen-title { font-family:var(--serif); font-size:28px; font-weight:600; }
+    .tabs { display:flex; gap:8px; padding:0 24px 18px; }
+    .dgrid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:0 16px; }
+    .dcard { background:var(--anthracite); border-radius:16px; overflow:hidden; position:relative; }
+    .dcard .im { aspect-ratio:3/3.6; background-size:cover; background-position:center; }
+    .dcard .info { padding:12px 14px 14px; }
+    .dcard .b { font-family:var(--serif); font-size:15px; }
+    .dcard .t { font-size:11px; color:var(--muted); margin-top:2px; }
+    .dcard .pr { font-family:var(--mono); font-size:13px; color:var(--or); margin-top:8px; }
+    .dbadges { position:absolute; top:10px; left:10px; right:10px; display:flex; flex-wrap:wrap; gap:6px; }
+    .db {
+      font-size:9px; font-weight:600; letter-spacing:1px; text-transform:uppercase;
+      padding:5px 9px; border-radius:99px; backdrop-filter:blur(10px);
+      display:inline-flex; align-items:center; gap:4px;
     }
+    .db svg { width:9px; height:9px; }
+    .db-time  { background:rgba(13,13,13,0.7); color:var(--blanc-casse); }
+    .db-urgent{ background:var(--rouge); color:#fff; }
+    .db-alert { background:rgba(232,150,60,0.92); color:#1c1200; }
+    .db-cycle { background:rgba(80,140,255,0.85); color:#fff; }
+    .db-select{ background:var(--or); color:var(--noir); }
+    .db-sold  { background:rgba(76,175,125,0.9); color:#04140c; }
+    .db-swap  { background:rgba(13,13,13,0.7); color:#B9A7EE; border:1px solid rgba(185,167,238,0.4); }
 
-    .nav-publish {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: var(--noir-de-jais);
-      color: var(--blanc-pur);
-      font-size: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      cursor: pointer;
-      margin-top: -20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    /* Alert banner in dressing */
+    .alert-card {
+      margin:0 16px 16px; padding:16px;
+      background: linear-gradient(135deg, rgba(232,150,60,0.14), rgba(201,168,76,0.06));
+      border:1px solid rgba(232,150,60,0.35); border-radius:16px;
+      display:flex; gap:14px; align-items:center;
     }
+    .alert-card .im { width:56px; height:56px; border-radius:12px; background-size:cover; background-position:center; flex-shrink:0; }
+    .alert-card .msg { font-size:12px; line-height:1.45; color:rgba(245,240,235,0.85); }
+    .alert-card .msg b { font-family:var(--serif); font-size:14px; display:block; margin-bottom:3px; }
+    .alert-card .link { color:var(--or); font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-top:6px; display:inline-block; text-decoration:underline; text-underline-offset:3px; }
 
-    /* Profile */
-    .profile-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: var(--gris-doux);
-      margin: 0 auto 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Playfair Display', serif;
-      font-size: 28px;
-      font-weight: 600;
+    /* ============ PRICE ADJUST MODAL ============ */
+    .center-modal {
+      position:absolute; inset:0; z-index:120; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px);
+      display:flex; align-items:center; justify-content:center; padding:24px;
+      animation: fadein 0.25s;
     }
-
-    .profile-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 24px;
-      text-align: center;
-      margin-bottom: 4px;
+    .modal-box {
+      width:100%; max-width:380px; background:var(--noir); border:1px solid var(--hairline);
+      border-radius:24px; padding:26px; animation: popin 0.3s cubic-bezier(0.22,0.61,0.36,1);
     }
-
-    .trust-score {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 14px;
-      background: var(--gris-doux);
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      text-align: center;
-      margin: 0 auto;
-      display: flex;
-      justify-content: center;
+    @keyframes popin { from{transform:scale(0.92); opacity:0} to{transform:scale(1); opacity:1} }
+    .modal-box .warn-ic {
+      width:48px; height:48px; border-radius:50%; margin-bottom:14px;
+      background:rgba(232,150,60,0.16); border:1px solid rgba(232,150,60,0.4);
+      display:flex; align-items:center; justify-content:center;
     }
-
-    .style-slider-group { margin-bottom: 28px; padding: 0 24px; }
-
-    .style-slider-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      color: var(--gris-moyen);
-      margin-bottom: 12px;
+    .modal-box .warn-ic svg { width:22px; height:22px; stroke:var(--orange); }
+    .modal-box h3 { font-family:var(--serif); font-size:22px; font-weight:600; margin-bottom:6px; }
+    .modal-box .sub { font-size:13px; color:var(--muted); line-height:1.5; margin-bottom:18px; }
+    .price-compare { display:flex; flex-direction:column; gap:8px; margin-bottom:18px; }
+    .pc-row { display:flex; justify-content:space-between; font-size:13px; }
+    .pc-row .l { color:var(--muted); }
+    .pc-row .v { font-family:var(--mono); }
+    .pc-row .v.gold { color:var(--or); }
+    .slider-wrap { margin-bottom:6px; }
+    input[type=range] {
+      width:100%; -webkit-appearance:none; height:3px; border-radius:2px;
+      background: linear-gradient(to right, var(--or) var(--val,50%), var(--anthracite) var(--val,50%));
+      outline:none;
     }
-
-    .style-slider {
-      width: 100%;
-      -webkit-appearance: none;
-      height: 4px;
-      background: var(--gris-clair);
-      border-radius: 2px;
-      outline: none;
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance:none; width:28px; height:28px; border-radius:50%;
+      background:var(--or); border:3px solid var(--noir);
+      box-shadow:0 2px 10px rgba(201,168,76,0.5); cursor:pointer;
     }
-
-    .style-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--noir-de-jais);
-      cursor: pointer;
+    .slider-labels { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); font-family:var(--mono); margin-bottom:16px; }
+    .modal-note {
+      font-size:11px; color:var(--muted); line-height:1.5; margin-bottom:6px;
+      display:flex; gap:8px; align-items:flex-start;
     }
+    .modal-note svg { width:13px; height:13px; stroke:var(--muted); flex-shrink:0; margin-top:1px; }
+    .adj-counter { font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--or); font-weight:600; margin-bottom:18px; }
 
-    .slider-labels {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 8px;
-      font-size: 11px;
-      color: var(--gris-moyen);
+    /* ============ STUDIO ============ */
+    .studio { padding: calc(env(safe-area-inset-top,0px) + 52px) 24px 120px; }
+    .studio h2 { font-family:var(--serif); font-size:26px; margin-bottom:4px; }
+    .studio .sub { font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:28px; }
+    .step-label { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .step-num {
+      width:26px; height:26px; border-radius:50%; font-family:var(--mono); font-size:12px;
+      background:var(--anthracite); color:var(--or); display:flex; align-items:center; justify-content:center;
+      border:1px solid rgba(201,168,76,0.35);
     }
-
-    /* Studio */
-    .studio-screen {
-      padding: 48px 24px;
+    .step-label span { font-size:11px; font-weight:600; letter-spacing:1.8px; text-transform:uppercase; color:var(--blanc-casse); }
+    .photo-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:28px; }
+    .pshot { aspect-ratio:1; border-radius:14px; background:var(--anthracite); border:1px dashed var(--hairline); display:flex; align-items:center; justify-content:center; color:var(--muted); }
+    .pshot.filled { border-style:solid; border-color:rgba(201,168,76,0.4); background-size:cover; background-position:center; position:relative; }
+    .pshot.filled .ok {
+      position:absolute; bottom:6px; right:6px; width:18px; height:18px; border-radius:50%;
+      background:var(--or); display:flex; align-items:center; justify-content:center;
     }
+    .pshot.filled .ok svg { width:10px; height:10px; stroke:var(--noir); stroke-width:2.6; }
+    .ai-panel { background:var(--anthracite); border-radius:16px; padding:16px; margin-bottom:24px; border:1px solid var(--hairline); }
+    .ai-panel .ai-head { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+    .ai-panel .ai-head svg { width:15px; height:15px; stroke:var(--or); }
+    .ai-panel .ai-head span { font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--or); font-weight:600; }
+    .ai-field { border-bottom:1px solid var(--hairline); padding:11px 2px; display:flex; justify-content:space-between; align-items:center; }
+    .ai-field:last-child { border-bottom:none; }
+    .ai-field .k { font-size:11px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
+    .ai-field .v { font-size:14px; color:var(--blanc-casse); }
+    .ai-field .v.serif { font-family:var(--serif); font-size:16px; }
+    .est { font-family:var(--mono); font-size:12px; color:var(--vert); }
 
-    .studio-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 28px;
-      text-align: center;
-      margin-bottom: 8px;
+    /* ============ SEARCH / PROFILE ============ */
+    .search-wrap { padding: calc(env(safe-area-inset-top,0px) + 52px) 24px 120px; }
+    .search-bar {
+      display:flex; align-items:center; gap:10px; background:var(--anthracite);
+      border:1px solid var(--hairline); border-radius:16px; padding:4px 16px; margin-bottom:22px;
     }
-
-    .studio-subtitle {
-      font-size: 12px;
-      color: var(--gris-moyen);
-      text-align: center;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-bottom: 32px;
+    .search-bar svg { width:17px; height:17px; stroke:var(--muted); flex-shrink:0; }
+    .search-bar input {
+      flex:1; background:none; border:none; outline:none; color:var(--blanc-casse);
+      font-size:15px; font-family:var(--sans); padding:13px 0;
     }
-
-    .studio-step { margin-bottom: 24px; }
-
-    .studio-step-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      color: var(--gris-moyen);
-      margin-bottom: 10px;
+    .section-title { font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin:26px 0 14px; }
+    .chips { display:flex; flex-wrap:wrap; gap:8px; }
+    .chip {
+      padding:10px 18px; border-radius:99px; border:1px solid var(--hairline);
+      font-size:13px; color:rgba(245,240,235,0.8); min-height:44px;
+      display:inline-flex; align-items:center; transition:all 0.2s;
     }
+    .chip.on { background:var(--blanc-casse); color:var(--noir); border-color:var(--blanc-casse); font-weight:600; }
+    .trend-row { display:flex; gap:14px; overflow-x:auto; padding:2px 0 14px; scrollbar-width:none; }
+    .trend-row::-webkit-scrollbar { display:none; }
+    .trend-card { flex-shrink:0; width:120px; }
+    .trend-card .im { width:120px; height:150px; border-radius:14px; background-size:cover; background-position:center; margin-bottom:8px; }
+    .trend-card .b { font-family:var(--serif); font-size:13px; }
+    .trend-card .n { font-size:11px; color:var(--muted); margin-top:2px; }
 
-    .photo-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
+    .profile-hero { display:flex; flex-direction:column; align-items:center; padding: calc(env(safe-area-inset-top,0px) + 64px) 24px 24px; }
+    .avatar {
+      width:88px; height:88px; border-radius:50%; background:var(--anthracite);
+      border:1px solid rgba(201,168,76,0.4); display:flex; align-items:center; justify-content:center;
+      font-family:var(--serif); font-size:34px; color:var(--or); margin-bottom:14px;
     }
-
-    .photo-slot {
-      aspect-ratio: 1;
-      border: 2px dashed var(--gris-clair);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      color: var(--gris-clair);
-      background: var(--gris-doux);
+    .profile-hero h2 { font-family:var(--serif); font-size:24px; }
+    .profile-hero .loc { font-size:12px; color:var(--muted); margin-top:4px; letter-spacing:0.5px; }
+    .trust-card {
+      margin: 8px 24px 0; background:var(--anthracite); border:1px solid var(--hairline); border-radius:16px; padding:18px;
     }
+    .trust-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+    .trust-top .lbl { font-size:11px; letter-spacing:1.8px; text-transform:uppercase; color:var(--muted); }
+    .trust-top .val { font-family:var(--mono); font-size:15px; color:var(--or); }
+    .trust-bar { height:6px; background:var(--noir); border-radius:3px; overflow:hidden; }
+    .trust-bar .fill { height:100%; width:94%; background:linear-gradient(90deg, rgba(201,168,76,0.5), var(--or)); border-radius:3px; }
+    .stats-row { display:flex; margin-top:14px; }
+    .stat { flex:1; text-align:center; border-right:1px solid var(--hairline); }
+    .stat:last-child { border-right:none; }
+    .stat .n { font-family:var(--serif); font-size:20px; }
+    .stat .l { font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-top:3px; }
 
-    .photo-slot.filled {
-      border-style: solid;
-      border-color: var(--noir-de-jais);
-      background: var(--noir-de-jais);
-      color: var(--blanc-pur);
+    /* Toast */
+    .toast {
+      position:absolute; top:calc(env(safe-area-inset-top,0px) + 66px); left:50%; transform:translateX(-50%);
+      background:var(--anthracite); border:1px solid rgba(201,168,76,0.4); color:var(--blanc-casse);
+      font-size:12px; letter-spacing:0.5px; padding:12px 20px; border-radius:99px; z-index:200;
+      animation: fadein 0.3s; white-space:nowrap; display:flex; align-items:center; gap:8px;
     }
+    .toast svg { width:14px; height:14px; stroke:var(--or); }
 
-    .studio-input {
-      width: 100%;
-      padding: 14px 16px;
-      border: 1px solid var(--gris-clair);
-      border-radius: 12px;
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      outline: none;
-      background: var(--blanc-pur);
-      margin-bottom: 8px;
-    }
-
-    .studio-ai-tag {
-      display: inline-block;
-      padding: 4px 10px;
-      background: var(--gris-doux);
-      border-radius: 8px;
-      font-size: 12px;
-      color: var(--gris-moyen);
-      margin: 4px 4px 4px 0;
-    }
-
-    .toggle-group {
-      display: flex;
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .toggle-option {
-      flex: 1;
-      padding: 12px;
-      border: 1px solid var(--gris-clair);
-      border-radius: 12px;
-      text-align: center;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 500;
-      transition: all 0.2s;
-    }
-
-    .toggle-option.active {
-      background: var(--noir-de-jais);
-      color: var(--blanc-pur);
-      border-color: var(--noir-de-jais);
-    }
-
-    .btn-publish {
-      width: 100%;
-      padding: 18px;
-      border: none;
-      border-radius: 14px;
-      background: var(--noir-de-jais);
-      color: var(--blanc-pur);
-      font-family: 'Playfair Display', serif;
-      font-size: 18px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 24px;
-    }
-
-    /* Bid sheet */
-    .sheet-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      align-items: flex-end;
-      z-index: 100;
-    }
-
-    .sheet-content {
-      background: var(--blanc-pur);
-      border-radius: 20px 20px 0 0;
-      padding: 24px;
-      padding-bottom: calc(24px + env(safe-area-inset-bottom));
-      max-height: 70vh;
-      width: 100%;
-    }
-
-    .sheet-handle {
-      width: 40px;
-      height: 4px;
-      background: var(--gris-clair);
-      border-radius: 2px;
-      margin: 0 auto 16px;
-    }
-
-    .sheet-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 22px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .sheet-subtitle {
-      font-size: 13px;
-      color: var(--gris-moyen);
-      margin-bottom: 20px;
-    }
-
-    .bid-input-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .bid-input {
-      flex: 1;
-      padding: 14px 16px;
-      border: 1px solid var(--gris-clair);
-      border-radius: 12px;
-      font-family: 'Playfair Display', serif;
-      font-size: 20px;
-      font-weight: 400;
-      outline: none;
-    }
-
-    .bid-currency {
-      font-family: 'Playfair Display', serif;
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--gris-moyen);
-    }
-
-    .bid-rule {
-      font-size: 12px;
-      color: var(--gris-moyen);
-      margin-bottom: 20px;
-      padding: 10px 12px;
-      background: var(--gris-doux);
-      border-radius: 8px;
-    }
-
-    .bid-rule strong { color: var(--noir-de-jais); }
-
-    .btn-submit {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 14px;
-      background: var(--noir-de-jais);
-      color: white;
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .btn-cancel {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid var(--gris-clair);
-      border-radius: 14px;
-      background: var(--blanc-pur);
-      color: var(--gris-moyen);
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      margin-top: 8px;
-    }
+    .feed-end { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; z-index:3; }
+    .feed-end h3 { font-family:var(--serif); font-size:26px; font-weight:500; }
+    .feed-end p { font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
   </style>
 </head>
 <body>
   <div id="root"></div>
-
   <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
   <script type="text/babel">
-    const { useState, useEffect, useRef } = React;
+  const { useState, useEffect, useRef } = React;
 
-    // ==================== DONNEES ====================
-    const MOCK_PRODUCTS = [
-      { id: 1, brand: 'Chanel', title: 'Classic Flap Bag', price: 4200, currency: '€', image: 'https://images.unsplash.com/photo-1548031762-8ae7b1b20b35?w=800&h=1200&fit=crop', category: 'Sac', seller: 'Amina T.', trust: 96, timer: '47:12:33' },
-      { id: 2, brand: 'Hermès', title: 'Birkin 30 — Noir Gold', price: 12500, currency: '€', image: 'https://images.unsplash.com/photo-1566150706505-5db913b6e6f7?w=800&h=1200&fit=crop', category: 'Sac', seller: 'Leila M.', trust: 98, timer: '23:45:10' },
-      { id: 3, brand: 'Dior', title: 'Lady Dior — Rose', price: 3800, currency: '€', image: 'https://images.unsplash.com/photo-1594271804399-c33b40e32130?w=800&h=1200&fit=crop', category: 'Sac', seller: 'Yassine B.', trust: 92, timer: '71:30:00' },
-      { id: 4, brand: 'Vogue', title: 'Trench Coat — Camel', price: 850, currency: '€', image: 'https://images.unsplash.com/photo-1548621336-0e27c7a8b12b?w=800&h=1200&fit=crop', category: 'Vêtement', seller: 'Sofia K.', trust: 89, timer: '11:59:59' },
-      { id: 5, brand: 'Nike', title: 'Air Max 1 — Heritage', price: 320, currency: '€', image: 'https://images.unsplash.com/photo-1542292179-06993e9a03df?w=800&h=1200&fit=crop', category: 'Chaussure', seller: 'Rami H.', trust: 94, timer: '48:00:00' },
-      { id: 6, brand: 'Gucci', title: 'Marmont Bag — Noir', price: 2400, currency: '€', image: 'https://images.unsplash.com/photo-1585128744913-ff175e5ac2a0?w=800&h=1200&fit=crop', category: 'Sac', seller: 'Zahra S.', trust: 97, timer: '10:05:44' }
-    ];
+  /* ===== ICONS (SVG thin-line, 1.5px stroke) ===== */
+  const I = {
+    eye: <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>,
+    swap: <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M7 16V4M7 4L3 8M7 4l4 4"/><path d="M17 8v12M17 20l4-4M17 20l-4-4"/></svg>,
+    ribbon: <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M6 3h12l1 7a7 7 0 0 1-7 7 7 7 0 0 1-7-7l1-7z"/><path d="M9 21l3-4 3 4"/></svg>,
+    home: <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>,
+    search: <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>,
+    dress: <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v3M12 6l-6 4v11h12V10l-6-4z"/><path d="M12 6l6 4"/></svg>,
+    user: <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg>,
+    plus: <svg viewBox="0 0 24 24" fill="none" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>,
+    clock: <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6" strokeLinecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>,
+    star: <svg viewBox="0 0 24 24" stroke="none"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2l-6.1 3.4 1.4-6.8L2.2 9.1l6.9-.8z"/></svg>,
+    x: <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.7" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>,
+    up: <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>,
+    left: <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>,
+    right: <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>,
+    heart: <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M12 21S3 14 3 8.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 9 2.5C21 14 12 21 12 21z"/></svg>,
+    check: <svg viewBox="0 0 24 24" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12l5 5L20 6"/></svg>,
+    warn: <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l10 18H2L12 3z"/><path d="M12 10v5M12 18.5v.5"/></svg>,
+    info: <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6" strokeLinecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.5"/></svg>,
+    sparkle: <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 17l.8 2.2L22 20l-2.2.8L19 23l-.8-2.2L16 20l2.2-.8L19 17z"/></svg>
+  };
 
-    const DRESSING_ITEMS = [
-      { id: 1, brand: 'Chanel', title: 'Classic Flap Bag', price: 4200, status: 'Enchère ouverte', type: 'vente', image: 'https://images.unsplash.com/photo-1548031762-8ae7b1b20b35?w=400&h=533&fit=crop' },
-      { id: 2, brand: 'Dior', title: 'Lady Dior', price: 3800, status: 'Timer 12h', type: 'vente', image: 'https://images.unsplash.com/photo-1594271804399-c33b40e32130?w=400&h=533&fit=crop' },
-      { id: 3, brand: 'Vintage', title: 'Rolex Datejust', price: 6500, status: 'Échange', type: 'echange', image: 'https://images.unsplash.com/photo-1547913247-953d4e7b8099?w=400&h=533&fit=crop' },
-      { id: 4, brand: 'Gucci', title: 'Marmont', price: 2400, status: 'Vendu', type: 'vente', image: 'https://images.unsplash.com/photo-1585128744913-ff175e5ac2a0?w=400&h=533&fit=crop' },
-      { id: 5, brand: 'Nike', title: 'Air Max 1', price: 320, status: 'Échange', type: 'echange', image: 'https://images.unsplash.com/photo-1542292179-06993e9a03df?w=400&h=533&fit=crop' }
-    ];
+  /* ===== DATA ===== */
+  const PRODUCTS = [
+    { id:1, brand:'SAINT LAURENT', title:'Sac Rive Gauche — Noir', meta:'Sac · Cuir lisse · Très bon état', price:2900, cur:'€', seller:'Amina T.', trust:96, cycle:1, timer:'11h 42', pct:0.62, img:'img/ysl.jpg' },
+    { id:2, brand:'HERMÈS', title:'Birkin 35 — Autruche', meta:'Sac · Naturel · Comme neuf', price:12500, cur:'€', seller:'Leila M.', trust:98, cycle:1, timer:'23h 45', pct:0.31, select:true, img:'img/birkin.jpg' },
+    { id:3, brand:'DIOR', title:'Saddle Bag — Bleu Logo', meta:'Sac · Toile brodée · Bon état', price:2100, cur:'€', seller:'Yassine B.', trust:92, cycle:2, timer:'07h 12', pct:0.84, img:'img/dior.jpg' },
+    { id:4, brand:'GUCCI', title:'Marmont — Chevron Noir', meta:'Sac · Cuir matelassé · Très bon état', price:2400, cur:'€', seller:'Zahra S.', trust:97, cycle:1, timer:'01h 58', pct:0.94, img:'img/gucci.jpg' },
+    { id:5, brand:'ROLEX', title:'Datejust 116234 — Acier', meta:'Montre · 2003 · Révisée', price:8900, cur:'€', seller:'Karim A.', trust:99, cycle:1, timer:'38h 02', pct:0.22, select:true, img:'img/rolex.jpg' },
+    { id:6, brand:'NIKE', title:'Air Max 97 — Argent', meta:'Chaussure · Taille 42 · Portées 3 fois', price:180, cur:'€', seller:'Nour D.', trust:89, cycle:3, timer:'04h 30', pct:0.89, img:'img/airmax.jpg' },
+    { id:7, brand:'VALENTINO', title:'Rockstud — Gris Perle', meta:'Sac · Peau nappa · Neuf avec housse', price:1900, cur:'€', seller:'Sofia K.', trust:95, cycle:1, timer:'30h 10', pct:0.18, img:'img/valentino.jpg' }
+  ];
 
-    // ==================== SWIPE FEED ====================
-    function SwipeFeed() {
-      const [currentIndex, setCurrentIndex] = useState(0);
-      const [priceVisible, setShowPrice] = useState(false);
-      const [swipeDir, setShowSwipe] = useState(null);
-      const [bidProduct, setBidProduct] = useState(null);
-      const touchStart = useRef(null);
+  const DRESSING = [
+    { id:'d1', brand:'SAINT LAURENT', title:'Rive Gauche', price:'2 900 €', img:PRODUCTS[0].img, badges:[['time','11h'],['cycle','C1/3']] },
+    { id:'d2', brand:'DIOR', title:'Saddle Bag', price:'1 680 €', img:PRODUCTS[2].img, badges:[['urgent','2h'],['cycle','C2/3']] },
+    { id:'d3', brand:'GUCCI', title:'Marmont', price:'2 400 €', img:PRODUCTS[3].img, badges:[['alert','PRIX']], alert:true },
+    { id:'d4', brand:'HERMÈS', title:'Birkin 35', price:'12 500 €', img:PRODUCTS[1].img, badges:[['select','SELECT'],['time','38h']] },
+    { id:'d5', brand:'ROLEX', title:'Datejust', price:'8 900 €', img:PRODUCTS[4].img, badges:[['sold','VENDU']] },
+    { id:'d6', brand:'NIKE', title:'Air Max 97', price:'144 €', img:PRODUCTS[5].img, badges:[['swap','ÉCHANGE'],['cycle','C3/3']] }
+  ];
 
-      const currentProduct = MOCK_PRODUCTS[currentIndex];
-      const isLast = currentIndex >= MOCK_PRODUCTS.length - 1;
+  /* ===== HOOK: silence visuel (3s) ===== */
+  function useReveal(dep, ms=3000) {
+    const [shown, setShown] = useState(false);
+    useEffect(() => { setShown(false); const t = setTimeout(()=>setShown(true), ms); return ()=>clearTimeout(t); }, [dep]);
+    return shown;
+  }
 
-      useEffect(() => {
-        if (swipeDir) return;
-        const timer = setTimeout(() => { setShowPrice(true); }, 3000);
-        return () => clearTimeout(timer);
-      }, [currentIndex, swipeDir]);
+  /* ===== TOPBAR ===== */
+  const TopBar = ({timer, urgent}) => (
+    <div className="topbar">
+      <div className="brand">LOKKO</div>
+      <div className={'timer-chip'+(urgent?' urgent':'')}>{I.clock}{timer}</div>
+    </div>
+  );
 
-      const handleSwipe = (dir) => {
-        setShowSwipe(dir);
-        setTimeout(() => {
-          if (currentIndex < MOCK_PRODUCTS.length - 1) {
-            setCurrentIndex(prev => prev + 1);
-          }
-          setShowSwipe(null);
-          setShowPrice(false);
-        }, 350);
-      };
+  /* ===== FEED CARD ===== */
+  function FeedCard({ p, onNext, onOffer, onToast }) {
+    const [drag, setDrag] = useState(null);      // {dx, dy}
+    const [out, setOut] = useState(null);          // 'left'|'right'|'up'
+    const revealed = useReveal(p.id);
+    const start = useRef(null);
 
-      const handleTouchStart = (e) => {
-        touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-      };
+    const tx = e => e.touches ? e.touches[0] : e;
 
-      const handleTouchEnd = (e) => {
-        if (!touchStart.current) return;
-        const touch = e.changedTouches[0];
-        const dx = touch.clientX - touchStart.current.x;
-        const dy = touch.clientY - touchStart.current.y;
-        if (Math.abs(dx) > 80 && dx < 0) handleSwipe('left');
-        else if (Math.abs(dx) > 80 && dx > 0) handleSwipe('right');
-        else if (Math.abs(dy) > 80 && dy < 0) handleSwipe('up');
-        touchStart.current = null;
-      };
+    const down = e => { start.current = tx(e); setDrag({dx:0,dy:0}); };
+    const move = e => {
+      if (!start.current) return;
+      const t = tx(e);
+      setDrag({ dx: t.clientX - start.current.clientX, dy: t.clientY - start.current.clientY });
+    };
+    const release = () => {
+      if (!drag) return;
+      const {dx,dy} = drag;
+      start.current = null; setDrag(null);
+      if (dy < -100 && Math.abs(dy) > Math.abs(dx)) { setOut('up'); setTimeout(()=>onOffer(p),260); }
+      else if (dx > 80)  { setOut('right'); setTimeout(()=>{onToast('Ajouté aux favoris'); onNext();},380); }
+      else if (dx < -80) { setOut('left');  setTimeout(onNext,380); }
+    };
 
-      if (isLast) {
-        return React.createElement('div', { className: 'lokko-screen-black' },
-          React.createElement('div', { className: 'feed-end' },
-            React.createElement('h2', { className: 'brand-serif' }, 'FIN DU FEED'),
-            React.createElement('p', { className: 'brand-sans' }, 'Revenez plus tard')
-          )
-        );
-      }
+    const style = drag
+      ? { transform:`translate(${drag.dx}px, ${drag.dy}px) rotate(${(drag.dx/430)*10}deg)` }
+      : out==='left' ? { className:'out-left' } : undefined;
 
-      if (!currentProduct) return null;
+    const cls = 'card' + (drag?' dragging':'') + (out==='left'?' out-left':out==='right'?' out-right':out==='up'?' out-up':'');
+    const pctClass = p.pct > 0.83 ? 'crit' : p.pct > 0.5 ? 'warn' : '';
 
-      const swipeClass = swipeDir === 'left' ? 'swipe-left' : 
-                         swipeDir === 'right' ? 'swipe-right' : 
-                         swipeDir === 'up' ? 'swipe-up' : '';
+    return (
+      <div className={cls} style={{backgroundImage:`url(${p.img})`, ...(drag?{transform:`translate(${drag.dx}px,${drag.dy}px) rotate(${(drag.dx/430)*10}deg)`}:{})}}
+        onTouchStart={down} onTouchMove={move} onTouchEnd={release}
+        onMouseDown={down} onMouseMove={move} onMouseUp={release} onMouseLeave={()=>{start.current=null;setDrag(null);}}>
 
-      return React.createElement('div', { className: 'lokko-screen-black' },
-        React.createElement('div', {
-          className: 'product-card ' + swipeClass,
-          onTouchStart: handleTouchStart,
-          onTouchEnd: handleTouchEnd,
-          style: { backgroundImage: 'url(' + currentProduct.image + ')' }
-        },
-          React.createElement('div', { className: 'card-overlay' },
-            React.createElement('h2', { className: 'brand-serif card-brand' }, currentProduct.brand),
-            React.createElement('p', { className: 'brand-sans card-title' }, currentProduct.title),
-            React.createElement('div', { className: 'card-price' },
-              currentProduct.price + ' ' + currentProduct.currency
-            ),
-            React.createElement('div', { className: 'card-meta' },
-              React.createElement('span', { className: 'trust-badge' }, currentProduct.seller + ' \u2022 Trust ' + currentProduct.trust + '%'),
-              React.createElement('span', { className: 'timer-badge' }, '\u2656 ' + currentProduct.timer)
-            )
-          ),
-          React.createElement('div', { className: 'action-bar' },
-            React.createElement('button', { className: 'action-btn', onClick: () => setBidProduct(currentProduct) }, '\u21c4'),
-            React.createElement('button', { className: 'action-btn eye-btn', onClick: () => setBidProduct(currentProduct) }, '\U0001f441'),
-            React.createElement('button', { className: 'action-btn', onClick: () => setBidProduct(currentProduct) }, '\U0001f517')
-          )
-        ),
-        bidProduct ? React.createElement('div', { className: 'sheet-overlay' },
-          React.createElement('div', { className: 'sheet-content' },
-            React.createElement('div', { className: 'sheet-handle' }),
-            React.createElement('h3', { className: 'sheet-title' }, bidProduct.brand + ' ' + bidProduct.title),
-            React.createElement('p', { className: 'sheet-subtitle' }, 'Offre priv\u00e9e \u2014 Ench\u00e8re boucle'),
-            React.createElement('div', { className: 'bid-rule' },
-              'R\u00e8gle des 70% : l\'offre doit \u00eatre \u2265 ' + Math.round(currentProduct.price * 0.70) + '€ (70% de l\'estimation)'
-            ),
-            React.createElement('button', { className: 'btn-submit', onClick: () => setBidProduct(null) }, 'Fermer')
-          )
-        ) : null
-      );
-    }
+        <div className="status-line">
+          {p.select && <span className="select-chip">{I.star} LOKKO SELECT</span>}
+          <span className="cycle-chip">↻ Cycle {p.cycle}/3</span>
+        </div>
 
-    // ==================== SEARCH SCREEN ====================
-    function SearchScreen() {
-      return React.createElement('div', { className: 'screen-white' },
-        React.createElement('div', { className: 'screen-header' },
-          React.createElement('h2', { className: 'brand-serif' }, 'Recherche')
-        ),
-        React.createElement('div', { className: 'screen-content' },
-          React.createElement('input', { className: 'search-input', placeholder: 'Rechercher une pi\u00e8ce...' })
-        )
-      );
-    }
+        <div className="hint left">{I.x}<span>Ignorer</span></div>
+        <div className="hint right">{I.heart}<span>Favori</span></div>
+        <div className="hint up">{I.up}<span>Offre</span></div>
+        {drag && <>
+          <div className={'hint left'+(drag.dx<-30?' show':'')}>{I.x}<span>Ignorer</span></div>
+          <div className={'hint right'+(drag.dx>30?' show':'')}>{I.heart}<span>Favori</span></div>
+          <div className={'hint up'+(drag.dy<-40?' show':'')}>{I.up}<span>Offre</span></div>
+        </>}
 
-    // ==================== STUDIO SCREEN ====================
-    function StudioScreen() {
-      return React.createElement('div', { className: 'screen-white' },
-        React.createElement('div', { className: 'studio-screen' },
-          React.createElement('div', { className: 'studio-title' }, 'Studio D\u00e9p\u00f4t'),
-          React.createElement('div', { className: 'studio-subtitle' }, 'Cr\u00e9ation assist\u00e9e par l\'IA'),
-          React.createElement('div', { className: 'studio-step' },
-            React.createElement('div', { className: 'studio-step-label' }, '1. Photos obligatoires'),
-            React.createElement('div', { className: 'photo-grid' },
-              React.createElement('div', { className: 'photo-slot filled' }, '\U0001f4d7'),
-              React.createElement('div', { className: 'photo-slot' }, '+'),
-              React.createElement('div', { className: 'photo-slot' }, '+'),
-              React.createElement('div', { className: 'photo-slot' }, '+')
-            ),
-            React.createElement('div', { className: 'studio-step-label' }, '1 photo d\'ensemble + 3 d\u00e9tails')
-          ),
-          React.createElement('div', { className: 'studio-step' },
-            React.createElement('div', { className: 'studio-step-label' }, '2. Scan IA'),
-            React.createElement('span', { className: 'studio-ai-tag' }, '\U0001f3e7 Marque d\u00e9tect\u00e9e'),
-            React.createElement('span', { className: 'studio-ai-tag' }, '\U0001f4c2 Cat\u00e9gorie'),
-            React.createElement('span', { className: 'studio-ai-tag' }, '\U0001f4cf Taille')
-          ),
-          React.createElement('div', { className: 'studio-step' },
-            React.createElement('div', { className: 'studio-step-label' }, '3. Mode de vente'),
-            React.createElement('div', { className: 'toggle-group' },
-              React.createElement('div', { className: 'toggle-option active' }, '\U0001f4b0 Ench\u00e8re'),
-              React.createElement('div', { className: 'toggle-option' }, '\u21c4 \u00c9change')
-            )
-          ),
-          React.createElement('button', { className: 'btn-publish' }, 'Publier sur LOKKO')
-        )
-      );
-    }
+        <div className="card-content">
+          <div className="badge-row">
+            <span className={'trust-badge '+(p.trust>=75?'verified':'warning')}>
+              {p.trust>=75?I.star:I.warn} {p.trust>=75?'Vérifié':'Attention'} · {p.seller}
+            </span>
+          </div>
+          <div className="p-brand">{p.brand}</div>
+          <div className="p-title">{p.title}</div>
+          <div className="p-meta">{p.meta}</div>
+          <div className={'price-zone'+(revealed?' revealed':'')}>
+            <span className="price-blur">•••••</span>
+            <span className="price-real">{p.price.toLocaleString('fr-FR')}<span className="cur">{p.cur}</span></span>
+            <span className="price-hint">Silence visuel · prix à 3s</span>
+          </div>
+        </div>
 
-    // ==================== DRESSING SCREEN ====================
-    function DressingScreen() {
-      const [tab, setTab] = useState('vente');
-      const filteredItems = DRESSING_ITEMS.filter(i => i.type === tab);
+        <div className="progress-track"><div className={'progress-fill '+pctClass} style={{width:(p.pct*100)+'%'}}/></div>
 
-      return React.createElement('div', { className: 'screen-white' },
-        React.createElement('div', { className: 'screen-header' },
-          React.createElement('h2', { className: 'brand-serif' }, 'Dressing')
-        ),
-        React.createElement('div', { className: 'dressing-tabs' },
-          React.createElement('button', {
-            className: 'tab' + (tab === 'vente' ? ' active' : ''),
-            onClick: () => setTab('vente')
-          }, 'Vente'),
-          React.createElement('button', {
-            className: 'tab' + (tab === 'echange' ? ' active' : ''),
-            onClick: () => setTab('echange')
-          }, '\u00c9change')
-        ),
-        React.createElement('div', { className: 'dressing-grid' },
-          filteredItems.map(item =>
-            React.createElement('div', { key: item.id, className: 'dressing-item' },
-              React.createElement('img', { src: item.image, alt: item.title }),
-              React.createElement('div', { className: 'item-info' },
-                React.createElement('span', { className: 'item-brand brand-serif' }, item.brand),
-                React.createElement('span', { className: 'item-status' }, item.status)
-              )
-            )
-          )
-        )
-      );
-    }
+        <div className="actions">
+          <button className="act" onClick={()=>{setOut('up');setTimeout(()=>onOffer(p),260);}}>{I.swap}</button>
+          <button className="act-eye" onClick={()=>onToast('Rapport AI Trust Engine · Score '+p.trust+'%')}>{I.eye}</button>
+          <button className="act" onClick={()=>onToast('Sentinelle de rareté activée')}>{I.ribbon}</button>
+        </div>
+        <div className="act-labels"><span>Troc</span><span>Œil IA</span><span>Sentinelle</span></div>
+      </div>
+    );
+  }
 
-    // ==================== PROFILE SCREEN ====================
-    function ProfileScreen() {
-      return React.createElement('div', { className: 'screen-white' },
-        React.createElement('div', { className: 'screen-header' },
-          React.createElement('div', { className: 'profile-avatar' }, 'M'),
-          React.createElement('div', { className: 'profile-name' }, 'Marwen'),
-          React.createElement('div', { className: 'trust-score' }, '\u2b50 Trust Score: 94%')
-        ),
-        React.createElement('div', { className: 'style-slider-group' },
-          React.createElement('div', { className: 'style-slider-label' }, 'Style'),
-          React.createElement('input', { className: 'style-slider', type: 'range', min: 0, max: 100, defaultValue: 65 }),
-          React.createElement('div', { className: 'slider-labels' },
-            React.createElement('span', null, 'Minimaliste'),
-            React.createElement('span', null, 'Avant-gardiste')
-          )
-        ),
-        React.createElement('div', { className: 'style-slider-group' },
-          React.createElement('div', { className: 'style-slider-label' }, 'Budget'),
-          React.createElement('input', { className: 'style-slider', type: 'range', min: 0, max: 100, defaultValue: 72 }),
-          React.createElement('div', { className: 'slider-labels' },
-            React.createElement('span', null, '300\u20ac'),
-            React.createElement('span', null, '3 000\u20ac')
-          )
-        )
-      );
-    }
+  /* ===== BID SHEET ===== */
+  function BidSheet({ p, onClose, onSubmit }) {
+    const min = Math.round(p.price*0.7);
+    const [amt, setAmt] = useState(Math.round(p.price*0.85));
+    const [dur, setDur] = useState(48);
+    return (
+      <div className="overlay" onClick={onClose}>
+        <div className="sheet" onClick={e=>e.stopPropagation()}>
+          <div className="sheet-handle"/>
+          <div className="sheet-head">
+            <div className="sheet-title">Offre privée</div>
+            <button className="sheet-close" onClick={onClose}>{I.x}</button>
+          </div>
+          <div className="prod-row">
+            <div className="prod-thumb" style={{backgroundImage:`url(${p.img})`}}/>
+            <div>
+              <div className="pb">{p.brand}</div>
+              <div className="pt">{p.title}</div>
+              <div className="pp">{p.price.toLocaleString('fr-FR')} {p.cur}</div>
+            </div>
+          </div>
+          <div className="field-label">Ton offre</div>
+          <div className="offer-input-row">
+            <input className="offer-input" type="number" value={amt} onChange={e=>setAmt(Number(e.target.value))}/>
+            <span className="offer-cur">{p.cur}</span>
+          </div>
+          <div className="info-banner">
+            {I.info}
+            <div><strong>Règle des 70%</strong> — offre minimale <strong>{min.toLocaleString('fr-FR')} {p.cur}</strong> (70% de l'estimation privée du vendeur). Le vendeur peut accepter plusieurs offres classées.</div>
+          </div>
+          <div className="field-label">Durée de l'enchère</div>
+          <div className="pills">
+            <button className={'pill'+(dur===48?' on':'')} onClick={()=>setDur(48)}>48h</button>
+            <button className={'pill'+(dur===72?' on':'')} onClick={()=>setDur(72)}>72h</button>
+          </div>
+          <button className="btn-primary" onClick={()=>{onSubmit(); onClose();}}>Soumettre l'offre</button>
+          <button className="btn-ghost" onClick={onClose}>Annuler</button>
+        </div>
+      </div>
+    );
+  }
 
-    // ==================== NAVIGATION ====================
-    function Navigation({ activeTab, onTabChange }) {
-      return React.createElement('div', { className: 'bottom-nav' },
-        React.createElement('button', {
-          className: 'nav-item' + (activeTab === 'swipe' ? ' active' : ''),
-          onClick: () => onTabChange('swipe')
-        },
-          React.createElement('span', { className: 'nav-icon' }, '\u25c9'),
-          React.createElement('span', { className: 'nav-label' }, 'Swipe')
-        ),
-        React.createElement('button', {
-          className: 'nav-item' + (activeTab === 'search' ? ' active' : ''),
-          onClick: () => onTabChange('search')
-        },
-          React.createElement('span', { className: 'nav-icon' }, '\U0001f50d'),
-          React.createElement('span', { className: 'nav-label' }, 'Recherche')
-        ),
-        React.createElement('button', {
-          className: 'nav-publish',
-          onClick: () => onTabChange('publish')
-        }, '+'),
-        React.createElement('button', {
-          className: 'nav-item' + (activeTab === 'dressing' ? ' active' : ''),
-          onClick: () => onTabChange('dressing')
-        },
-          React.createElement('span', { className: 'nav-icon' }, '\U0001f457'),
-          React.createElement('span', { className: 'nav-label' }, 'Dressing')
-        ),
-        React.createElement('button', {
-          className: 'nav-item' + (activeTab === 'profile' ? ' active' : ''),
-          onClick: () => onTabChange('profile')
-        },
-          React.createElement('span', { className: 'nav-icon' }, '\U0001f464'),
-          React.createElement('span', { className: 'nav-label' }, 'Profil')
-        )
-      );
-    }
+  /* ===== PRICE ALERT MODAL ===== */
+  function AdjustModal({ onClose, onToast }) {
+    const [val, setVal] = useState(1980);
+    return (
+      <div className="center-modal" onClick={onClose}>
+        <div className="modal-box" onClick={e=>e.stopPropagation()}>
+          <div className="warn-ic">{I.warn}</div>
+          <h3>Ton article ne se vend pas</h3>
+          <div className="sub">« GUCCI Jackie 1961 » — Seulement 3 personnes ont liké ton article en 24h.</div>
+          <div className="price-compare">
+            <div className="pc-row"><span className="l">Prix actuel</span><span className="v">2 400 €</span></div>
+            <div className="pc-row"><span className="l">Prix marché IA</span><span className="v">1 700 – 2 100 €</span></div>
+            <div className="pc-row"><span className="l">Prix suggéré</span><span className="v gold">★ 1 980 €</span></div>
+          </div>
+          <div className="slider-wrap">
+            <input type="range" min="1400" max="2400" step="10" value={val}
+              style={{'--val': ((val-1400)/1000*100)+'%'}}
+              onChange={e=>setVal(Number(e.target.value))}/>
+            <div className="slider-labels"><span>1 400 €</span><span>{val.toLocaleString('fr-FR')} €</span><span>2 400 €</span></div>
+          </div>
+          <div className="modal-note">{I.clock}<span>Timer enchère : 4h 12min restants — le timer ne repart pas si tu ajustes.</span></div>
+          <div className="adj-counter">Ajustements restants : 2/3</div>
+          <button className="btn-primary" onClick={()=>{onToast('Prix ajusté à '+val.toLocaleString('fr-FR')+' €'); onClose();}}>✓ Ajuster mon prix</button>
+          <button className="btn-ghost" onClick={onClose}>Garder 2 400 €</button>
+        </div>
+      </div>
+    );
+  }
 
-    // ==================== APP PRINCIPALE ====================
-    function App() {
-      const [activeTab, setActiveTab] = useState('swipe');
+  /* ===== DRESSING ===== */
+  const badgeClass = { time:'db-time', urgent:'db-urgent', alert:'db-alert', cycle:'db-cycle', select:'db-select', sold:'db-sold', swap:'db-swap' };
+  function Dressing({ onAlert }) {
+    const [tab, setTab] = useState('vente');
+    return (
+      <>
+        <div className="screen-head">
+          <div className="screen-title">Mon Dressing</div>
+        </div>
+        <div className="tabs">
+          <button className={'pill'+(tab==='vente'?' on':'')} onClick={()=>setTab('vente')}>En vente (6)</button>
+          <button className={'pill'+(tab==='vendus'?' on':'')} onClick={()=>setTab('vendus')}>Vendus (12)</button>
+          <button className={'pill'+(tab==='arch'?' on':'')} onClick={()=>setTab('arch')}>Archivés</button>
+        </div>
+        <div className="alert-card" onClick={onAlert}>
+          <div className="im" style={{backgroundImage:`url(${PRODUCTS[3].img})`}}/>
+          <div className="msg">
+            <b>⚠ GUCCI Jackie 1961</b>
+            Ton prix est 30% au-dessus du marché. Ajuste pour relancer les vues.
+            <span className="link">Ajuster le prix →</span>
+          </div>
+        </div>
+        <div className="dgrid">
+          {DRESSING.map(d => (
+            <div className="dcard" key={d.id}>
+              <div className="im" style={{backgroundImage:`url(${d.img})`}}/>
+              <div className="dbadges">{d.badges.map((b,i)=><span key={i} className={'db '+badgeClass[b[0]]}>{b[0]==='time'?I.clock:b[0]==='urgent'?I.clock:b[0]==='alert'?I.warn:b[0]==='select'?I.star:b[0]==='sold'?I.check:b[0]==='swap'?I.swap:null}{b[1]}</span>)}</div>
+              <div className="info">
+                <div className="b">{d.brand}</div>
+                <div className="t">{d.title}</div>
+                <div className="pr">{d.price}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  }
 
-      if (activeTab === 'swipe') {
-        return React.createElement('div', { className: 'lokko-app' },
-          React.createElement(SwipeFeed),
-          React.createElement(Navigation, { activeTab: activeTab, onTabChange: setActiveTab })
-        );
-      }
+  /* ===== STUDIO ===== */
+  function Studio({ onToast }) {
+    return (
+      <div className="studio">
+        <h2>Studio Dépôt</h2>
+        <div className="sub">L'IA fait tout pour toi</div>
 
-      const screens = {
-        search: SearchScreen,
-        publish: StudioScreen,
-        dressing: DressingScreen,
-        profile: ProfileScreen
-      };
+        <div className="step-label"><span className="step-num">1</span><span>Photos</span></div>
+        <div className="photo-grid">
+          <div className="pshot filled" style={{backgroundImage:`url(${'img/ysl.jpg'})`}}>
+            <span className="ok">{I.check}</span>
+          </div>
+          <div className="pshot">{I.plus}</div><div className="pshot">{I.plus}</div><div className="pshot">{I.plus}</div>
+        </div>
 
-      const Screen = screens[activeTab];
+        <div className="step-label"><span className="step-num">2</span><span>Analyse IA</span></div>
+        <div className="ai-panel">
+          <div className="ai-head">{I.sparkle}<span>Pré-rempli par l'AI Seller Engine</span></div>
+          <div className="ai-field"><span className="k">Titre</span><span className="v serif">Chanel Classic Flap — Noir Or</span></div>
+          <div className="ai-field"><span className="k">Marque</span><span className="v">CHANEL · 94%</span></div>
+          <div className="ai-field"><span className="k">Catégorie</span><span className="v">Sacs</span></div>
+          <div className="ai-field"><span className="k">État</span><span className="v">Très bon état</span></div>
+          <div className="ai-field"><span className="k">Fourchette marché</span><span className="est">3 800 – 4 600 €  ✓</span></div>
+        </div>
 
-      return React.createElement('div', { className: 'lokko-app' },
-        React.createElement(Screen),
-        React.createElement(Navigation, { activeTab: activeTab, onTabChange: setActiveTab })
-      );
-    }
+        <div className="step-label"><span className="step-num">3</span><span>Mode de vente</span></div>
+        <div className="pills">
+          <button className="pill on">Enchère</button>
+          <button className="pill">Troc</button>
+          <button className="pill">Prix fixe</button>
+        </div>
+        <div className="pills">
+          <button className="pill on">48h</button>
+          <button className="pill">72h</button>
+        </div>
+        <button className="btn-primary" onClick={()=>onToast('Publié · Enchère ouverte 48h')}>Publier l'annonce</button>
+      </div>
+    );
+  }
 
-    // Montage
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(React.createElement(App));
+  /* ===== SEARCH ===== */
+  function Search() {
+    const [size, setSize] = useState('M');
+    return (
+      <div className="search-wrap">
+        <div className="screen-title" style={{marginBottom:18}}>Recherche</div>
+        <div className="search-bar">{I.search}<input placeholder="Marque, pièce, référence..."/></div>
+        <div className="section-title">ACTIVER MES TAILLES</div>
+        <div className="chips">
+          {['XS','S','M','L','XL','38','39','40','41','42'].map(s =>
+            <button key={s} className={'chip'+(size===s?' on':'')} onClick={()=>setSize(size===s?null:s)}>{s}</button>)}
+        </div>
+        <div className="section-title">TENDANCE 24H</div>
+        <div className="trend-row">
+          {PRODUCTS.slice(0,5).map(p =>
+            <div className="trend-card" key={p.id}>
+              <div className="im" style={{backgroundImage:`url(${p.img})`}}/>
+              <div className="b">{p.brand}</div>
+              <div className="n">{(120-p.id*17)} likes</div>
+            </div>)}
+        </div>
+        <div className="section-title">ILS SONT REPARTIS VITE</div>
+        <div className="trend-row">
+          {PRODUCTS.slice(2,5).map(p =>
+            <div className="trend-card" key={p.id}>
+              <div className="im" style={{backgroundImage:`url(${p.img})`}}/>
+              <div className="b">{p.brand}</div>
+              <div className="n">Vendu en {p.id}h{p.id*3}min</div>
+            </div>)}
+        </div>
+      </div>
+    );
+  }
+
+  /* ===== PROFILE ===== */
+  function Profile() {
+    return (
+      <div>
+        <div className="profile-hero">
+          <div className="avatar">M</div>
+          <h2>Marwen</h2>
+          <div className="loc">Tunis · Membre depuis Jan 2025</div>
+        </div>
+        <div className="trust-card">
+          <div className="trust-top">
+            <span className="lbl">Trust Score</span>
+            <span className="val">★ 94 · Vérifié</span>
+          </div>
+          <div className="trust-bar"><div className="fill"/></div>
+          <div className="stats-row">
+            <div className="stat"><div className="n">47</div><div className="l">Ventes</div></div>
+            <div className="stat"><div className="n">4.8★</div><div className="l">Note</div></div>
+            <div className="stat"><div className="n">0</div><div className="l">Litiges</div></div>
+            <div className="stat"><div className="n">&lt;2h</div><div className="l">Réponse</div></div>
+          </div>
+        </div>
+        <div className="search-wrap" style={{paddingTop:8}}>
+          <div className="section-title">MES PRÉFÉRENCES IA</div>
+          <div className="ai-panel">
+            <div className="ai-field"><span className="k">Style</span><span className="v">Minimaliste ◀──●──▶ Avant-garde</span></div>
+            <div className="ai-field"><span className="k">Budget</span><span className="v serif">500 – 5 000 €</span></div>
+            <div className="ai-field"><span className="k">Marques</span><span className="v">Hermès, Chanel, Dior</span></div>
+          </div>
+          <div className="section-title">PARAMÈTRES</div>
+          <div className="chips">
+            <span className="chip">Langue : FR</span><span className="chip">Devise : € / AED</span>
+            <span className="chip">Notifications</span><span className="chip">RGPD — Export</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ===== NAV ===== */
+  const Nav = ({ tab, setTab }) => (
+    <div className="nav">
+      <button className={'nav-item'+(tab==='feed'?' active':'')} onClick={()=>setTab('feed')}>{I.home}<span>Feed</span></button>
+      <button className={'nav-item'+(tab==='search'?' active':'')} onClick={()=>setTab('search')}>{I.search}<span>Recherche</span></button>
+      <button className="nav-plus" onClick={()=>setTab('sell')}>{I.plus}</button>
+      <button className={'nav-item'+(tab==='dressing'?' active':'')} onClick={()=>setTab('dressing')}>{I.dress}<span>Dressing</span></button>
+      <button className={'nav-item'+(tab==='profile'?' active':'')} onClick={()=>setTab('profile')}>{I.user}<span>Profil</span></button>
+    </div>
+  );
+
+  /* ===== APP ===== */
+  function App() {
+    const [tab, setTab] = useState('feed');
+    const [idx, setIdx] = useState(0);
+    const [bid, setBid] = useState(null);
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [toast, setToast] = useState(null);
+    const toastT = useRef(null);
+
+    const showToast = msg => {
+      clearTimeout(toastT.current);
+      setToast(msg);
+      toastT.current = setTimeout(()=>setToast(null), 2600);
+    };
+
+    const p = PRODUCTS[idx];
+
+    return (
+      <div className="app">
+        {tab === 'feed' && (
+          <>
+            {p && <>
+              <TopBar timer={p.timer} urgent={p.pct>0.83}/>
+              <div className="feed">
+                <FeedCard p={p} onNext={()=>setIdx(i=>Math.min(i+1, PRODUCTS.length))} onOffer={setBid} onToast={showToast}/>
+              </div>
+            </>}
+            {idx >= PRODUCTS.length && (
+              <>
+                <TopBar timer="—"/>
+                <div className="feed">
+                  <div className="feed-end">
+                    <h3>Le feed respire.</h3>
+                    <p>Revenez demain — l'IA affine ta sélection</p>
+                  </div>
+                </div>
+              </>
+            )}
+          </>
+        )}
+        {tab === 'search' && <div className="screen"><Search/></div>}
+        {tab === 'sell' && <div className="screen"><Studio onToast={showToast}/></div>}
+        {tab === 'dressing' && <div className="screen"><Dressing onAlert={()=>setAlertOpen(true)}/></div>}
+        {tab === 'profile' && <div className="screen"><Profile/></div>}
+
+        {tab !== 'feed' && <div className="topbar"><div className="brand">LOKKO</div></div>}
+
+        <Nav tab={tab} setTab={setTab}/>
+
+        {bid && <BidSheet p={bid} onClose={()=>setBid(null)} onSubmit={()=>showToast('Offre soumise · Confidential')}/>}
+        {alertOpen && <AdjustModal onClose={()=>setAlertOpen(false)} onToast={showToast}/>}
+        {toast && <div className="toast">{I.sparkle}{toast}</div>}
+      </div>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
   </script>
 </body>
 </html>
